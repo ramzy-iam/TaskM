@@ -1,15 +1,13 @@
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, Unique } from 'typeorm';
 import { AppBaseEntity } from './base.entity';
 import { User } from './user.entity';
 import { WorkspaceUser } from './workspace-user.entity';
 
 @Entity({ name: 'Workspaces' })
+@Unique(['name', 'userId'])
 export class Workspace extends AppBaseEntity {
   @Column()
   name: string;
-
-  @Column({ unique: true })
-  code: string;
 
   @ManyToOne(() => User, (user) => user.workspaces)
   user: User;
@@ -21,4 +19,8 @@ export class Workspace extends AppBaseEntity {
     cascade: true,
   })
   workspaceUsers: WorkspaceUser[];
+
+  buildWorkspaceUserToSaveWithWorkspace(userId: number, roleIds?: number[]) {
+    this.workspaceUsers = [new WorkspaceUser(userId, roleIds)];
+  }
 }

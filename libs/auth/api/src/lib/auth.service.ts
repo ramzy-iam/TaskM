@@ -7,25 +7,27 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { User } from '@task-manager/core/db';
+import { UsersService } from '@task-manager/users/api';
+import { JwtService } from '@nestjs/jwt';
+import bcrypt from 'bcrypt';
+import { EmailHelper, DayjsHelper } from '@task-manager/core/helpers';
+import otpGenerator from 'otp-generator';
+import {
+  JWT_EXPIRY_DATE,
+  OTP_EXPIRY_TIME,
+  OTP_LENGTH,
+  RESET_PASSWORD_EXPIRY_TIME,
+} from '@task-manager/core/constants';
+import crypto from 'crypto';
 import {
   BaseUserDto,
   CreateUserDto,
   ForgotPasswordDto,
   ResetPasswordDto,
   SendOtpDto,
-  UsersService,
   VerifyOtpDto,
-} from '@task-manager/users/api';
-import { JwtService } from '@nestjs/jwt';
-import bcrypt from 'bcrypt';
-import { EmailHelper, DayjsHelper } from '@task-manager/core/helpers';
-import otpGenerator from 'otp-generator';
-import {
-  OTP_EXPIRY_TIME,
-  OTP_LENGTH,
-  RESET_PASSWORD_EXPIRY_TIME,
-} from '@task-manager/core/constants';
-import crypto from 'crypto';
+} from '@task-manager/core/dto';
+import { StateUser } from '@task-manager/users/types';
 
 @Injectable()
 export class AuthService {
@@ -73,11 +75,13 @@ export class AuthService {
     const user = await this.validateUser(userDto.email, userDto.password);
     if (user === null) throw new NotFoundException(`User not found`);
     if (user === undefined) throw new BadRequestException(`Incorrect password`);
-    if (!user.isVerified)
+    if (!(user.state === StateUser.CONFIRMED))
       throw new UnauthorizedException(`You account is not verified`);
 
     const payload = { username: user.email, sub: user.id };
-    const access_token = this.jwtService.sign(payload);
+    const access_token = this.jwtService.sign(payload, {
+      expiresIn: JWT_EXPIRY_DATE,
+    });
 
     return {
       access_token,
@@ -86,10 +90,10 @@ export class AuthService {
 
   async verifyPayload(payload: {
     username: string;
-    id: string;
+    sub: number;
   }): Promise<Partial<User>> {
-    const username = payload.username;
-    const user = await this.usersService.findOne({ email: username });
+    const { sub: id, username } = payload;
+    const user = await this.usersService.findOne({ id, email: username });
     if (!user) throw new UnauthorizedException(`Invalid token`);
     return user;
   }
@@ -97,7 +101,7 @@ export class AuthService {
   async sendOTP({ email }: SendOtpDto) {
     const user = await this.usersService.findOne({ email });
     if (!user) throw new NotFoundException('User not found');
-    if (user.isVerified) return;
+    if (user.state === StateUser.CONFIRMED) return;
 
     const newOtp = otpGenerator.generate(OTP_LENGTH, {
       lowerCaseAlphabets: false,
@@ -145,7 +149,7 @@ export class AuthService {
 
     //OTP is correct
     await this.usersService.update(user.id, {
-      isVerified: true,
+      state: StateUser.CONFIRMED,
       otp: undefined,
       otpExpiryTime: undefined,
     });

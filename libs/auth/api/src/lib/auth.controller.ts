@@ -8,7 +8,7 @@ import {
   VerifyOtpDto,
   SendOtpDto,
   ResetPasswordDto,
-} from '@task-manager/users/api';
+} from '@task-manager/core/dto';
 import { PublicRoute } from './auth.decorator';
 import { Serialize } from '@task-manager/core/interceptors';
 
@@ -33,7 +33,7 @@ export class AuthController {
   }
 
   @PublicRoute()
-  @Post('verify-otp')
+  @Post('verify')
   async verifyOtp(
     @Body()
     verifyOtpDto: VerifyOtpDto
@@ -42,7 +42,7 @@ export class AuthController {
   }
 
   @PublicRoute()
-  @Post('send-otp')
+  @Post('confirm')
   async sendOtp(
     @Body()
     sendOtpDto: SendOtpDto

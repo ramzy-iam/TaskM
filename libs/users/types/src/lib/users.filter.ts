@@ -1,4 +1,5 @@
 export interface BaseFilter {
+  id?: number;
   email?: string;
   name?: string;
   isVerified?: boolean;

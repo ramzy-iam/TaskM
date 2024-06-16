@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-export const convertUndefinedToNull = (obj: any): any => {
+const convertUndefinedToNull = (obj: any): any => {
   return _.isArray(obj)
     ? _.map(obj, convertUndefinedToNull)
     : _.isObject(obj) && !_.isDate(obj)
@@ -8,4 +8,8 @@ export const convertUndefinedToNull = (obj: any): any => {
         value === undefined ? null : convertUndefinedToNull(value)
       )
     : obj;
+};
+
+export default {
+  convertUndefinedToNull,
 };

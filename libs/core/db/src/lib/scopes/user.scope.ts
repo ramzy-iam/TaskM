@@ -1,5 +1,5 @@
-import { User } from '@task-manager/core/db';
 import { SelectQueryBuilder } from 'typeorm';
+import { User } from '../entities';
 
 export class UsersScope extends SelectQueryBuilder<User> {
   filterById(userId: number): UsersScope {

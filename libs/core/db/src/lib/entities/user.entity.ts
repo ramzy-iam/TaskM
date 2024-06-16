@@ -2,6 +2,7 @@ import { Entity, Column, OneToMany } from 'typeorm';
 
 import { AppBaseEntity } from './base.entity';
 import { Workspace } from './workspace.entity';
+import { StateUser } from '@task-manager/users/types';
 
 @Entity({ name: 'Users' })
 export class User extends AppBaseEntity {
@@ -29,8 +30,12 @@ export class User extends AppBaseEntity {
   @Column({ nullable: true, type: 'timestamptz' })
   passwordResetExpires: Date;
 
-  @Column({ nullable: true, default: false })
-  isVerified: boolean;
+  @Column({
+    type: 'enum',
+    enum: StateUser,
+    default: StateUser.UNCONFIRMED,
+  })
+  state: StateUser;
 
   @OneToMany(() => Workspace, (workspace) => workspace.user)
   workspaces: Workspace[];

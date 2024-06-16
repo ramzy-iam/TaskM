@@ -3,11 +3,25 @@ import { AppBaseEntity } from './base.entity';
 import { Workspace } from './workspace.entity';
 import { User } from './user.entity';
 import { Role } from './role.entity';
+import { StateUser } from '@task-manager/users/types';
 
 @Entity({ name: 'WorkspaceUsers' })
 export class WorkspaceUser extends AppBaseEntity {
   @Column()
   workspaceId: number;
+
+  @Column({ nullable: true })
+  tokenInvitation?: string;
+
+  @Column({ nullable: true, type: 'timestamptz' })
+  tokenInvitationExpires?: Date;
+
+  @Column({
+    type: 'enum',
+    enum: StateUser,
+    default: StateUser.CONFIRMED,
+  })
+  state: StateUser;
 
   @ManyToOne(() => Workspace, (workspace) => workspace.id, {
     nullable: false,
@@ -25,5 +39,22 @@ export class WorkspaceUser extends AppBaseEntity {
     eager: true,
   })
   @JoinTable()
-  roles: Role[];
+  roles?: Role[];
+
+  buildRolesToSave(roleIds?: number[]) {
+    this.roles = roleIds?.map((roleId) => new Role(roleId));
+  }
+
+  constructor(
+    userId: number,
+    roleIds?: number[],
+    tokenInvitation?: string,
+    tokenInvitationExpires?: Date
+  ) {
+    super();
+    this.userId = userId;
+    this.tokenInvitation = tokenInvitation;
+    this.tokenInvitationExpires = tokenInvitationExpires;
+    this.buildRolesToSave(roleIds);
+  }
 }
