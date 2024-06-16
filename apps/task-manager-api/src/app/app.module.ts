@@ -12,9 +12,10 @@ import {
 } from '@task-manager/auth/api';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
+import { WorkspacesApiModule } from '@task-manager/workspaces/api';
 
 @Module({
-  imports: [DatabaseModule, UsersApiModule, AuthApiModule],
+  imports: [DatabaseModule, UsersApiModule, AuthApiModule, WorkspacesApiModule],
   controllers: [AppController],
   providers: [
     AppService,

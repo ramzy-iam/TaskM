@@ -11,6 +11,10 @@ import { UserRole } from '@task-manager/users/types';
 @Entity({ name: 'Roles' })
 @Unique(['name'])
 export class Role {
+  constructor(id: number) {
+    this.id = id;
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 

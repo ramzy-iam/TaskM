@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { UserListFilter } from '@task-manager/users/types';
-import { UsersRepository } from './users.repository';
-import { CreateUserDto } from './users.dto';
-import { User } from '@task-manager/core/db';
-import { convertUndefinedToNull } from '@task-manager/core/helpers';
+import { User, UsersRepository } from '@task-manager/core/db';
+import { UtilsHelper } from '@task-manager/core/helpers';
+import { CreateUserDto } from '@task-manager/core/dto';
 
 @Injectable()
 export class UsersService {
@@ -28,8 +27,12 @@ export class UsersService {
     return query.getMany();
   }
 
-  findOne({ email }: UserListFilter) {
+  findOne({ email, id }: UserListFilter) {
     const query = this.usersRepository.scoped;
+
+    if (id) {
+      query.filterById(id);
+    }
 
     if (email) {
       query.filterByEmail(email);
@@ -51,7 +54,7 @@ export class UsersService {
     await this.get(id);
     return this.usersRepository.update(
       { id },
-      convertUndefinedToNull(updatedUser)
+      UtilsHelper.convertUndefinedToNull(updatedUser)
     );
   }
 }
