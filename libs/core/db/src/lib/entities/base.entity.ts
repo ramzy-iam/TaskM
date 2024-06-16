@@ -5,16 +5,16 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-export class BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+export class AppBaseEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @CreateDateColumn({type:'timestamptz'})
+  @CreateDateColumn({ type: 'timestamptz' })
   readonly createdAt: Date;
 
-  @UpdateDateColumn({type:'timestamptz'})
+  @UpdateDateColumn({ type: 'timestamptz' })
   readonly updatedAt: Date;
 
-  @DeleteDateColumn({type:'timestamptz'})
+  @DeleteDateColumn({ type: 'timestamptz' })
   deletedAt: Date;
 }

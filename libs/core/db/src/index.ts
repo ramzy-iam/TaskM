@@ -1,2 +1,3 @@
 export * from './lib/database.module';
-export * from './lib/entities/workspace.entity';
+export * from './lib/entities'
+export * from './lib/database-source'

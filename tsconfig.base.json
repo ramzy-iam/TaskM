@@ -14,9 +14,20 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "strictPropertyInitialization":false,
+    "strictPropertyInitialization": false,
+    "esModuleInterop": true,
     "paths": {
-      "@task-manager/core/db": ["libs/core/db/src/index.ts"]
+      "@task-manager/auth/api": ["libs/auth/api/src/index.ts"],
+      "@task-manager/core/constants": ["libs/core/constants/src/index.ts"],
+      "@task-manager/core/db": ["libs/core/db/src/index.ts"],
+      "@task-manager/core/helpers": ["libs/core/helpers/src/index.ts"],
+      "@task-manager/core/interceptors": [
+        "libs/core/interceptors/src/index.ts"
+      ],
+      "@task-manager/core/types": ["libs/core/types/src/index.ts"],
+      "@task-manager/users/api": ["libs/users/api/src/index.ts"],
+      "@task-manager/users/types": ["libs/users/types/src/index.ts"],
+      "@task-manager/workspace/api": ["libs/workspace/api/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

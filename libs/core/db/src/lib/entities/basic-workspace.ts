@@ -1,11 +1,9 @@
 import { Column } from 'typeorm';
-import { IsNotEmpty } from 'class-validator';
-import { BaseEntity } from './base.entity';
+import { AppBaseEntity } from './base.entity';
 
-export class WorkspaceOwnedEntity extends BaseEntity {
+export class WorkspaceOwnedEntity extends AppBaseEntity {
   @Column({
     nullable: false,
   })
-  @IsNotEmpty()
   workspaceId: number;
 }
