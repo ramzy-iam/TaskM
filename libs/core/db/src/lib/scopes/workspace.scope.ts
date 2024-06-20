@@ -13,10 +13,4 @@ export class WorkspacesScope extends SelectQueryBuilder<Workspace> {
       name: `%${name}%`,
     });
   }
-
-  filterByUserId(userId: number): WorkspacesScope {
-    return this.andWhere('Workspaces.userId = :userId', {
-      userId,
-    });
-  }
 }

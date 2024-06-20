@@ -1,0 +1,20 @@
+{
+  "name": "workspace-users-api",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/workspace-users/api/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/workspace-users/api",
+        "tsConfig": "libs/workspace-users/api/tsconfig.lib.json",
+        "packageJson": "libs/workspace-users/api/package.json",
+        "main": "libs/workspace-users/api/src/index.ts",
+        "assets": ["libs/workspace-users/api/*.md"]
+      }
+    }
+  }
+}

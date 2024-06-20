@@ -1,4 +1,4 @@
-import { Entity, Column, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, JoinColumn } from 'typeorm';
 
 import { AppBaseEntity } from './base.entity';
 import { Workspace } from './workspace.entity';
@@ -19,10 +19,10 @@ export class User extends AppBaseEntity {
   lastName: string;
 
   @Column({ nullable: true })
-  otp: string;
+  token: string;
 
   @Column({ nullable: true, type: 'timestamptz' })
-  otpExpiryTime: Date;
+  tokenExpires: Date;
 
   @Column({ nullable: true })
   passwordResetToken: string;
@@ -37,6 +37,10 @@ export class User extends AppBaseEntity {
   })
   state: StateUser;
 
-  @OneToMany(() => Workspace, (workspace) => workspace.user)
-  workspaces: Workspace[];
+  @Column({ nullable: true })
+  activeWorkspaceId: number;
+
+  @OneToMany(() => Workspace, (workspace) => workspace.id, { nullable: true })
+  @JoinColumn({ name: 'activeWorkspaceId' })
+  activeWorkspace?: Workspace;
 }

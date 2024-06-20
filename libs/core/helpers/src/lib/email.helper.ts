@@ -2,7 +2,7 @@ import * as nodemailer from 'nodemailer';
 import * as SMTPTransport from 'nodemailer/lib/smtp-transport/';
 
 export class EmailHelper {
-  private static _instance: EmailHelper | null = null;
+  private static instance: EmailHelper | null = null;
   private transporter: nodemailer.Transporter<SMTPTransport.SentMessageInfo>;
 
   private constructor() {
@@ -18,13 +18,13 @@ export class EmailHelper {
   }
 
   public static getInstance(): EmailHelper {
-    if (this._instance === null) {
-      this._instance = new EmailHelper();
+    if (EmailHelper.instance === null) {
+      EmailHelper.instance = new EmailHelper();
     }
-    return this._instance;
+    return EmailHelper.instance;
   }
 
-  sendEmail({
+  async sendEmail({
     to,
     subject,
     html,
@@ -42,7 +42,8 @@ export class EmailHelper {
         text, // Uncomment this line if you want to include a plain text version of the email
       };
 
-      return this.transporter.sendMail(mailOptions);
+      const response = await this.transporter.sendMail(mailOptions);
+      return response;
     } catch (error) {
       console.log(`Failed  to send the email, ${error}`);
       throw error;

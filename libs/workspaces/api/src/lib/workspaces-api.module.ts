@@ -1,13 +1,29 @@
 import { Module } from '@nestjs/common';
 import { WorkspacesController } from './workspaces.controller';
 import { WorkspacesService } from './workspaces.service';
-import { Workspace, WorkspacesRepository } from '@task-manager/core/db';
+import {
+  User,
+  UsersRepository,
+  Workspace,
+  WorkspaceUser,
+  WorkspaceUsersRepository,
+  WorkspacesRepository,
+} from '@task-manager/core/db';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersService } from '@task-manager/users/api';
+import { WorkspaceUsersService } from '@task-manager/workspace-users/api';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Workspace])],
+  imports: [TypeOrmModule.forFeature([Workspace, User, WorkspaceUser])],
   controllers: [WorkspacesController],
-  providers: [WorkspacesService, WorkspacesRepository],
+  providers: [
+    WorkspacesService,
+    WorkspacesRepository,
+    UsersService,
+    UsersRepository,
+    WorkspaceUsersService,
+    WorkspaceUsersRepository,
+  ],
   exports: [WorkspacesService],
 })
 export class WorkspacesApiModule {}

@@ -14,6 +14,7 @@ export class SerializerInterceptor implements NestInterceptor {
       map((data: any) => {
         return plainToInstance(this.dto, data, {
           excludeExtraneousValues: true,
+          enableImplicitConversion: true,
         });
       })
     );

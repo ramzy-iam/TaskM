@@ -4,8 +4,11 @@ import {
   IsEmail,
   MinLength,
   MaxLength,
+  IsPositive,
+  IsArray,
 } from 'class-validator';
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
+import { WorkspaceDto } from './workspace.dto';
 
 export class BaseUserDto {
   @IsEmail()
@@ -61,21 +64,40 @@ export class ForgotPasswordDto {
   email: string;
 }
 
-export class SendOtpDto extends ForgotPasswordDto {}
+export class SendVerificationLinkDto extends ForgotPasswordDto {}
 
-export class VerifyOtpDto {
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
-
+export class VerifyAccountDto {
   @IsString()
   @IsNotEmpty()
-  otp: string;
+  token: string;
+}
+
+export class ChangeActiveWorkspaceDto {
+  @IsPositive()
+  @IsNotEmpty()
+  workspaceId: number;
+}
+
+export class ConfirmInvitationDto {
+  @IsString()
+  @IsNotEmpty()
+  tokenInvitation: string;
+}
+
+export class InviteUserToWorkspaceDto {
+  @IsArray()
+  @IsString({ each: true })
+  @IsEmail({}, { each: true })
+  emails: string[];
+
+  @IsPositive()
+  @IsNotEmpty()
+  roleId: number;
 }
 
 export class UserDto {
   @Expose()
-  id: string;
+  id: number;
 
   @Expose()
   firstName: string;
@@ -87,5 +109,18 @@ export class UserDto {
   email: string;
 
   @Expose()
-  createdAt: string;
+  createdAt?: Date;
+}
+
+export class UserInfoDto {
+  @Expose()
+  user: UserDto;
+
+  @Expose()
+  @Type(() => WorkspaceDto)
+  activeWorkspace: WorkspaceDto;
+
+  @Expose()
+  @Type(() => WorkspaceDto)
+  workspaces: WorkspaceDto[];
 }

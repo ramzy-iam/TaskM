@@ -10,24 +10,23 @@ import { User } from '@task-manager/core/db';
 import { UsersService } from '@task-manager/users/api';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import { EmailHelper, DayjsHelper } from '@task-manager/core/helpers';
-import otpGenerator from 'otp-generator';
 import {
   JWT_EXPIRY_DATE,
-  OTP_EXPIRY_TIME,
-  OTP_LENGTH,
+  ACCOUNT_VERIFICATION_EXPIRY_TIME,
   RESET_PASSWORD_EXPIRY_TIME,
 } from '@task-manager/core/constants';
-import crypto from 'crypto';
 import {
   BaseUserDto,
   CreateUserDto,
   ForgotPasswordDto,
   ResetPasswordDto,
-  SendOtpDto,
-  VerifyOtpDto,
+  SendVerificationLinkDto,
+  VerifyAccountDto,
 } from '@task-manager/core/dto';
 import { StateUser } from '@task-manager/users/types';
+import { ManipulateType } from 'dayjs';
 
 @Injectable()
 export class AuthService {
@@ -51,7 +50,7 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    this.sendOTP({ email: userDto.email });
+    this.sendVerificationLink({ email: userDto.email });
 
     return response;
   }
@@ -98,84 +97,78 @@ export class AuthService {
     return user;
   }
 
-  async sendOTP({ email }: SendOtpDto) {
+  async sendVerificationLink({ email }: SendVerificationLinkDto) {
     const user = await this.usersService.findOne({ email });
     if (!user) throw new NotFoundException('User not found');
-    if (user.state === StateUser.CONFIRMED) return;
+    if (user.state === StateUser.CONFIRMED)
+      throw new BadRequestException({
+        message: 'This account is already is verified',
+        code: 'AccountAlreadyVerifiedLinkException',
+        name: 'AccountAlreadyVerifiedLinkException',
+      });
 
-    const newOtp = otpGenerator.generate(OTP_LENGTH, {
-      lowerCaseAlphabets: false,
-      upperCaseAlphabets: false,
-      specialChars: false,
-    });
+    const { hashedToken: token, tokenExpiresAt: tokenExpires } =
+      await this.createToken(ACCOUNT_VERIFICATION_EXPIRY_TIME);
 
-    const otpExpiryTime = DayjsHelper.new().add(OTP_EXPIRY_TIME, 'm').toDate(); //10 min after otp is sent
+    const verificationLink = `${process.env['NX_AUTH_PUBLIC_URL']}/auth/verify-account?token=${token}`;
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedOtp = await bcrypt.hash(newOtp, salt);
-
-    await this.usersService.update(user.id, { otp: hashedOtp, otpExpiryTime });
+    await this.usersService.update(user.id, { token, tokenExpires });
 
     const response = await this.emailHelper.sendEmail({
       to: user?.email as string,
-      subject: 'OTP for TaskM',
-      html: `Activate your account with this OTP: ${newOtp}. This is valid for ${OTP_EXPIRY_TIME} min`,
+      subject: 'TaskM: Account verification',
+      html: `Activate your account with this link: ${verificationLink}. This is valid for ${ACCOUNT_VERIFICATION_EXPIRY_TIME} min`,
     });
     if (!response.accepted.length)
       throw new InternalServerErrorException(
-        'Failed to send to OTP code by mail'
+        'Failed to send the verification link by mail'
       );
 
-    return { message: 'OTP sent successfully' };
+    return { message: 'Verification link sent successfully' };
   }
 
-  async verifyOTP({ email, otp: _otp }: VerifyOtpDto) {
+  async verifyAccount({ token }: VerifyAccountDto) {
     const user = await this.usersService.findOne({
-      email: email,
+      token,
     });
 
-    if (!user) throw new NotFoundException('User not found');
-    if (!user.otp) throw new NotFoundException('There no is OTP generated');
+    if (!user)
+      throw new BadRequestException({
+        message: 'Verification link is invalid',
+        code: 'InvalidVerificationLinkException',
+        name: 'InvalidVerificationLinkException',
+      });
 
-    const hasExpired = DayjsHelper.new(user.otpExpiryTime)
+    const hasExpired = DayjsHelper.new(user.tokenExpires)
       .utc()
       .isBefore(DayjsHelper.new());
 
-    if (hasExpired) throw new BadRequestException('OTP has expired');
+    if (hasExpired)
+      throw new BadRequestException({
+        message: 'Verification link has expired',
+        code: 'ExpiryVerificationLinkException',
+        name: 'ExpiryVerificationLinkException',
+      });
 
-    if (!(await bcrypt.compare(_otp, user.otp))) {
-      throw new BadRequestException('OTP is incorrect');
-    }
-
-    //OTP is correct
     await this.usersService.update(user.id, {
       state: StateUser.CONFIRMED,
-      otp: undefined,
-      otpExpiryTime: undefined,
+      token: undefined,
+      tokenExpires: undefined,
     });
 
     return {
-      message: 'OTP verified successfully',
+      message: 'Account verified successfully',
     };
   }
 
-  private async createPasswordResetToken(userId: number) {
-    const resetToken = crypto.randomBytes(32).toString('hex');
+  private async createToken(expiryTime: number, unit: ManipulateType = 'm') {
+    const token = crypto.randomBytes(32).toString('hex');
 
-    const passwordResetToken = crypto
-      .createHash('sha256')
-      .update(resetToken)
-      .digest('hex');
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
-    const passwordResetExpires = DayjsHelper.new()
-      .add(RESET_PASSWORD_EXPIRY_TIME, 'm')
-      .toDate(); //10 min
+    const tokenExpiresAt = DayjsHelper.new().add(expiryTime, 'm').toDate(); //10 min
 
-    await this.usersService.update(userId, {
-      passwordResetToken,
-      passwordResetExpires,
-    });
-    return passwordResetToken;
+    return { hashedToken, tokenExpiresAt };
   }
 
   async forgotPassword({ email }: ForgotPasswordDto) {
@@ -186,13 +179,21 @@ export class AuthService {
         'There is no user with given email address'
       );
 
-    const resetToken = await this.createPasswordResetToken(user.id);
-    const resetURL = `${process.env['CLIENT_AUTH_URL']}/new-password?token=${resetToken}`;
+    const {
+      hashedToken: passwordResetToken,
+      tokenExpiresAt: passwordResetExpires,
+    } = await this.createToken(RESET_PASSWORD_EXPIRY_TIME);
+
+    await this.usersService.update(user.id, {
+      passwordResetToken,
+      passwordResetExpires,
+    });
+    const resetURL = `${process.env['NX_AUTH_PUBLIC_URL']}/auth/new-password?token=${passwordResetToken}`;
 
     // send mail
     await this.emailHelper.sendEmail({
       to: user?.email as string,
-      subject: 'TaskM: Reset password for ',
+      subject: 'TaskM: Reset password',
       html: `Click to this link to reset your password, it's valid for ${RESET_PASSWORD_EXPIRY_TIME} min: ${resetURL}`,
     });
 
@@ -216,7 +217,7 @@ export class AuthService {
     if (resetToken !== user.passwordResetToken)
       throw new BadRequestException('Invalid password reset link');
 
-    const hasExpired = DayjsHelper.new(user.otpExpiryTime)
+    const hasExpired = DayjsHelper.new(user.passwordResetExpires)
       .utc()
       .isBefore(DayjsHelper.new());
 
@@ -244,5 +245,16 @@ export class AuthService {
       message: 'Password reset successfully',
       token,
     };
+  }
+
+  async updateActiveWorkspace(
+    userId: number,
+    workspaceId: number
+  ): Promise<void> {
+    return this.usersService.updateActiveWorkspace(userId, workspaceId);
+  }
+
+  async getMyInfo(userId: number) {
+    return this.usersService.getUserInfo(userId);
   }
 }
