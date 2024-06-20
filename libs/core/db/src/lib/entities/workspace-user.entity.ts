@@ -25,6 +25,7 @@ export class WorkspaceUser extends AppBaseEntity {
 
   @ManyToOne(() => Workspace, (workspace) => workspace.id, {
     nullable: false,
+    eager: true,
   })
   workspace: Workspace;
 
@@ -49,12 +50,16 @@ export class WorkspaceUser extends AppBaseEntity {
     userId: number,
     roleIds?: number[],
     tokenInvitation?: string,
-    tokenInvitationExpires?: Date
+    tokenInvitationExpires?: Date,
+    workspaceId?: number,
+    state?: StateUser
   ) {
     super();
     this.userId = userId;
     this.tokenInvitation = tokenInvitation;
     this.tokenInvitationExpires = tokenInvitationExpires;
+    if (workspaceId) this.workspaceId = workspaceId;
+    if (state) this.state = state;
     this.buildRolesToSave(roleIds);
   }
 }

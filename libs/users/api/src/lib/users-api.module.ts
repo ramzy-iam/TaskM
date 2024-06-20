@@ -7,13 +7,20 @@ import {
   UsersRepository,
   Workspace,
   WorkspaceUser,
+  WorkspaceUsersRepository,
 } from '@task-manager/core/db';
 import { UsersController } from './users.controller';
+import { WorkspaceUsersService } from '@task-manager/workspace-users/api';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Workspace, WorkspaceUser, Role])],
   controllers: [UsersController],
-  providers: [UsersService, UsersRepository],
+  providers: [
+    UsersService,
+    UsersRepository,
+    WorkspaceUsersService,
+    WorkspaceUsersRepository,
+  ],
   exports: [UsersService],
 })
 export class UsersApiModule {}

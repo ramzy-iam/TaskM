@@ -1,7 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { ROLES } from '@task-manager/core/constants';
-import { WorkspacesRepository } from '@task-manager/core/db';
+import { Workspace, WorkspacesRepository } from '@task-manager/core/db';
 import { CreateWorkspaceDto } from '@task-manager/core/dto';
+import { UtilsHelper } from '@task-manager/core/helpers';
 
 @Injectable()
 export class WorkspacesService {
@@ -9,18 +10,16 @@ export class WorkspacesService {
 
   async create(workspaceDto: CreateWorkspaceDto, userId: number) {
     const existingWorkspace = await this.workspacesRepository.scoped
-      .filterByUserId(userId)
       .filterByName(workspaceDto.name)
       .getOne();
 
     if (existingWorkspace)
-      throw new BadRequestException(
-        `You already have a workspace with the name '${workspaceDto.name}'`
+      throw new ConflictException(
+        `There is already a workspace with the name '${workspaceDto.name}'`
       );
 
     const workspace = this.workspacesRepository.create({
       ...workspaceDto,
-      userId,
     });
 
     workspace.buildWorkspaceUserToSaveWithWorkspace(userId, [ROLES.ADMIN]);
@@ -28,10 +27,26 @@ export class WorkspacesService {
     return this.workspacesRepository.save(workspace);
   }
 
-  getOne(id: number, userId: number) {
-    return this.workspacesRepository.scoped
-      .filterById(id)
-      .filterByUserId(userId)
-      .getOneOrFail();
+  getOne(id: number) {
+    return this.workspacesRepository.scoped.filterById(id).getOneOrFail();
+  }
+
+  async update(id: number, workspaceUpdate: Partial<Workspace>) {
+    await this.workspacesRepository.update(
+      { id },
+      UtilsHelper.convertUndefinedToNull(workspaceUpdate)
+    );
+    return this.getOne(id);
+  }
+
+  async validateBeforeCreateOrUpdate(name: string, workspaceId?: number) {
+    const existingWorkspace = await this.workspacesRepository.scoped
+      .filterByName(name)
+      .getOne();
+
+    if (existingWorkspace && existingWorkspace.id !== workspaceId)
+      throw new ConflictException(
+        `There is already a workspace with the name '${name}'`
+      );
   }
 }

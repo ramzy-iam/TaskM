@@ -1,16 +1,20 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   BaseUserDto,
   CreateUserDto,
   UserDto,
   ForgotPasswordDto,
-  VerifyOtpDto,
-  SendOtpDto,
+  VerifyAccountDto,
+  SendVerificationLinkDto,
   ResetPasswordDto,
+  ChangeActiveWorkspaceDto,
+  UserInfoDto,
 } from '@task-manager/core/dto';
 import { PublicRoute } from './auth.decorator';
 import { Serialize } from '@task-manager/core/interceptors';
+import { CurrentUser } from '@task-manager/core/decorators';
+import { User } from '@task-manager/core/db';
 
 @Controller('auth')
 export class AuthController {
@@ -33,21 +37,21 @@ export class AuthController {
   }
 
   @PublicRoute()
-  @Post('verify')
-  async verifyOtp(
+  @Post('verify-account')
+  async verifyAccount(
     @Body()
-    verifyOtpDto: VerifyOtpDto
+    verifyAccountDto: VerifyAccountDto
   ) {
-    return this.authService.verifyOTP(verifyOtpDto);
+    return this.authService.verifyAccount(verifyAccountDto);
   }
 
   @PublicRoute()
-  @Post('confirm')
+  @Post('confirm-account')
   async sendOtp(
     @Body()
-    sendOtpDto: SendOtpDto
+    dto: SendVerificationLinkDto
   ) {
-    return this.authService.sendOTP(sendOtpDto);
+    return this.authService.sendVerificationLink(dto);
   }
 
   @PublicRoute()
@@ -66,5 +70,19 @@ export class AuthController {
     resetPasswordDto: ResetPasswordDto
   ) {
     return this.authService.resetPassword(resetPasswordDto);
+  }
+
+  @Serialize(UserInfoDto)
+  @Get('get-my-info')
+  async getMyInfo(@CurrentUser() user: User) {
+    return this.authService.getMyInfo(user.id);
+  }
+
+  @Post('update-active-workspace')
+  async updateActiveWorkspace(
+    @CurrentUser() user: User,
+    @Body() payload: ChangeActiveWorkspaceDto
+  ) {
+    return this.authService.updateActiveWorkspace(user.id, payload.workspaceId);
   }
 }

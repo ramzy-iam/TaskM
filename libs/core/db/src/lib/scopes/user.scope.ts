@@ -18,8 +18,14 @@ export class UsersScope extends SelectQueryBuilder<User> {
   }
 
   filterByEmail(email: string): UsersScope {
-    return this.andWhere('Users.email ILIKE :email', {
-      email: `%${email}%`,
+    return this.andWhere('Users.email = :email', {
+      email,
+    });
+  }
+
+  filterByVerificationToken(token: string): UsersScope {
+    return this.andWhere('Users.token = :token', {
+      token,
     });
   }
 }
