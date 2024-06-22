@@ -1,3 +1,3 @@
 export const jwtConstants = {
-  secret: process.env['TASK_MANAGER_AUTH_SECRET'],
+  secret: process.env.AUTH_JWT_SECRET,
 };

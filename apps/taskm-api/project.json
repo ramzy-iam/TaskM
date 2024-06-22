@@ -1,7 +1,7 @@
 {
-  "name": "task-m-api",
+  "name": "taskm-api",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/task-m-api/src",
+  "sourceRoot": "apps/taskm-api/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -9,14 +9,14 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "task-m-api:build"
+        "buildTarget": "taskm-api:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "task-m-api:build:development"
+          "buildTarget": "taskm-api:build:development"
         },
         "production": {
-          "buildTarget": "task-m-api:build:production"
+          "buildTarget": "taskm-api:build:production"
         }
       }
     }

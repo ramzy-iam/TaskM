@@ -110,7 +110,7 @@ export class AuthService {
     const { hashedToken: token, tokenExpiresAt: tokenExpires } =
       await this.createToken(ACCOUNT_VERIFICATION_EXPIRY_TIME);
 
-    const verificationLink = `${process.env['NX_AUTH_PUBLIC_URL']}/auth/verify-account?token=${token}`;
+    const verificationLink = `${process.env.NX_AUTH_PUBLIC_URL}/auth/verify-account?token=${token}`;
 
     await this.usersService.update(user.id, { token, tokenExpires });
 
@@ -188,7 +188,7 @@ export class AuthService {
       passwordResetToken,
       passwordResetExpires,
     });
-    const resetURL = `${process.env['NX_AUTH_PUBLIC_URL']}/auth/new-password?token=${passwordResetToken}`;
+    const resetURL = `${process.env.NX_AUTH_PUBLIC_URL}/auth/new-password?token=${passwordResetToken}`;
 
     // send mail
     await this.emailHelper.sendEmail({
