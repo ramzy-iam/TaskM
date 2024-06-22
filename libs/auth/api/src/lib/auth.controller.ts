@@ -10,11 +10,11 @@ import {
   ResetPasswordDto,
   ChangeActiveWorkspaceDto,
   UserInfoDto,
-} from '@task-manager/core/dto';
+} from '@TaskM/core/dto';
 import { PublicRoute } from './auth.decorator';
-import { Serialize } from '@task-manager/core/interceptors';
-import { CurrentUser } from '@task-manager/core/decorators';
-import { User } from '@task-manager/core/db';
+import { Serialize } from '@TaskM/core/interceptors';
+import { CurrentUser } from '@TaskM/core/decorators';
+import { User } from '@TaskM/core/db';
 
 @Controller('auth')
 export class AuthController {

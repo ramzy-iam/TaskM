@@ -2,7 +2,8 @@ import { Entity, Column, OneToMany, JoinColumn } from 'typeorm';
 
 import { AppBaseEntity } from './base.entity';
 import { Workspace } from './workspace.entity';
-import { StateUser } from '@task-manager/users/types';
+import { StateUser } from '@TaskM/users/types';
+import { WorkspaceUser } from './workspace-user.entity';
 
 @Entity({ name: 'Users' })
 export class User extends AppBaseEntity {
@@ -43,4 +44,11 @@ export class User extends AppBaseEntity {
   @OneToMany(() => Workspace, (workspace) => workspace.id, { nullable: true })
   @JoinColumn({ name: 'activeWorkspaceId' })
   activeWorkspace?: Workspace;
+
+  @OneToMany(() => WorkspaceUser, (workspaceUser) => workspaceUser.user, {
+    cascade: true,
+    nullable: false,
+    eager: true,
+  })
+  workspaceUsers: WorkspaceUser[];
 }

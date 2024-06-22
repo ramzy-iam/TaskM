@@ -1,11 +1,11 @@
 /* eslint-disable */
 export default {
-  displayName: 'task-manager-api',
-  preset: '../../jest.preset.js',
+  displayName: 'authz-types',
+  preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/apps/task-manager-api',
+  coverageDirectory: '../../../coverage/libs/authz/types',
 };

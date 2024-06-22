@@ -1,4 +1,4 @@
-import { PaginationMeta } from '@task-manager/core/types';
+import { PaginationMeta } from '@TaskM/core/types';
 import { IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
 import { ObjectLiteral, SelectQueryBuilder } from 'typeorm';
 

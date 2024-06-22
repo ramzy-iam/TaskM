@@ -8,10 +8,10 @@ import {
   WorkspaceUser,
   WorkspaceUsersRepository,
   WorkspacesRepository,
-} from '@task-manager/core/db';
+} from '@TaskM/core/db';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersService } from '@task-manager/users/api';
-import { WorkspaceUsersService } from '@task-manager/workspace-users/api';
+import { UsersService } from '@TaskM/users/api';
+import { WorkspaceUsersService } from '@TaskM/workspace-users/api';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Workspace, User, WorkspaceUser])],

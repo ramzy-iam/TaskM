@@ -8,9 +8,9 @@ import {
   Workspace,
   WorkspaceUser,
   WorkspaceUsersRepository,
-} from '@task-manager/core/db';
+} from '@TaskM/core/db';
 import { UsersController } from './users.controller';
-import { WorkspaceUsersService } from '@task-manager/workspace-users/api';
+import { WorkspaceUsersService } from '@TaskM/workspace-users/api';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Workspace, WorkspaceUser, Role])],

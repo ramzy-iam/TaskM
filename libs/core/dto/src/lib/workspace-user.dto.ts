@@ -1,4 +1,4 @@
-import { StateUser } from '@task-manager/users/types';
+import { StateUser } from '@TaskM/users/types';
 import { Expose, Type } from 'class-transformer';
 import { RoleDto } from './role.dto';
 

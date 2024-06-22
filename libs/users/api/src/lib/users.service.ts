@@ -4,11 +4,11 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { StateUser, UserListFilter } from '@task-manager/users/types';
-import { User, UsersRepository, Workspace } from '@task-manager/core/db';
-import { DayjsHelper, UtilsHelper } from '@task-manager/core/helpers';
-import { CreateUserDto } from '@task-manager/core/dto';
-import { WorkspaceUsersService } from '@task-manager/workspace-users/api';
+import { StateUser, UserListFilter } from '@TaskM/users/types';
+import { User, UsersRepository, Workspace } from '@TaskM/core/db';
+import { DayjsHelper, UtilsHelper } from '@TaskM/core/helpers';
+import { CreateUserDto } from '@TaskM/core/dto';
+import { WorkspaceUsersService } from '@TaskM/workspace-users/api';
 
 @Injectable()
 export class UsersService {

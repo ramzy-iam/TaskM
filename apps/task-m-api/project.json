@@ -1,7 +1,7 @@
 {
-  "name": "task-manager-api",
+  "name": "task-m-api",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/task-manager-api/src",
+  "sourceRoot": "apps/task-m-api/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -9,14 +9,14 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "task-manager-api:build"
+        "buildTarget": "task-m-api:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "task-manager-api:build:development"
+          "buildTarget": "task-m-api:build:development"
         },
         "production": {
-          "buildTarget": "task-manager-api:build:production"
+          "buildTarget": "task-m-api:build:production"
         }
       }
     }

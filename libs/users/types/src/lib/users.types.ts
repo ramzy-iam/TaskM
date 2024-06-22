@@ -1,8 +1,3 @@
-export enum UserRole {
-  ADMIN = 'ADMIN',
-  LINGUIST = 'LINGUIST',
-}
-
 export enum StateUser {
   UNCONFIRMED = 'UNCONFIRMED',
   CONFIRMED = 'CONFIRMED',

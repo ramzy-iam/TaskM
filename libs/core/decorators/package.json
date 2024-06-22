@@ -1,5 +1,5 @@
 {
-  "name": "@task-manager/core/decorators",
+  "name": "@TaskM/core/decorators",
   "version": "0.0.1",
   "dependencies": {
     "tslib": "^2.3.0"

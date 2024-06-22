@@ -6,7 +6,7 @@ import {
   Unique,
 } from 'typeorm';
 import { WorkspaceUser } from './workspace-user.entity';
-import { UserRole } from '@task-manager/users/types';
+import { UserRole } from '@TaskM/core/types';
 
 @Entity({ name: 'Roles' })
 @Unique(['name'])
@@ -21,7 +21,7 @@ export class Role {
   @Column({
     type: 'enum',
     enum: UserRole,
-    default: UserRole.LINGUIST,
+    default: UserRole.DEFAULT,
     nullable: true,
   })
   name: UserRole;

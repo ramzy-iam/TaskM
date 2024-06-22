@@ -3,7 +3,7 @@ import { AppBaseEntity } from './base.entity';
 import { Workspace } from './workspace.entity';
 import { User } from './user.entity';
 import { Role } from './role.entity';
-import { StateUser } from '@task-manager/users/types';
+import { StateUser } from '@TaskM/users/types';
 
 @Entity({ name: 'WorkspaceUsers' })
 export class WorkspaceUser extends AppBaseEntity {
