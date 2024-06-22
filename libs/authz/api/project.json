@@ -1,0 +1,20 @@
+{
+  "name": "authz-api",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/authz/api/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/authz/api",
+        "tsConfig": "libs/authz/api/tsconfig.lib.json",
+        "packageJson": "libs/authz/api/package.json",
+        "main": "libs/authz/api/src/index.ts",
+        "assets": ["libs/authz/api/*.md"]
+      }
+    }
+  }
+}

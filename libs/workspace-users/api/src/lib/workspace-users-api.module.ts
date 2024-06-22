@@ -6,7 +6,7 @@ import {
   UsersRepository,
   WorkspaceUser,
   WorkspaceUsersRepository,
-} from '@task-manager/core/db';
+} from '@TaskM/core/db';
 
 @Module({
   imports: [TypeOrmModule.forFeature([WorkspaceUser, User])],

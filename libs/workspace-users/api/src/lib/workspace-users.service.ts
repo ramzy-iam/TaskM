@@ -4,18 +4,14 @@ import {
   ConflictException,
   Injectable,
 } from '@nestjs/common';
-import { INVITATION_TOKEN_EXPIRY_TIME } from '@task-manager/core/constants';
+import { INVITATION_TOKEN_EXPIRY_TIME } from '@TaskM/core/constants';
 import {
   UsersRepository,
   WorkspaceUser,
   WorkspaceUsersRepository,
-} from '@task-manager/core/db';
-import {
-  DayjsHelper,
-  EmailHelper,
-  UtilsHelper,
-} from '@task-manager/core/helpers';
-import { StateUser } from '@task-manager/users/types';
+} from '@TaskM/core/db';
+import { DayjsHelper, EmailHelper, UtilsHelper } from '@TaskM/core/helpers';
+import { StateUser } from '@TaskM/users/types';
 
 @Injectable()
 export class WorkspaceUsersService {

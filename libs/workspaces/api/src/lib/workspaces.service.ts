@@ -1,8 +1,8 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { ROLES } from '@task-manager/core/constants';
-import { Workspace, WorkspacesRepository } from '@task-manager/core/db';
-import { CreateWorkspaceDto } from '@task-manager/core/dto';
-import { UtilsHelper } from '@task-manager/core/helpers';
+import { ROLES } from '@TaskM/core/constants';
+import { Workspace, WorkspacesRepository } from '@TaskM/core/db';
+import { CreateWorkspaceDto } from '@TaskM/core/dto';
+import { UtilsHelper } from '@TaskM/core/helpers';
 
 @Injectable()
 export class WorkspacesService {
@@ -22,7 +22,7 @@ export class WorkspacesService {
       ...workspaceDto,
     });
 
-    workspace.buildWorkspaceUserToSaveWithWorkspace(userId, [ROLES.ADMIN]);
+    workspace.buildWorkspaceUserToSaveWithWorkspace(userId, [ROLES.Admin]);
 
     return this.workspacesRepository.save(workspace);
   }

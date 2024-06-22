@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { UsersService } from '@task-manager/users/api';
+import { UsersService } from '@TaskM/users/api';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   User,
   UsersRepository,
   WorkspaceUser,
   WorkspaceUsersRepository,
-} from '@task-manager/core/db';
+} from '@TaskM/core/db';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './jwt.constant';
-import { WorkspaceUsersService } from '@task-manager/workspace-users/api';
+import { WorkspaceUsersService } from '@TaskM/workspace-users/api';
 
 @Module({
   imports: [

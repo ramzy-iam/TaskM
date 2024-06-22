@@ -6,17 +6,17 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { User } from '@task-manager/core/db';
-import { UsersService } from '@task-manager/users/api';
+import { User } from '@TaskM/core/db';
+import { UsersService } from '@TaskM/users/api';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-import { EmailHelper, DayjsHelper } from '@task-manager/core/helpers';
+import { EmailHelper, DayjsHelper } from '@TaskM/core/helpers';
 import {
   JWT_EXPIRY_DATE,
   ACCOUNT_VERIFICATION_EXPIRY_TIME,
   RESET_PASSWORD_EXPIRY_TIME,
-} from '@task-manager/core/constants';
+} from '@TaskM/core/constants';
 import {
   BaseUserDto,
   CreateUserDto,
@@ -24,8 +24,8 @@ import {
   ResetPasswordDto,
   SendVerificationLinkDto,
   VerifyAccountDto,
-} from '@task-manager/core/dto';
-import { StateUser } from '@task-manager/users/types';
+} from '@TaskM/core/dto';
+import { StateUser } from '@TaskM/users/types';
 import { ManipulateType } from 'dayjs';
 
 @Injectable()

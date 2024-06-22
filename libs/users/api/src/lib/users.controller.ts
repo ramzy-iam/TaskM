@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UserFilter } from '@task-manager/users/types';
-import { Serialize } from '@task-manager/core/interceptors';
-import { ConfirmInvitationDto, UserDto } from '@task-manager/core/dto';
-import { PublicRoute } from '@task-manager/core/decorators';
+import { UserFilter } from '@TaskM/users/types';
+import { Serialize } from '@TaskM/core/interceptors';
+import { ConfirmInvitationDto, UserDto } from '@TaskM/core/dto';
+import { PublicRoute } from '@TaskM/core/decorators';
 
 @Controller('users')
 export class UsersController {

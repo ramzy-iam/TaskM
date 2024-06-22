@@ -1,10 +1,11 @@
 {
-  "name": "@task-manager/source",
+  "name": "@TaskM/source",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {},
   "private": true,
   "dependencies": {
+    "@casl/ability": "^6.7.1",
     "@nestjs/common": "^10.0.2",
     "@nestjs/core": "^10.0.2",
     "@nestjs/jwt": "^10.2.0",

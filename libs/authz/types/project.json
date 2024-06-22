@@ -1,0 +1,19 @@
+{
+  "name": "authz-types",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/authz/types/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/authz/types",
+        "main": "libs/authz/types/src/index.ts",
+        "tsConfig": "libs/authz/types/tsconfig.lib.json",
+        "assets": ["libs/authz/types/*.md"]
+      }
+    }
+  }
+}
