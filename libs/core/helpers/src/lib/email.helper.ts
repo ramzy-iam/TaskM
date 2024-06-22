@@ -7,12 +7,12 @@ export class EmailHelper {
 
   private constructor() {
     this.transporter = nodemailer.createTransport({
-      host: process.env['MAIL_HOST'],
-      port: parseInt(process.env['MAIL_PORT'] as string),
+      host: process.env.MAIL_HOST,
+      port: parseInt(process.env.MAIL_PORT as string),
       secure: false, // true for 465, false for other ports,
       auth: {
-        user: process.env['MAIL_USERNAME'],
-        pass: process.env['MAIL_PASSWORD'],
+        user: process.env.MAIL_USERNAME,
+        pass: process.env.MAIL_PASSWORD,
       },
     });
   }
@@ -32,7 +32,7 @@ export class EmailHelper {
     text,
   }: Partial<nodemailer.SendMailOptions>) {
     try {
-      const from = process.env['MAIL_FROM_ADDRESS'];
+      const from = process.env.MAIL_FROM_ADDRESS;
       const mailOptions: nodemailer.SendMailOptions = {
         from,
         to,

@@ -172,7 +172,7 @@ export class WorkspaceUsersService {
     lastName?: string
   ): Promise<any> {
     const invitationLink = `${
-      process.env['NX_AUTH_PUBLIC_URL']
+      process.env.NX_AUTH_PUBLIC_URL
     }/auth/confirm-invitation?token=${tokenInvitation}&workspaceName=${encodeURIComponent(
       workspaceName
     )}`;

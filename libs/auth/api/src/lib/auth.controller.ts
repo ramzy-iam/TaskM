@@ -16,7 +16,7 @@ import { Serialize } from '@TaskM/core/interceptors';
 import { CurrentUser } from '@TaskM/core/decorators';
 import { User } from '@TaskM/core/db';
 
-@Controller('auth')
+@Controller()
 export class AuthController {
   constructor(private authService: AuthService) {}
 
