@@ -1,1 +1,1 @@
-export * from './serializer.interceptor';
+export * from './lib/serializer.interceptor';

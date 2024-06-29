@@ -20,6 +20,7 @@
       "@TaskM/auth/api": ["libs/auth/api/src/index.ts"],
       "@TaskM/authz/api": ["libs/authz/api/src/index.ts"],
       "@TaskM/authz/types": ["libs/authz/types/src/index.ts"],
+      "@TaskM/clients/api": ["libs/clients/api/src/index.ts"],
       "@TaskM/core/constants": ["libs/core/constants/src/index.ts"],
       "@TaskM/core/db": ["libs/core/db/src/index.ts"],
       "@TaskM/core/decorators": ["libs/core/decorators/src/index.ts"],

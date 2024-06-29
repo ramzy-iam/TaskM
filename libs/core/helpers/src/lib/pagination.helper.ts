@@ -2,12 +2,12 @@ import { PaginationMeta } from '@TaskM/core/types';
 import { IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
 import { ObjectLiteral, SelectQueryBuilder } from 'typeorm';
 
-export async function paginateResult<T extends ObjectLiteral, P = undefined>(
+export const paginateResult = async <T extends ObjectLiteral, P = undefined>(
   queryBuilder: SelectQueryBuilder<T>,
   options: IPaginationOptions,
   isRawQuery = false,
   queryBuilderForExtraFields?: SelectQueryBuilder<T>
-): Promise<Pagination<T, PaginationMeta<P>>> {
+): Promise<Pagination<T, PaginationMeta<P>>> => {
   const limit = +options.limit,
     page = +options.page;
 
@@ -29,4 +29,4 @@ export async function paginateResult<T extends ObjectLiteral, P = undefined>(
       currentPage: page,
     },
   };
-}
+};
