@@ -16,7 +16,23 @@ async function bootstrap() {
     new ValidationPipe({
       transform: true,
       whitelist: true,
-      exceptionFactory: (errors) => new BadRequestException(errors),
+      stopAtFirstError: true,
+      exceptionFactory: (errors) => {
+        const result = errors.map((error) => {
+          let message = error.constraints
+            ? error.constraints[Object.keys(error.constraints)[0]]
+            : '';
+
+          message = message.replace(`${error.property} `, '');
+          message = message.charAt(0).toUpperCase() + message.slice(1);
+
+          return {
+            property: error.property,
+            message,
+          };
+        });
+        return new BadRequestException(result);
+      },
     })
   );
 
