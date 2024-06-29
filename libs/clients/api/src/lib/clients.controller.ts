@@ -15,6 +15,7 @@ import {
   UpdateClientDto,
   ClientsFilterDto,
   PaginationDto,
+  ClientPreviewDto,
 } from '@TaskM/core/dto';
 import { Serialize } from '@TaskM/core/interceptors';
 
@@ -43,7 +44,7 @@ export class ClientsController {
     return this.clientsService.update(id, clientDto);
   }
 
-  @Serialize(new PaginationDto<ClientDto>(ClientDto))
+  @Serialize(new PaginationDto<ClientPreviewDto>(ClientPreviewDto))
   @Get()
   findAll(@Query() filters: ClientsFilterDto) {
     return this.clientsService.findAll(filters);

@@ -74,13 +74,14 @@ export class UpdateClientDto {
 
 export class ClientsFilterDto extends BasicFilterDto {}
 
-export class ClientDto extends BasicDto {
+export class ClientPreviewDto extends BasicDto {
   @Expose()
   name: string;
 
   @Expose()
   code: string;
-
+}
+export class ClientDto extends ClientPreviewDto {
   @Expose()
   paymentDueDays: number;
 
