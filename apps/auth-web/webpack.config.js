@@ -24,6 +24,7 @@ function getClientEnvironment() {
 module.exports = (config, options, context) => {
   // Overwrite the mode set by Angular if the NODE_ENV is set
   config.mode = process.env.NODE_ENV || config.mode;
+  config.plugins = config.plugins || [];
   config.plugins.push(new webpack.DefinePlugin(getClientEnvironment()));
   return config;
 };

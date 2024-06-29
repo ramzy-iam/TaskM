@@ -27,6 +27,8 @@
       "@TaskM/core/helpers": ["libs/core/helpers/src/index.ts"],
       "@TaskM/core/interceptors": ["libs/core/interceptors/src/index.ts"],
       "@TaskM/core/types": ["libs/core/types/src/index.ts"],
+      "@TaskM/shared/admin-layout": ["libs/shared/admin-layout/src/index.ts"],
+      "@TaskM/shared/layout": ["libs/shared/layout/src/index.ts"],
       "@TaskM/users/api": ["libs/users/api/src/index.ts"],
       "@TaskM/users/types": ["libs/users/types/src/index.ts"],
       "@TaskM/workspace-users/api": ["libs/workspace-users/api/src/index.ts"],

@@ -1,2 +1,2 @@
-export * from './lib/constants';
-export * from './lib/authz.constants';
+export * from './constants';
+export * from './authz.constants';

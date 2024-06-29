@@ -252,6 +252,15 @@
     vite "5.2.11"
     watchpack "2.4.1"
 
+"@angular/cdk@^18.0.4":
+  version "18.0.4"
+  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-18.0.4.tgz#8dc5f2d05dd88b11de722bba634e604b7b800d6e"
+  integrity sha512-OCG1EGv/nyZYGcSu7y6IAuarC5gZcZYhhvEQsgMUDrf1TGRSa+0dBN5W2HxRWKs6NsGgDjW1VcK+AC85PYLXPA==
+  dependencies:
+    tslib "^2.3.0"
+  optionalDependencies:
+    parse5 "^7.1.2"
+
 "@angular/cli@~18.0.0":
   version "18.0.5"
   resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-18.0.5.tgz#20480490ff410f5e74c5565d4c5de98057f4ed68"
@@ -2458,6 +2467,27 @@
   integrity sha512-H738bJyydK4SQkRCTeh1aFBxoO1E9xdL/HaLGThwrqN95os5mEyAtK7BLADOS+vldP4jDZ2VQPLj4epWwRqCeQ==
   dependencies:
     uuid "9.0.1"
+
+"@ng-icons/core@^28.0.0":
+  version "28.0.0"
+  resolved "https://registry.yarnpkg.com/@ng-icons/core/-/core-28.0.0.tgz#4de3f4dc17fefacfba7a26577129f2816d37dad5"
+  integrity sha512-rp4W6mHqm8n0JcLnAMpruluw2cWcKJjzKtlwzBVCzyMlOHI4A/YIPZZDYdOLAayIHr1sz1ZNCAYFHSEpixF+hQ==
+  dependencies:
+    tslib "^2.2.0"
+
+"@ng-icons/feather-icons@^28.0.0":
+  version "28.0.0"
+  resolved "https://registry.yarnpkg.com/@ng-icons/feather-icons/-/feather-icons-28.0.0.tgz#c6560d2c4f9f94e32c0dcf08b8fa9e07fdc1bb4f"
+  integrity sha512-l5xNgGtC493RPhkoBlI5krIqMpUJiTiLI2H99T+nEQQfWCbSriMDN7YOKHDdWj4td1K5wyh6tpBdFoPaEPVF1w==
+  dependencies:
+    tslib "^2.2.0"
+
+"@ng-icons/heroicons@^28.0.0":
+  version "28.0.0"
+  resolved "https://registry.yarnpkg.com/@ng-icons/heroicons/-/heroicons-28.0.0.tgz#093e612b2a1d3e314269c10ed9bb16a7591a0f49"
+  integrity sha512-RSGdk1BcCBvlunZK0vysKSeaZueBkEDhSrbEptF+7w2vaOph2erJE9VyUGYhCXxVQ8K1sEkX15w6dxMb6GBaiA==
+  dependencies:
+    tslib "^2.2.0"
 
 "@ngtools/webpack@18.0.5":
   version "18.0.5"
@@ -9373,7 +9403,7 @@ parse5@^6.0.1:
   resolved "https://registry.yarnpkg.com/parse5/-/parse5-6.0.1.tgz#e1a1c085c569b3dc08321184f19a39cc27f7c30b"
   integrity sha512-Ofn/CTFzRGTTxwpNEs9PP93gXShHcTq255nzRYSKe8AkVpZY7e1fpmTfOyoIvjP5HG7Z2ZM7VS9PPhQGW2pOpw==
 
-parse5@^7.0.0, parse5@^7.1.1:
+parse5@^7.0.0, parse5@^7.1.1, parse5@^7.1.2:
   version "7.1.2"
   resolved "https://registry.yarnpkg.com/parse5/-/parse5-7.1.2.tgz#0736bebbfd77793823240a23b7fc5e010b7f8e32"
   integrity sha512-Czj1WaSVpaoj0wbhMzLmWD69anp2WH7FXMB9n1Sy8/ZFF9jolSQVMu1Ij5WIyGmcBmhk7EOndpO4mIpihVqAXw==
@@ -9970,6 +10000,13 @@ pretty-format@^29.0.0, pretty-format@^29.7.0:
     "@jest/schemas" "^29.6.3"
     ansi-styles "^5.0.0"
     react-is "^18.0.0"
+
+primeng@^17.18.1:
+  version "17.18.1"
+  resolved "https://registry.yarnpkg.com/primeng/-/primeng-17.18.1.tgz#bd8957acf2f840487e6587773ffb5dbb4d28fb15"
+  integrity sha512-pMuXOgLQw5Xz0w9d3YTp2DAlYR8svK1Jz5gSWAhk6AyH7u7akwL1JX96RXVzLS8v2YeLUCvkMM+QROOvR3yKug==
+  dependencies:
+    tslib "^2.3.0"
 
 proc-log@^3.0.0:
   version "3.0.0"
@@ -11340,7 +11377,7 @@ tslib@2.6.2, tslib@^2.1.0, tslib@^2.3.0, tslib@^2.4.0, tslib@^2.5.0, tslib@^2.6.
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.2.tgz#703ac29425e7b37cd6fd456e92404d46d1f3e4ae"
   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
 
-tslib@^2.0.0:
+tslib@^2.0.0, tslib@^2.2.0:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.3.tgz#0438f810ad7a9edcde7a241c3d80db693c8cbfe0"
   integrity sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ==

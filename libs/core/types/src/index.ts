@@ -1,2 +1,2 @@
-export * from './lib/pagination.type';
-export * from './lib/authz.type';
+export * from './pagination.type';
+export * from './authz.type';

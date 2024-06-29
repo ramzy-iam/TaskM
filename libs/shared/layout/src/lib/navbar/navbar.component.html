@@ -1,0 +1,30 @@
+<header
+  class="bg-white drop-shadow-xl h-10 flex w-full fixed top-0 left-0 right-0 z-50"
+>
+  <div class="flex items-center mx-auto">
+    <h1
+      class="text-secondary text-[20.5714px] font-[500] text-xl tracking-[0.154286px]"
+    >
+      TaskM
+    </h1>
+  </div>
+  <button
+    type="submit"
+    class="fixed right-0 flex items-center justify-center mt-1 mb-1 mr-10"
+    (click)="toggleUserMenu()"
+    cdkOverlayOrigin
+    #trigger="cdkOverlayOrigin"
+  >
+    John Doe
+  </button>
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="trigger"
+    [cdkConnectedOverlayOpen]="showProfil"
+    [cdkConnectedOverlayOffsetY]="0"
+    (backdropClick)="toggleUserMenu()"
+    [cdkConnectedOverlayHasBackdrop]="true"
+    [cdkConnectedOverlayBackdropClass]="'opacity-0'"
+  >
+  </ng-template>
+</header>

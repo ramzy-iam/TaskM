@@ -1,5 +1,22 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer tailwind-base,reset, primeng, tailwind-utilities;
 
-/* You can add global styles to this file, and also import other style files */
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer reset {
+  *:focus {
+    box-shadow: none !important;
+  }
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+
+@import '@angular/cdk/overlay-prebuilt.css';
+
+* {
+  scrollbar-color: #babac0 transparent;
+}
