@@ -1,4 +1,4 @@
-import { Expose, Transform, Type } from 'class-transformer';
+import { Expose, Transform } from 'class-transformer';
 import {
   IsString,
   IsNotEmpty,
@@ -8,7 +8,6 @@ import {
   IsEmail,
   IsEnum,
   IsPositive,
-  IsNumber,
   IsUppercase,
 } from 'class-validator';
 import { BasicDto, BasicFilterDto } from './basic.dto';
