@@ -1,16 +1,5 @@
-import {
-  Exclude,
-  Expose,
-  Transform,
-  Type,
-  plainToInstance,
-} from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
 
-function TypeFactory<T>(type: new () => T): PropertyDecorator {
-  return Transform(({ value }) => {
-    return value.map((item: T) => plainToInstance(type, item));
-  });
-}
 export class MetaDto {
   @Expose()
   totalItems: number;

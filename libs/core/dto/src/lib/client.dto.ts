@@ -10,7 +10,7 @@ import {
   IsPositive,
   IsUppercase,
 } from 'class-validator';
-import { BasicDto, BasicFilterDto } from './basic.dto';
+import { BaseDto, BaseFilterDto } from './base.dto';
 import { CurrencyEnum, PaymentMethodEnum } from '@TaskM/core/constants';
 import { CastHelper } from '@TaskM/core/helpers';
 
@@ -71,9 +71,9 @@ export class UpdateClientDto {
   code?: string;
 }
 
-export class ClientsFilterDto extends BasicFilterDto {}
+export class ClientsFilterDto extends BaseFilterDto {}
 
-export class ClientPreviewDto extends BasicDto {
+export class ClientPreviewDto extends BaseDto {
   @Expose()
   name: string;
 

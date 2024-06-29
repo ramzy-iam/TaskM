@@ -4,7 +4,7 @@ import { OrderType } from '@TaskM/core/types';
 import { Expose, Transform } from 'class-transformer';
 import { IsOptional, IsPositive, IsString, Max, Min } from 'class-validator';
 
-export class BasicDto {
+export class BaseDto {
   @Expose()
   id: number;
 
@@ -15,7 +15,7 @@ export class BasicDto {
   updatedAt?: string;
 }
 
-export class BasicFilterDto {
+export class BaseFilterDto {
   @IsOptional()
   @IsString()
   query?: string;
