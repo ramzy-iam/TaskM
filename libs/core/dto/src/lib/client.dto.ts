@@ -11,7 +11,7 @@ import {
   IsUppercase,
 } from 'class-validator';
 import { BaseDto, BaseFilterDto } from './base.dto';
-import { CurrencyEnum, PaymentMethodEnum } from '@TaskM/core/constants';
+import { Currency, PaymentMethod } from '@TaskM/core/constants';
 import { CastHelper } from '@TaskM/core/helpers';
 
 export class CreateClientDto {
@@ -44,12 +44,12 @@ export class CreateClientDto {
   billingPeriod: string;
 
   @Transform(({ value }) => CastHelper.trim(value))
-  @IsEnum(CurrencyEnum)
-  currency: CurrencyEnum;
+  @IsEnum(Currency)
+  currency: Currency;
 
   @Transform(({ value }) => CastHelper.trim(value))
-  @IsEnum(PaymentMethodEnum)
-  paymentMethod: PaymentMethodEnum;
+  @IsEnum(PaymentMethod)
+  paymentMethod: PaymentMethod;
 }
 
 export class UpdateClientDto {
@@ -91,8 +91,8 @@ export class ClientDto extends ClientPreviewDto {
   billingPeriod: string;
 
   @Expose()
-  currency: CurrencyEnum;
+  currency: Currency;
 
   @Expose()
-  paymentMethod: PaymentMethodEnum;
+  paymentMethod: PaymentMethod;
 }

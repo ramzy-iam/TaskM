@@ -1,6 +1,6 @@
 import { Column, Entity, Unique } from 'typeorm';
 import { AppBaseEntity } from './base.entity';
-import { CurrencyEnum, PaymentMethodEnum } from '@TaskM/core/constants';
+import { Currency, PaymentMethod } from '@TaskM/core/constants';
 
 @Entity({ name: 'Clients' })
 @Unique(['code'])
@@ -22,13 +22,13 @@ export class Client extends AppBaseEntity {
 
   @Column({
     type: 'enum',
-    enum: CurrencyEnum,
+    enum: Currency,
   })
-  currency: CurrencyEnum;
+  currency: Currency;
 
   @Column({
     type: 'enum',
-    enum: PaymentMethodEnum,
+    enum: PaymentMethod,
   })
-  paymentMethod: PaymentMethodEnum;
+  paymentMethod: PaymentMethod;
 }

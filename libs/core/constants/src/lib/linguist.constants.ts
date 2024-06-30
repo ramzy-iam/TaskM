@@ -1,11 +1,11 @@
-export enum CurrencyEnum {
+export enum Currency {
   USD = 'USD',
   EURO = 'EURO',
   CAD = 'CAD',
   XAF = 'XAF',
 }
 
-export enum TaskTypeEnum {
+export enum TaskType {
   TRA = 'TRA',
   EDIT = 'EDIT',
   PROOF = 'PROOF',
@@ -18,7 +18,7 @@ export enum TaskTypeEnum {
   VO = 'VO',
 }
 
-export enum PaymentMethodEnum {
+export enum PaymentMethod {
   PAYONNEER = 'Payonneer',
   PAYPAL = 'PayPal',
   BANK = 'Bank',
@@ -27,14 +27,14 @@ export enum PaymentMethodEnum {
   CASH = 'Cash',
 }
 
-export enum UnitEnum {
+export enum Unit {
   WORD = 'word',
   PAGE = 'page',
   MINUTE = 'minute',
   HOUR = 'hour',
 }
 
-export enum ProjectStatusEnum {
+export enum ProjectStatus {
   DELIVERED_WAITING_QA = 'Delivered & waiting QA',
   COMPLETED = 'Completed',
   NOT_STARTED = 'Not Started',
@@ -44,13 +44,13 @@ export enum ProjectStatusEnum {
   ON_HOLD = 'On hold',
 }
 
-export enum TaskStatusEnum {
+export enum TaskStatus {
   NOT_STARTED = 'Not Started',
   IN_PROGRESS = 'In progress',
   COMPLETED = 'Completed',
 }
 
-export enum LanguageEnum {
+export enum Language {
   'En-Fr' = 'En-Fr',
   'EnUK-FrFR' = 'EnUK-FrFR',
   'EnUK-FrCA' = 'EnUK-FrCA',
@@ -74,94 +74,94 @@ export enum LanguageEnum {
 }
 
 export const LANGUAGES_WITH_LABEL = [
-  { name: 'English - French', code: LanguageEnum['En-Fr'] },
+  { name: 'English - French', code: Language['En-Fr'] },
   {
     name: 'English (United Kingdom) - French (France)',
-    code: LanguageEnum['EnUK-FrFR'],
+    code: Language['EnUK-FrFR'],
   },
   {
     name: 'English (United Kingdom) - French (Canada)',
-    code: LanguageEnum['EnUK-FrCA'],
+    code: Language['EnUK-FrCA'],
   },
   {
     name: 'English (United States) - French (France)',
-    code: LanguageEnum['EnUS-FrFR'],
+    code: Language['EnUS-FrFR'],
   },
   {
     name: 'English (United States) - French (Canada)',
-    code: LanguageEnum['EnUS-FrCA'],
+    code: Language['EnUS-FrCA'],
   },
 
-  { name: 'French - English ', code: LanguageEnum['Fr-En'] },
+  { name: 'French - English ', code: Language['Fr-En'] },
   {
     name: 'French (France) - English (United Kingdom)',
-    code: LanguageEnum['FrFR-EnUK'],
+    code: Language['FrFR-EnUK'],
   },
   {
     name: 'French (France) - English (United States)',
-    code: LanguageEnum['FrFR-EnUS'],
+    code: Language['FrFR-EnUS'],
   },
   {
     name: 'French (Canada) - English (United Kingdom)',
-    code: LanguageEnum['FrCA-EnUK'],
+    code: Language['FrCA-EnUK'],
   },
   {
     name: 'French (Canada) - English (United States)',
-    code: LanguageEnum['FrCA-EnUS'],
+    code: Language['FrCA-EnUS'],
   },
   {
     name: 'French (Canada) - English (Canada)',
-    code: LanguageEnum['FrCA-EnCA'],
+    code: Language['FrCA-EnCA'],
   },
 
-  { name: 'Spanish - French   ', code: LanguageEnum['Spa-Fr'] },
-  { name: 'Spanish - French (France)   ', code: LanguageEnum['Spa-FrFR'] },
-  { name: 'Spanish - French (Canada)   ', code: LanguageEnum['Spa-FrCA'] },
+  { name: 'Spanish - French   ', code: Language['Spa-Fr'] },
+  { name: 'Spanish - French (France)   ', code: Language['Spa-FrFR'] },
+  { name: 'Spanish - French (Canada)   ', code: Language['Spa-FrCA'] },
 
-  { name: 'German - French   ', code: LanguageEnum['Ger-Fr'] },
-  { name: 'German - French (France)   ', code: LanguageEnum['Ger-FrFR'] },
-  { name: 'German - French (Canada)', code: LanguageEnum['Ger- FrCA'] },
+  { name: 'German - French   ', code: Language['Ger-Fr'] },
+  { name: 'German - French (France)   ', code: Language['Ger-FrFR'] },
+  { name: 'German - French (Canada)', code: Language['Ger- FrCA'] },
 ];
 
 export const TASK_TYPES_WITH_LABEL = [
   {
     name: 'Translation',
-    code: TaskTypeEnum.TRA,
+    code: TaskType.TRA,
   },
   {
     name: 'Editing',
-    code: TaskTypeEnum.EDIT,
+    code: TaskType.EDIT,
   },
   {
     name: 'Proofreading',
-    code: TaskTypeEnum.PROOF,
+    code: TaskType.PROOF,
   },
   {
     name: 'Translation, Editing & Proofreading',
-    code: TaskTypeEnum.TEP,
+    code: TaskType.TEP,
   },
   {
     name: 'Transcreation',
-    code: TaskTypeEnum.TRCEA,
+    code: TaskType.TRCEA,
   },
   {
     name: 'Transcription',
-    code: TaskTypeEnum.TRANS,
+    code: TaskType.TRANS,
   },
   {
     name: 'Machine Post Editing',
-    code: TaskTypeEnum.MPTE,
+    code: TaskType.MPTE,
   },
   {
     name: 'Subtitling',
-    code: TaskTypeEnum.SUBT,
+    code: TaskType.SUBT,
   },
   {
     name: 'Desktop Publishing',
-    code: TaskTypeEnum.DTP,
+    code: TaskType.DTP,
   },
   {
     name: 'Voice Over',
-    code: TaskTypeEnum.VO,
+    code: TaskType.VO,
   },
 ];
