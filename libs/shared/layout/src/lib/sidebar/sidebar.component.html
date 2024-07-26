@@ -1,7 +1,7 @@
 <aside
   [ngClass]="{
     'translate-x-0': isOpen,
-    '-translate-x-full': !isOpen
+    '-translate-x-full': !isOpen,
   }"
   class="fixed top-0 left-0 z-40 pt-16 flex h-screen w-64 flex-col overflow-y-hidden bg-black transition-transform duration-300 ease-linear dark:bg-boxdark"
 >
@@ -11,23 +11,23 @@
     <nav class="mt-5 py-3 pr-6 pl-3 lg:mt-9">
       <div class="mb-6 flex flex-col gap-1.5">
         @for (link of links; track $index) {
-        <a
-          [routerLink]="[link.link]"
-          class="group relative flex items-center gap-2.5 rounded-sm  p-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4"
-          routerLinkActive="group is-active"
-          [routerLinkActiveOptions]="{ exact: false }"
-          #rla="routerLinkActive"
-          [ngClass]="{
-            'bg-graydark dark:bg-meta-4': rla.isActive,
-          }"
-        >
-          <div
-            class="rounded-full flex justify-center items-center group-[.is-active]:text-white group-[.is-active]:bg-primary-color text-accent-base group-hover:bg-primary-color group-hover:text-white transition-all duration-300 ease-in-out"
+          <a
+            [routerLink]="[link.link]"
+            class="group relative flex items-center gap-2.5 rounded-sm p-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4"
+            routerLinkActive="group is-active"
+            [routerLinkActiveOptions]="{ exact: false }"
+            #rla="routerLinkActive"
+            [ngClass]="{
+              'bg-graydark dark:bg-meta-4': rla.isActive,
+            }"
           >
-            <ng-icon [name]="link.icon" size="20"></ng-icon>
-          </div>
-          <span>{{ link.label }}</span>
-        </a>
+            <div
+              class="rounded-full flex justify-center items-center group-[.is-active]:text-white group-[.is-active]:bg-primary-color text-accent-base group-hover:bg-primary-color group-hover:text-white transition-all duration-300 ease-in-out"
+            >
+              <ng-icon [name]="link.icon" size="20"></ng-icon>
+            </div>
+            <span>{{ link.label }}</span>
+          </a>
         }
       </div>
     </nav>
