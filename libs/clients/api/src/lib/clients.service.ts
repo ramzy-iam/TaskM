@@ -45,12 +45,14 @@ export class ClientsService {
       );
   }
 
-  findAll(filters?: ClientsFilterDto) {
+  findAll<P = Client[]>(filters?: ClientsFilterDto) {
     const query = this.clientsRepository.scoped;
     if (filters?.query) query.filterByName(filters?.query);
 
-    return filters?.page && filters?.limit
-      ? paginateResult(query, { page: filters?.page, limit: filters.limit })
-      : query.getMany();
+    return (
+      filters?.page && filters?.limit
+        ? paginateResult(query, { page: filters?.page, limit: filters.limit })
+        : query.getMany()
+    ) as Promise<P>;
   }
 }

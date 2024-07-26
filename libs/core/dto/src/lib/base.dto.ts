@@ -27,7 +27,7 @@ export class BaseFilterDto {
   )
   @IsPositive()
   @Min(PAGINATION.DEFAULT_PAGE)
-  page: number;
+  page?: number;
 
   @Transform(({ value }) =>
     CastHelper.toNumber(value, {
@@ -37,9 +37,22 @@ export class BaseFilterDto {
   @IsPositive()
   @Min(1)
   @Max(PAGINATION.MAX_LIMIT)
-  limit: number;
+  limit?: number;
 
   @Transform(({ value }) => CastHelper.toOrder(value))
   @IsOptional()
   order?: OrderType;
+
+  @Transform(({ value }) => CastHelper.trim(value))
+  @IsOptional()
+  orderField?: string;
+
+  @Transform(({ value }) => CastHelper.toBoolean(value))
+  @IsOptional()
+  withDeleted?: boolean;
+
+  @Transform(({ value }) => CastHelper.toNumber(value))
+  @IsOptional()
+  @IsPositive()
+  clientId?: number;
 }

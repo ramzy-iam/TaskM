@@ -1,9 +1,9 @@
 /* eslint-disable */
 export default {
-  displayName: 'auth-web',
+  displayName: 'taskm-client',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/apps/auth-web',
+  coverageDirectory: '../../coverage/apps/taskm-client',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

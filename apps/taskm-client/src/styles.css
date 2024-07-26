@@ -1,0 +1,49 @@
+@layer tailwind-base,reset, primeng, tailwind-components, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer reset {
+  *:focus {
+    box-shadow: none !important;
+  }
+}
+
+@layer tailwind-components {
+  @tailwind components;
+}
+@layer tailwind-utilities {
+  @tailwind utilities;
+}
+
+@layer tailwind-base {
+  body {
+    @apply relative z-1 bg-whiten font-inter text-base font-normal text-body;
+  }
+}
+
+@layer tailwind-utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .chat-height {
+    @apply h-[calc(100vh_-_8.125rem)] lg:h-[calc(100vh_-_5.625rem)];
+  }
+  .inbox-height {
+    @apply h-[calc(100vh_-_8.125rem)] lg:h-[calc(100vh_-_5.625rem)];
+  }
+}
+
+@import '@angular/cdk/overlay-prebuilt.css';
+
+* {
+  scrollbar-color: #babac0 transparent;
+}

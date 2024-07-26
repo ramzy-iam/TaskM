@@ -4,6 +4,7 @@ import { Workspace } from './workspace.entity';
 import { User } from './user.entity';
 import { Role } from './role.entity';
 import { StateUser } from '@TaskM/users/types';
+import { DateTzColumn } from './db.decorator';
 
 @Entity({ name: 'WorkspaceUsers' })
 export class WorkspaceUser extends AppBaseEntity {
@@ -13,7 +14,7 @@ export class WorkspaceUser extends AppBaseEntity {
   @Column({ nullable: true })
   tokenInvitation?: string;
 
-  @Column({ nullable: true, type: 'timestamptz' })
+  @DateTzColumn({ nullable: true })
   tokenInvitationExpires?: Date;
 
   @Column({

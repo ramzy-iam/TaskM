@@ -4,6 +4,7 @@ import { AppBaseEntity } from './base.entity';
 import { Workspace } from './workspace.entity';
 import { StateUser } from '@TaskM/users/types';
 import { WorkspaceUser } from './workspace-user.entity';
+import { DateTzColumn } from './db.decorator';
 
 @Entity({ name: 'Users' })
 export class User extends AppBaseEntity {
@@ -22,13 +23,13 @@ export class User extends AppBaseEntity {
   @Column({ nullable: true })
   token: string;
 
-  @Column({ nullable: true, type: 'timestamptz' })
+  @DateTzColumn({ nullable: true })
   tokenExpires: Date;
 
   @Column({ nullable: true })
   passwordResetToken: string;
 
-  @Column({ nullable: true, type: 'timestamptz' })
+  @DateTzColumn({ nullable: true })
   passwordResetExpires: Date;
 
   @Column({

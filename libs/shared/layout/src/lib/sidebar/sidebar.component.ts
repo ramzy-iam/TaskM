@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Link } from './link';
 import { RouterModule } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { featherUsers } from '@ng-icons/feather-icons';
+import { heroBuildingOffice,heroSquares2x2, heroPresentationChartBar, heroUserGroup,heroQueueList,  } from '@ng-icons/heroicons/outline';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,17 +11,45 @@ import { featherUsers } from '@ng-icons/feather-icons';
   imports: [CommonModule, RouterModule, NgIconComponent],
   providers: [
     provideIcons({
-      featherUsers,
+      heroBuildingOffice,
+      heroSquares2x2,
+      heroPresentationChartBar,
+      heroUserGroup,
+      heroQueueList
     }),
   ],
   templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent {
+  @Input() isOpen = true;
+
+
   links: Link[] = [
+    // {
+    //   icon: 'heroSquares2x2',
+    //   label: 'Dashboard',
+    //   link: 'dashboard',
+    // },
     {
-      icon: 'featherUsers',
-      label: 'Linguist',
-      link: 'members',
+      icon: 'heroBuildingOffice',
+      label: 'Clients',
+      link: 'clients',
+    },
+    {
+      icon: 'heroPresentationChartBar',
+      label: 'Projects',
+      link: 'projects',
+    },
+
+    {
+      icon: 'heroQueueList',
+      label: 'Tasks',
+      link: 'tasks',
+    },
+    {
+      icon: 'heroUserGroup',
+      label: 'Linguists',
+      link: 'linguists',
     },
   ];
 }

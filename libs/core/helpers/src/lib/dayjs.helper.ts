@@ -6,7 +6,9 @@ dayjs.extend(utc);
 dayjs.extend(duration);
 
 export class DayjsHelper {
-  static new(date?: string | Date | dayjs.Dayjs) {
-    return date ? dayjs(date).utc() : dayjs().utc();
+  static new(date?: dayjs.ConfigType, utc = true
+
+  ) {
+    return utc ? dayjs(date, { utc: true }).utc() : dayjs(date, { utc: true });
   }
 }

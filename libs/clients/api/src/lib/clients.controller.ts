@@ -18,6 +18,8 @@ import {
   ClientPreviewDto,
 } from '@TaskM/core/dto';
 import { Serialize } from '@TaskM/core/interceptors';
+import { Pagination } from 'nestjs-typeorm-paginate';
+import { Client } from '@TaskM/core/db';
 
 @Controller('clients')
 export class ClientsController {
@@ -41,12 +43,13 @@ export class ClientsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() clientDto: UpdateClientDto
   ) {
+    return clientDto;
     return this.clientsService.update(id, clientDto);
   }
 
   @Serialize(new PaginationDto<ClientPreviewDto>(ClientPreviewDto))
   @Get()
   findAll(@Query() filters: ClientsFilterDto) {
-    return this.clientsService.findAll(filters);
+    return this.clientsService.findAll<Pagination<Client>>(filters);
   }
 }

@@ -1,7 +1,21 @@
-<app-navbar></app-navbar>
-<main class="relative md:grid grid-cols-[2fr_10fr] mx-5 mt-10">
-  <app-sidebar></app-sidebar>
-  <div class="">
-    <router-outlet></router-outlet>
-  </div>
-</main>
+<div>
+<app-header (toggleSidebarEvent)="toggleSidebar()"></app-header>
+<div class="pt-16 flex overflow-hidden"
+>
+<app-sidebar [isOpen]="isSidebarOpen"></app-sidebar>
+<div class="  h-full w-full overflow-y-auto relative transition-all duration-300 ease-linear" [ngClass]="{
+  'ml-64':isSidebarOpen,
+  'ml-0':!isSidebarOpen,
+}" >
+  <main>
+    <div class="px-3">
+      <div class="p-3">
+        <div class="w-full h-screen bg-white"></div>
+      <router-outlet></router-outlet>
+      </div>
+    </div>
+  </main>
+
+</div>
+</div>
+</div>
