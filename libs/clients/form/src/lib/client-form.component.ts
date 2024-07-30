@@ -180,7 +180,7 @@ export class ClientFormComponent
         errorMessage = error.error.message;
       } else if (Array.isArray(error.error.message)) {
         for (const message of error.error.message) {
-          errorMessage = message.message;
+          errorMessage = `${message.property} ${message.message}`;
           break;
         }
       }

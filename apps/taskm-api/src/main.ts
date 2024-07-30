@@ -24,7 +24,6 @@ async function bootstrap() {
             : '';
 
           message = message.replace(`${error.property} `, '');
-          message = message.charAt(0).toUpperCase() + message.slice(1);
 
           return {
             property: error.property,
