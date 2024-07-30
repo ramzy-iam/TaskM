@@ -111,6 +111,10 @@ export class ClientFormComponent
   }
 
   onSubmit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     this.loading = true;
 
     const operation = this.client?.id

@@ -70,6 +70,32 @@ export class UpdateClientDto {
   @MinLength(2)
   @IsOptional()
   code?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => CastHelper.toNumber(value))
+  @IsPositive()
+  paymentDueDays?: number;
+
+  @IsOptional()
+  @Transform(({ value }) => CastHelper.trim(value))
+  @IsEmail()
+  billingEmailAddress?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => CastHelper.trim(value))
+  @IsString()
+  @IsNotEmpty()
+  billingPeriod?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => CastHelper.trim(value))
+  @IsEnum(Currency)
+  currency?: Currency;
+
+  @IsOptional()
+  @Transform(({ value }) => CastHelper.trim(value))
+  @IsEnum(PaymentMethod)
+  paymentMethod?: PaymentMethod;
 }
 
 export class ClientsFilterDto extends BaseFilterDto {
