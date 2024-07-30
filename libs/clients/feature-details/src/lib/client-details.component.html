@@ -11,9 +11,8 @@
     <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
     <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
   </div>
-}
-@if (client$ | async; as client) {
-  @if (!loading) {
+} @else {
+  @if (client$ | async; as client) {
     <h1
       class="text-[24px] text-black-2 font-semibold border-b border-gray pb-2"
     >
