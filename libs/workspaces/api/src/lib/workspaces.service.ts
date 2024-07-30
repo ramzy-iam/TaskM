@@ -15,7 +15,7 @@ export class WorkspacesService {
 
     if (existingWorkspace)
       throw new ConflictException(
-        `There is already a workspace with the name '${workspaceDto.name}'`
+        `There is already a workspace with the name '${workspaceDto.name}'`,
       );
 
     const workspace = this.workspacesRepository.create({
@@ -27,14 +27,14 @@ export class WorkspacesService {
     return this.workspacesRepository.save(workspace);
   }
 
-  getOne(id: number) {
+  getOne(id: string) {
     return this.workspacesRepository.scoped.filterById(id).getOneOrFail();
   }
 
-  async update(id: number, workspaceUpdate: Partial<Workspace>) {
+  async update(id: string, workspaceUpdate: Partial<Workspace>) {
     await this.workspacesRepository.update(
       { id },
-      UtilsHelper.convertUndefinedToNull(workspaceUpdate)
+      UtilsHelper.convertUndefinedToNull(workspaceUpdate),
     );
     return this.getOne(id);
   }
@@ -46,7 +46,7 @@ export class WorkspacesService {
 
     if (existingWorkspace && existingWorkspace.id !== workspaceId)
       throw new ConflictException(
-        `There is already a workspace with the name '${name}'`
+        `There is already a workspace with the name '${name}'`,
       );
   }
 }

@@ -9,6 +9,7 @@ import {
   IsEnum,
   IsPositive,
   IsUppercase,
+  IsUUID,
 } from 'class-validator';
 import { BaseDto, BaseFilterDto } from './base.dto';
 import { Currency, PaymentMethod } from '@TaskM/core/constants';
@@ -71,7 +72,19 @@ export class UpdateClientDto {
   code?: string;
 }
 
-export class ClientsFilterDto extends BaseFilterDto {}
+export class ClientsFilterDto extends BaseFilterDto {
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @IsUppercase()
+  @MaxLength(10)
+  @MinLength(2)
+  code?: string;
+
+  @IsOptional()
+  @IsUUID()
+  clientId?: string;
+}
 
 export class ClientPreviewDto extends BaseDto {
   @Expose()

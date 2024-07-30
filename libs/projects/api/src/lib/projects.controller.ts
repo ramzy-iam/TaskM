@@ -34,16 +34,13 @@ export class ProjectsController {
 
   @Serialize(ProjectDto)
   @Get(':id')
-  getOne(@Param('id', ParseIntPipe) id: number) {
+  getOne(@Param('id') id: string) {
     return this.projectsService.getOne(id);
   }
 
   @Serialize(ProjectDto)
   @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() projectDto: UpdateProjectDto
-  ) {
+  update(@Param('id') id: string, @Body() projectDto: UpdateProjectDto) {
     return this.projectsService.update(id, projectDto);
   }
 

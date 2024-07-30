@@ -32,18 +32,20 @@ export class ClientsController {
   }
 
   @Serialize(ClientDto)
+  @Get('one')
+  findOne(@Query() filters: ClientsFilterDto) {
+    return this.clientsService.findOne(filters);
+  }
+
+  @Serialize(ClientDto)
   @Get(':id')
-  getOne(@Param('id', ParseIntPipe) id: number) {
+  getOne(@Param('id') id: string) {
     return this.clientsService.getOne(id);
   }
 
   @Serialize(ClientDto)
   @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() clientDto: UpdateClientDto
-  ) {
-    return clientDto;
+  update(@Param('id') id: string, @Body() clientDto: UpdateClientDto) {
     return this.clientsService.update(id, clientDto);
   }
 

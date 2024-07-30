@@ -7,7 +7,7 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
+      "executor": "@nx/angular:webpack-browser",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/taskm-client",
@@ -23,10 +23,13 @@
         ],
         "styles": [
           "apps/taskm-client/src/styles.css",
-          "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+          "node_modules/primeng/resources/themes/aura-light-blue/theme.css",
           "node_modules/primeng/resources/primeng.min.css"
         ],
-        "scripts": []
+        "scripts": [],
+        "customWebpackConfig": {
+          "path": "apps/taskm-client/webpack.config.js"
+        }
       },
       "configurations": {
         "production": {
@@ -56,7 +59,7 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "executor": "@nx/angular:dev-server",
       "configurations": {
         "production": {
           "buildTarget": "taskm-client:build:production"

@@ -1,7 +1,18 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter, withComponentInputBinding, withEnabledBlockingInitialNavigation } from '@angular/router';
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  provideZoneChangeDetection,
+} from '@angular/core';
+import {
+  provideRouter,
+  withComponentInputBinding,
+  withEnabledBlockingInitialNavigation,
+} from '@angular/router';
 import { appRoutes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { baseHttpUrlInterceptor } from '@TaskM/core/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -9,8 +20,10 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       appRoutes,
       withComponentInputBinding(),
-      withEnabledBlockingInitialNavigation()
+      withEnabledBlockingInitialNavigation(),
     ),
-    provideHttpClient(withInterceptors([])),
+    provideHttpClient(withInterceptors([baseHttpUrlInterceptor])),
+    importProvidersFrom([BrowserAnimationsModule]),
+    MessageService,
   ],
 };

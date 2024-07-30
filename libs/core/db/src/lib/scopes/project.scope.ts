@@ -8,7 +8,7 @@ import {
 } from '@TaskM/core/constants';
 
 export class ProjectsScope extends SelectQueryBuilder<Project> {
-  filterById(id: number) {
+  filterById(id: string) {
     return this.andWhere('Projects.id = :id', {
       id,
     });
@@ -35,7 +35,7 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
   filterByDate(
     from?: Date,
     to?: Date,
-    dateField: ProjectDateFilterField = ProjectDateFilterField.CREATED_AT
+    dateField: ProjectDateFilterField = ProjectDateFilterField.CREATED_AT,
   ) {
     if (from && to)
       return this.andWhere(
@@ -43,7 +43,7 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
         {
           from,
           to,
-        }
+        },
       );
     if (from)
       return this.andWhere(`DATE("Projects"."${dateField}") >= DATE(:from)`, {
@@ -59,7 +59,7 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
 
   _orderBy(
     field: string = ProjectDateFilterField.CREATED_AT,
-    order: OrderType = 'DESC'
+    order: OrderType = 'DESC',
   ) {
     return this.addOrderBy(field, order);
   }

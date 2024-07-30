@@ -2,7 +2,7 @@ import { SelectQueryBuilder } from 'typeorm';
 import { Workspace } from '../entities';
 
 export class WorkspacesScope extends SelectQueryBuilder<Workspace> {
-  filterById(id: number): WorkspacesScope {
+  filterById(id: string): WorkspacesScope {
     return this.andWhere('Workspaces.id = :id', {
       id: id,
     });

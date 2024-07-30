@@ -1,3 +1,6 @@
+@import '@angular/cdk/overlay-prebuilt.css';
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap'); */
+
 @layer tailwind-base,reset, primeng, tailwind-components, tailwind-utilities;
 
 @layer tailwind-base {
@@ -7,6 +10,32 @@
 @layer reset {
   *:focus {
     box-shadow: none !important;
+  }
+
+  button.p-button {
+    padding: 0.5rem 1rem !important;
+
+    .p-button-label {
+      font-weight: 500 !important;
+    }
+  }
+
+  .p-inputtext.with-icon {
+    padding-right: 35px !important;
+    position: relative;
+  }
+
+  p-inputnumber,
+  .p-inputnumber {
+    display: inline !important;
+  }
+
+  .p-inputnumber input.p-inputtext {
+    max-width: 100% !important;
+  }
+
+  .p-button .p-button-icon-left {
+    margin-right: 0.5rem;
   }
 }
 
@@ -19,7 +48,7 @@
 
 @layer tailwind-base {
   body {
-    @apply relative z-1 bg-whiten font-inter text-base font-normal text-body;
+    @apply relative z-1 bg-whiten  text-base font-normal text-body;
   }
 }
 
@@ -33,17 +62,20 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
-
-  .chat-height {
-    @apply h-[calc(100vh_-_8.125rem)] lg:h-[calc(100vh_-_5.625rem)];
-  }
-  .inbox-height {
-    @apply h-[calc(100vh_-_8.125rem)] lg:h-[calc(100vh_-_5.625rem)];
-  }
 }
 
-@import '@angular/cdk/overlay-prebuilt.css';
-
-* {
-  scrollbar-color: #babac0 transparent;
+::-webkit-scrollbar {
+  width: 10px;
+  margin: 0 2px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #babac0;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
 }

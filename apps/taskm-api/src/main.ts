@@ -33,13 +33,14 @@ async function bootstrap() {
         });
         return new BadRequestException(result);
       },
-    })
+    }),
   );
 
-  const port = process.env.TASK_MANAGER_API_PORT || 3001;
+  const port = process.env.TASK_MANAGER_API_PORT || 3000;
+  app.enableCors();
   await app.listen(port);
   Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
+    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
   );
 }
 

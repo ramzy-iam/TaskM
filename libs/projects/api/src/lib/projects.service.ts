@@ -13,7 +13,7 @@ import { DayjsHelper, paginateResult, UtilsHelper } from '@TaskM/core/helpers';
 export class ProjectsService {
   constructor(
     private projectsRepository: ProjectsRepository,
-    private clientsService: ClientsService
+    private clientsService: ClientsService,
   ) {}
 
   async create(projectDto: CreateProjectDto) {
@@ -27,23 +27,23 @@ export class ProjectsService {
     return this.projectsRepository.save(project);
   }
 
-  getOne(id: number) {
+  getOne(id: string) {
     return this.projectsRepository.scoped.filterById(id).getOneOrFail();
   }
 
-  async update(id: number, projectDto: UpdateProjectDto) {
+  async update(id: string, projectDto: UpdateProjectDto) {
     await this.validateBeforeCreateOrUpdate(projectDto.name);
 
     await this.projectsRepository.update(
       { id },
-      UtilsHelper.convertUndefinedToNull(projectDto)
+      UtilsHelper.convertUndefinedToNull(projectDto),
     );
     return this.getOne(id);
   }
 
   private async validateBeforeCreateOrUpdate(
     poId?: string,
-    projectId?: number
+    projectId?: number,
   ) {
     if (!poId) return;
     const existingProject = await this.projectsRepository.scoped
@@ -52,7 +52,7 @@ export class ProjectsService {
 
     if (existingProject && (!projectId || existingProject.id !== projectId))
       throw new ConflictException(
-        `There is already a project with the PO ID '${poId}'`
+        `There is already a project with the PO ID '${poId}'`,
       );
   }
 

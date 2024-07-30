@@ -6,7 +6,7 @@ import { IsOptional, IsPositive, IsString, Max, Min } from 'class-validator';
 
 export class BaseDto {
   @Expose()
-  id: number;
+  id: string;
 
   @Expose()
   createdAt?: string;
@@ -23,8 +23,9 @@ export class BaseFilterDto {
   @Transform(({ value }) =>
     CastHelper.toNumber(value, {
       default: PAGINATION.DEFAULT_PAGE,
-    })
+    }),
   )
+  @IsOptional()
   @IsPositive()
   @Min(PAGINATION.DEFAULT_PAGE)
   page?: number;
@@ -32,8 +33,9 @@ export class BaseFilterDto {
   @Transform(({ value }) =>
     CastHelper.toNumber(value, {
       default: PAGINATION.DEFAULT_LIMIT,
-    })
+    }),
   )
+  @IsOptional()
   @IsPositive()
   @Min(1)
   @Max(PAGINATION.MAX_LIMIT)
@@ -50,9 +52,4 @@ export class BaseFilterDto {
   @Transform(({ value }) => CastHelper.toBoolean(value))
   @IsOptional()
   withDeleted?: boolean;
-
-  @Transform(({ value }) => CastHelper.toNumber(value))
-  @IsOptional()
-  @IsPositive()
-  clientId?: number;
 }

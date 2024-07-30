@@ -5,6 +5,14 @@ export const appRoutes: Route[] = [
   {
     path: '',
     component: BaseLayoutComponent,
-    children: [],
+    children: [
+      {
+        path: 'clients',
+        loadComponent: () =>
+          import('@TaskM/clients/feature-list').then(
+            (c) => c.ClientListComponent,
+          ),
+      },
+    ],
   },
 ];
