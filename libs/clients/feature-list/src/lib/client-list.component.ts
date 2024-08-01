@@ -69,7 +69,7 @@ export class ClientListComponent implements OnInit, OnDestroy {
   private clientsSubject = new BehaviorSubject<Client[]>([]);
   clients$ = this.clientsSubject.asObservable();
   selectedClientCode: string | null = null;
-  dialogRef?: DynamicDialogRef | undefined;
+  dialogRef?: DynamicDialogRef;
 
   constructor(
     private clientService: ClientService,
