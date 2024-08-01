@@ -26,6 +26,7 @@ import {
 import { ClientPreviewDto } from '@TaskM/core/dto';
 import { ClientDetailsComponent } from '@TaskM/clients/feature-details';
 import { ClientFormComponent } from '@TaskM/clients/form';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-client-list',
@@ -45,6 +46,7 @@ import { ClientFormComponent } from '@TaskM/clients/form';
     ClientDetailsComponent,
     DialogModule,
     ClientFormComponent,
+    SkeletonModule,
   ],
   providers: [
     DialogService,

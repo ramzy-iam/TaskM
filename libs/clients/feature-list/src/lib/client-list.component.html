@@ -31,32 +31,55 @@
         'col-span-full': !selectedClientCode,
       }"
     >
-      @if (clients$ | async; as clients) {
-        <ui-list-item class="sticky top-0 z-1 bg-white">
-          <div class="grid grid-cols-2 text-black/95 font-semibold">
-            <div class="grid-cols-1">Name</div>
-            <div class="grid-cols-1">Code</div>
-          </div>
-        </ui-list-item>
-        <div class="h-full w-full">
-          @for (client of clients; track client.id; let i = $index) {
-            <a
-              routerLink="."
-              [queryParams]="{ selectedClient: client.code }"
-              #rla="routerLinkActive"
-              routerLinkActive
-              [routerLinkActiveOptions]="{ exact: true }"
-              class="block relative hover:border-primary hover:border-[1.4px]"
-            >
-              <ui-list-item [isSelected]="rla.isActive">
-                <div class="grid grid-cols-2 items-center">
-                  <div class="grid-cols-1">{{ client.name }}</div>
-                  <div class="grid-cols-1">{{ client.code }}</div>
-                </div>
-              </ui-list-item>
-            </a>
-          }
+      @if (loading) {
+        <div class="grid grid-cols-3 gap-10">
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
         </div>
+        <div class="grid grid-cols-3 gap-10 mt-10">
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+        </div>
+        <div class="grid grid-cols-3 gap-10 mt-8">
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+        </div>
+        <div class="grid grid-cols-3 gap-10 mt-8">
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+        </div>
+      } @else {
+        @if (clients$ | async; as clients) {
+          <ui-list-item class="sticky top-0 z-1 bg-white">
+            <div class="grid grid-cols-2 text-black/95 font-semibold">
+              <div class="grid-cols-1">Name</div>
+              <div class="grid-cols-1">Code</div>
+            </div>
+          </ui-list-item>
+          <div class="h-full w-full">
+            @for (client of clients; track client.id; let i = $index) {
+              <a
+                routerLink="."
+                [queryParams]="{ selectedClient: client.code }"
+                #rla="routerLinkActive"
+                routerLinkActive
+                [routerLinkActiveOptions]="{ exact: true }"
+                class="block relative hover:border-primary hover:border-[1.4px]"
+              >
+                <ui-list-item [isSelected]="rla.isActive">
+                  <div class="grid grid-cols-2 items-center">
+                    <div class="grid-cols-1">{{ client.name }}</div>
+                    <div class="grid-cols-1">{{ client.code }}</div>
+                  </div>
+                </ui-list-item>
+              </a>
+            }
+          </div>
+        }
       }
     </div>
     @if (selectedClientCode) {
