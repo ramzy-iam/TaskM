@@ -24,7 +24,6 @@ async function bootstrap() {
             : '';
 
           message = message.replace(`${error.property} `, '');
-          message = message.charAt(0).toUpperCase() + message.slice(1);
 
           return {
             property: error.property,
@@ -33,13 +32,14 @@ async function bootstrap() {
         });
         return new BadRequestException(result);
       },
-    })
+    }),
   );
 
-  const port = process.env.TASK_MANAGER_API_PORT || 3001;
+  const port = process.env.TASK_MANAGER_API_PORT || 3000;
+  app.enableCors();
   await app.listen(port);
   Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
+    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
   );
 }
 

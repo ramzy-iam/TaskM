@@ -1,0 +1,161 @@
+@if (form) {
+  <form
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    autocomplete="off"
+    class="bg-white"
+  >
+    <div class="flex flex-col gap-x-4">
+      <div class="grid grid-cols-2">
+        <div class="col-span-full pt-8">
+          <p-floatLabel>
+            <input
+              id="name"
+              type="text"
+              pInputText
+              class="w-full"
+              formControlName="name"
+            />
+            <label for="name">Name</label>
+          </p-floatLabel>
+          <small class="text-red-400">
+            @if (hasError('name', 'required')) {
+              <p>Name is required.</p>
+            }
+          </small>
+        </div>
+      </div>
+      <div class="grid grid-cols-2">
+        <div class="col-span-full pt-8">
+          <p-floatLabel>
+            <input
+              id="code"
+              type="text"
+              pInputText
+              class="w-full"
+              formControlName="code"
+            />
+            <label for="code">Code</label>
+          </p-floatLabel>
+          <small class="text-red-400">
+            @if (hasError('code', 'required')) {
+              <p>Code is required.</p>
+            }
+          </small>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="col-span-1 pt-8">
+          <p-floatLabel>
+            <p-dropdown
+              formControlName="currency"
+              [options]="currencies"
+              optionLabel="name"
+              optionValue="value"
+              inputId="currency"
+              [editable]="true"
+              [checkmark]="true"
+              [showClear]="true"
+            />
+            <label for="currency">Currency</label>
+          </p-floatLabel>
+          <small class="text-red-400">
+            @if (hasError('currency', 'required')) {
+              <p>Currency is required.</p>
+            }
+          </small>
+        </div>
+        <div class="col-span-1 pt-8">
+          <p-floatLabel>
+            <p-dropdown
+              formControlName="paymentMethod"
+              [options]="paymentMethods"
+              optionLabel="name"
+              optionValue="value"
+              inputId="paymentMethod"
+              [editable]="true"
+              [checkmark]="true"
+              [showClear]="true"
+            />
+            <label for="paymentMethod">Payment Method</label>
+          </p-floatLabel>
+          <small class="text-red-400">
+            @if (hasError('paymentMethod', 'required')) {
+              <p>Payment Method is required.</p>
+            }
+          </small>
+        </div>
+      </div>
+      <div class="grid grid-cols-2">
+        <div class="col-span-full pt-8">
+          <p-floatLabel>
+            <input
+              id="billingEmailAddress"
+              type="text"
+              pInputText
+              class="w-full"
+              formControlName="billingEmailAddress"
+              placeholder="Email"
+            />
+            <label for="billingEmailAddress">Billing Address</label>
+          </p-floatLabel>
+          <small class="text-red-400">
+            @if (hasError('billingEmailAddress', 'required')) {
+              <p>Billing Address is required.</p>
+            }
+            @if (hasError('billingEmailAddress', 'email')) {
+              <p>Please enter a valid email address.</p>
+            }
+          </small>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="col-span-1 pt-8">
+          <p-floatLabel>
+            <input
+              id="billingPeriod"
+              type="text"
+              pInputText
+              class="w-full"
+              formControlName="billingPeriod"
+            />
+            <label for="billingPeriod">Billing Period</label>
+          </p-floatLabel>
+          <small class="text-red-400">
+            @if (hasError('billingPeriod', 'required')) {
+              <p>Billing period is required.</p>
+            }
+          </small>
+        </div>
+        <div class="col-span-1 pt-8">
+          <p-floatLabel>
+            <p-inputNumber
+              inputId="paymentDueDays"
+              formControlName="paymentDueDays"
+              prefix="Pay after "
+              suffix=" days"
+              class="w-2"
+            />
+            <label for="paymentDueDays">Payment Due Days</label>
+          </p-floatLabel>
+          <small class="text-red-400">
+            @if (hasError('paymentDueDays', 'required')) {
+              <p>Payment Due Days is required.</p>
+            }
+          </small>
+        </div>
+      </div>
+    </div>
+    @if (!autoSave) {
+      <div class="mt-8 flex justify-center">
+        <p-button
+          icon="pi pi-check"
+          type="submit"
+          [label]="!client ? 'Submit' : 'Update'"
+          [loading]="loading"
+          [disabled]="form.invalid"
+        />
+      </div>
+    }
+  </form>
+}

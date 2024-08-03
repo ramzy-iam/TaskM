@@ -6,3 +6,4 @@ export * from './permission.entity';
 export * from './role-permission.entity';
 export * from './casl-subject.entity';
 export * from './client.entity';
+export * from './project.entity';

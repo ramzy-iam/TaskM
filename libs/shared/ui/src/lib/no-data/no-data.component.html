@@ -1,0 +1,8 @@
+<div class="flex flex-col items-center py-10">
+  @if (!isNotFound) {
+    <img src="/assets/svg/no-data.svg" alt="" width="200" />
+  } @else {
+    <img src="/assets/svg/search-no-data.svg" alt="" width="200" />
+  }
+  <p class="text-secondary-muted mt-5">{{ displayedMessage }}</p>
+</div>

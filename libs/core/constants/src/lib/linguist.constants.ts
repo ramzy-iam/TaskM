@@ -27,7 +27,7 @@ export enum PaymentMethod {
   CASH = 'Cash',
 }
 
-export enum Unit {
+export enum LoadUnit {
   WORD = 'word',
   PAGE = 'page',
   MINUTE = 'minute',
@@ -41,16 +41,20 @@ export enum ProjectStatus {
   DELIVERED_CLOSED = 'Delivered & closed',
   IN_PROGRESS = 'In progress',
   CANCELLED = 'Cancelled',
-  ON_HOLD = 'On hold',
+  ON_HOLD = 'On Hold',
 }
 
 export enum TaskStatus {
   NOT_STARTED = 'Not Started',
-  IN_PROGRESS = 'In progress',
+  IN_PROGRESS = 'In Progress',
   COMPLETED = 'Completed',
+  CANCELLED = 'Cancelled',
 }
 
 export enum Language {
+  'Fr' = 'Fr',
+  'En' = 'En',
+
   'En-Fr' = 'En-Fr',
   'EnUK-FrFR' = 'EnUK-FrFR',
   'EnUK-FrCA' = 'EnUK-FrCA',
@@ -74,6 +78,10 @@ export enum Language {
 }
 
 export const LANGUAGES_WITH_LABEL = [
+  { name: 'French', code: Language.Fr },
+  { name: 'English', code: Language.En },
+
+  { name: 'English - French', code: Language['En-Fr'] },
   { name: 'English - French', code: Language['En-Fr'] },
   {
     name: 'English (United Kingdom) - French (France)',

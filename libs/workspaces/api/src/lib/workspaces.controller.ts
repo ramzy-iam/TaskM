@@ -25,7 +25,7 @@ import { CheckPermissions } from '@TaskM/authz/api';
 export class WorkspacesController {
   constructor(
     private workspacesService: WorkspacesService,
-    private usersService: UsersService
+    private usersService: UsersService,
   ) {}
 
   @Post()
@@ -34,30 +34,27 @@ export class WorkspacesController {
   }
 
   @Get(':id')
-  getOne(@Param('id', ParseIntPipe) id: number) {
+  getOne(@Param('id') id: string) {
     return this.workspacesService.getOne(id);
   }
 
   @CheckPermissions([PermissionAction.UPDATE, PermissionSubject.WORKSPACE])
   @Serialize(WorkspaceDto)
   @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() workspaceDto: UpdateWorkspaceDto
-  ) {
+  update(@Param('id') id: string, @Body() workspaceDto: UpdateWorkspaceDto) {
     return this.workspacesService.update(id, workspaceDto);
   }
 
   @CheckPermissions([PermissionAction.INVITE, PermissionSubject.USER])
   @Post(':id/invitations')
   async invitations(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() invitations: InviteUserToWorkspaceDto
+    @Param('id') id: string,
+    @Body() invitations: InviteUserToWorkspaceDto,
   ) {
     return this.usersService.inviteUsers(
       id,
       invitations.emails,
-      invitations.roleId
+      invitations.roleId,
     );
   }
 }

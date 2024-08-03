@@ -1,0 +1,26 @@
+@if (loading) {
+  <p-skeleton height="2rem" width="50%" borderRadius="5px" />
+  <p-skeleton height="2.25rem" styleClass="mt-10" borderRadius="5px" />
+  <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
+  <div class="grid grid-cols-2 gap-2">
+    <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
+    <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
+  </div>
+  <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
+  <div class="grid grid-cols-2 gap-2">
+    <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
+    <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
+  </div>
+} @else {
+  @if (client$ | async; as client) {
+    <h1
+      class="text-[24px] text-black-2 font-semibold border-b border-gray pb-2"
+    >
+      Client Details
+    </h1>
+
+    <div class="bg-inherit flex flex-col gap-y-4">
+      <app-client-form [client]="client" [autoSave]="true"></app-client-form>
+    </div>
+  }
+}
