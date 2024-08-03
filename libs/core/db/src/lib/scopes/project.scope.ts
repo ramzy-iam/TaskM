@@ -20,7 +20,7 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
     });
   }
 
-  filterByClientId(clientId: number) {
+  filterByClientId(clientId: string) {
     return this.andWhere('Projects.clientId = :clientId', {
       clientId,
     });

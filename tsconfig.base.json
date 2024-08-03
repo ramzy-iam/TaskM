@@ -37,6 +37,7 @@
       "@TaskM/core/types": ["libs/core/types/src/index.ts"],
       "@TaskM/projects/api": ["libs/projects/api/src/index.ts"],
       "@TaskM/shared/layout": ["libs/shared/layout/src/index.ts"],
+      "@TaskM/shared/misc": ["libs/shared/misc/src/index.ts"],
       "@TaskM/shared/ui": ["libs/shared/ui/src/index.ts"],
       "@TaskM/users/api": ["libs/users/api/src/index.ts"],
       "@TaskM/users/types": ["libs/users/types/src/index.ts"],

@@ -1,9 +1,17 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Link } from './link';
 import { RouterModule } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroBuildingOffice,heroSquares2x2, heroPresentationChartBar, heroUserGroup,heroQueueList,  } from '@ng-icons/heroicons/outline';
+import {
+  heroBuildingOffice,
+  heroSquares2x2,
+  heroPresentationChartBar,
+  heroUserGroup,
+  heroQueueList,
+} from '@ng-icons/heroicons/outline';
+import { LocalStorageService } from '@TaskM/shared/misc';
+import { SIDEBAR_KEY } from '@TaskM/core/constants';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,14 +23,30 @@ import { heroBuildingOffice,heroSquares2x2, heroPresentationChartBar, heroUserGr
       heroSquares2x2,
       heroPresentationChartBar,
       heroUserGroup,
-      heroQueueList
+      heroQueueList,
     }),
   ],
   templateUrl: './sidebar.component.html',
 })
-export class SidebarComponent {
-  @Input() isOpen = true;
+export class SidebarComponent implements OnInit {
+  private _isOpen = this.localStorageService.getItem<boolean>(
+    SIDEBAR_KEY,
+    true,
+  )!;
+  @Input()
+  set isOpen(value: boolean) {
+    this._isOpen = value;
+    this.localStorageService.setItem(SIDEBAR_KEY, value);
+  }
 
+  constructor(private localStorageService: LocalStorageService) {}
+
+  ngOnInit() {
+    this._isOpen = this.localStorageService.getItem(SIDEBAR_KEY, true)!;
+  }
+  get isOpen(): boolean {
+    return this._isOpen;
+  }
 
   links: Link[] = [
     // {

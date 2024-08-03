@@ -16,7 +16,6 @@ import {
   Subscription,
 } from 'rxjs';
 import { ClientDto } from '@TaskM/core/dto';
-import { HttpErrorResponse } from '@angular/common/http';
 import { BaseEnumComponent } from '@TaskM/shared/ui';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -123,27 +122,12 @@ export class ClientFormComponent
 
     operation.pipe(finalize(() => (this.loading = false))).subscribe({
       next: (client: ClientDto) => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: this.client?.id
-            ? 'Updated successfully'
-            : 'Created successfully',
-        });
-
         if (this.dialogRef && !this.client?.id) this.dialogRef.close();
         // Store form values
         this.initialFormValues = this.form.getRawValue();
         this.clientService.triggerChanges(client);
       },
-      error: async (error: HttpErrorResponse) => {
-        const errorMessage = await this.handleError(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: errorMessage,
-        });
-
+      error: () => {
         // Unsubscribe before resetting the form to avoid triggering the update
         if (this.formValueChangesSubscription) {
           this.formValueChangesSubscription.unsubscribe();
@@ -174,35 +158,5 @@ export class ClientFormComponent
   hasError(controlName: string, errorName: string): boolean {
     const control = this.form.get(controlName);
     return (control?.touched && control.hasError(errorName)) ?? false;
-  }
-
-  private async handleError(error: any): Promise<string> {
-    let errorMessage = 'Something went wrong';
-
-    if (error?.error?.message) {
-      if (typeof error.error.message === 'string') {
-        errorMessage = error.error.message;
-      } else if (Array.isArray(error.error.message)) {
-        for (const message of error.error.message) {
-          errorMessage = `${message.property} ${message.message}`;
-          break;
-        }
-      }
-    }
-
-    if (
-      error.error instanceof Blob &&
-      error.error.type === 'application/json'
-    ) {
-      try {
-        const text = await error.error.text();
-        const data = JSON.parse(text);
-        errorMessage = data.message;
-      } catch (parseError) {
-        // Do nothing
-      }
-    }
-
-    return errorMessage;
   }
 }

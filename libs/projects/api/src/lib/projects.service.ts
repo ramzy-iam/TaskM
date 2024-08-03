@@ -31,7 +31,7 @@ export class ProjectsService {
     return this.projectsRepository.scoped.filterById(id).getOneOrFail();
   }
 
-  async update(id: string, projectDto: UpdateProjectDto) {
+  async update(id: string, projectDto: Partial<UpdateProjectDto>) {
     await this.validateBeforeCreateOrUpdate(projectDto.name);
 
     await this.projectsRepository.update(
@@ -43,7 +43,7 @@ export class ProjectsService {
 
   private async validateBeforeCreateOrUpdate(
     poId?: string,
-    projectId?: number,
+    projectId?: string,
   ) {
     if (!poId) return;
     const existingProject = await this.projectsRepository.scoped
@@ -75,7 +75,7 @@ export class ProjectsService {
     ) as Promise<P>;
   }
 
-  private async generateSpecialFields(clientId: number) {
+  private async generateSpecialFields(clientId: string) {
     const client = await this.clientsService.getOne(clientId);
     const today = DayjsHelper.new();
     const from = today.endOf('M').toDate();

@@ -65,7 +65,7 @@ export class Project extends AppBaseEntity {
   client: Client;
 
   @Column()
-  clientId: number;
+  clientId: string;
 
   @DateTzColumn()
   deadline: Date;

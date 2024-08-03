@@ -54,7 +54,10 @@ export class ClientsService {
 
     return (
       filters?.page && filters?.limit
-        ? paginateResult(query, { page: filters?.page, limit: filters.limit })
+        ? paginateResult(query, {
+            page: filters.page,
+            limit: filters.limit,
+          })
         : query.getMany()
     ) as Promise<P>;
   }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import {
   ClientDto,
@@ -7,17 +7,22 @@ import {
   ClientsFilterDto,
   PaginationDto,
 } from '@TaskM/core/dto';
+import { Nullable, ToastOptions } from '@TaskM/core/types';
+import { HttpBaseService } from '@TaskM/core/http';
+import { TOAST_COMMON_MESSAGES } from '@TaskM/core/constants';
 
 type Client = ClientPreviewDto | ClientDto;
 
 @Injectable({
   providedIn: 'root',
 })
-export class ClientService {
+export class ClientService extends HttpBaseService {
   private url = 'clients';
   private changes$ = new Subject<Client>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    super();
+  }
 
   triggerChanges(client: Client): void {
     this.changes$.next(client);
@@ -27,29 +32,72 @@ export class ClientService {
     return this.changes$;
   }
 
-  create(clientDto: ClientDto): Observable<ClientDto> {
-    return this.http.post<ClientDto>(this.url, clientDto);
-  }
+  create(
+    clientDto: ClientDto,
+    toastOptions?: ToastOptions,
+  ): Observable<ClientDto> {
+    const defaultToastOptions: ToastOptions = {
+      success: { message: TOAST_COMMON_MESSAGES.CREATED_SUCCESSFULLY },
+      error: { message: TOAST_COMMON_MESSAGES.FAILED_TO_CREATE },
+    };
 
-  update(id: string, clientDto: Partial<ClientDto>): Observable<ClientDto> {
-    return this.http.patch<ClientDto>(`${this.url}/${id}`, clientDto);
-  }
-
-  getList(
-    filters?: ClientsFilterDto,
-  ): Observable<PaginationDto<ClientPreviewDto>> {
-    return this.http.get<PaginationDto<ClientPreviewDto>>(this.url, {
-      params: { ...filters },
+    return this.http.post<ClientDto>(this.url, clientDto, {
+      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
     });
   }
 
-  getOne(id: string): Observable<ClientDto> {
-    return this.http.get<ClientDto>(`${this.url}/${id}`);
+  update(
+    id: string,
+    clientDto: Partial<ClientDto>,
+    toastOptions?: ToastOptions,
+  ): Observable<ClientDto> {
+    const defaultToastOptions: ToastOptions = {
+      success: { message: TOAST_COMMON_MESSAGES.UPDATED_SUCCESSFULLY },
+      error: { message: TOAST_COMMON_MESSAGES.FAILED_TO_UPDATE },
+    };
+    return this.http.patch<ClientDto>(`${this.url}/${id}`, clientDto, {
+      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+    });
   }
 
-  findOne(filters?: ClientsFilterDto): Observable<ClientDto | null> {
+  getList(
+    filters?: Nullable<ClientsFilterDto>,
+    toastOptions: ToastOptions = {},
+  ): Observable<PaginationDto<ClientPreviewDto>> {
+    const defaultToastOptions: ToastOptions = {
+      success: { onSuccess: false },
+      error: { message: TOAST_COMMON_MESSAGES.FAILED_TO_LOAD_RESOURCE },
+    };
+
+    return this.http.get<PaginationDto<ClientPreviewDto>>(this.url, {
+      params: filters as HttpParams,
+      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+    });
+  }
+
+  getOne(id: string, toastOptions?: ToastOptions): Observable<ClientDto> {
+    const defaultToastOptions: ToastOptions = {
+      success: { onSuccess: false },
+      error: { message: TOAST_COMMON_MESSAGES.FAILED_TO_LOAD_RESOURCE },
+    };
+
+    return this.http.get<ClientDto>(`${this.url}/${id}`, {
+      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+    });
+  }
+
+  findOne(
+    filters?: ClientsFilterDto,
+    toastOptions?: ToastOptions,
+  ): Observable<ClientDto | null> {
+    const defaultToastOptions: ToastOptions = {
+      success: { onSuccess: false },
+      error: { message: TOAST_COMMON_MESSAGES.FAILED_TO_LOAD_RESOURCE },
+    };
+
     return this.http.get<ClientDto | null>(`${this.url}/one`, {
       params: { ...filters },
+      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
     });
   }
 }

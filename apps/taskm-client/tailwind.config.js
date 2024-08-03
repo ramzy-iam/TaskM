@@ -243,6 +243,14 @@ module.exports = {
         2: '0px 1px 4px rgba(0, 0, 0, 0.12)',
       },
       keyframes: {
+        spin: {
+          from: {
+            transform: 'rotate(0deg)',
+          },
+          to: {
+            transform: 'rotate(360deg)',
+          },
+        },
         linspin: {
           '100%': { transform: 'rotate(360deg)' },
         },
@@ -280,6 +288,8 @@ module.exports = {
         },
       },
       animation: {
+        spin: 'spin 1s linear infinite',
+
         linspin: 'linspin 1568.2353ms linear infinite',
         easespin: 'easespin 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both',
         'left-spin':

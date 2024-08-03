@@ -10,7 +10,7 @@ import {
 } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { baseHttpUrlInterceptor } from '@TaskM/core/http';
+import { HttpToastInterceptor, baseHttpUrlInterceptor } from '@TaskM/core/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MessageService } from 'primeng/api';
 
@@ -22,7 +22,9 @@ export const appConfig: ApplicationConfig = {
       withComponentInputBinding(),
       withEnabledBlockingInitialNavigation(),
     ),
-    provideHttpClient(withInterceptors([baseHttpUrlInterceptor])),
+    provideHttpClient(
+      withInterceptors([baseHttpUrlInterceptor, HttpToastInterceptor]),
+    ),
     importProvidersFrom([BrowserAnimationsModule]),
     MessageService,
   ],

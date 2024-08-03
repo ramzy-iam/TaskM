@@ -10,9 +10,9 @@
             <p-button label="Add client" (onClick)="showCreateDialog()" />
           </div>
           <div>
-            <form [formGroup]="searchForm">
+            <form [formGroup]="filterForm">
               <ui-input-search
-                [control]="searchForm.controls.query"
+                [control]="filterForm.controls.query"
                 [attributes]="{ placeholder: 'Search' }"
               />
             </form>
@@ -25,6 +25,8 @@
     class="grid grid-cols-3 h-auto max-w-full max-h-full row-span-3 overflow-hidden"
   >
     <div
+      appScrollNearEnd
+      (nearEnd)="onNearEndScroll()"
       class="relative w-full h-full- max-h-full pr-8 overflow-auto bg-white mb-2"
       [ngClass]="{
         'col-span-2': selectedClientCode,
@@ -55,13 +57,18 @@
       } @else {
         @if (clients$ | async; as clients) {
           <ui-list-item class="sticky top-0 z-1 bg-white">
-            <div class="grid grid-cols-2 text-black/95 font-semibold">
+            <div
+              class="grid grid-cols-2 xl:grid-cols-4 text-black/95 font-semibold"
+            >
+              <div class="grid-cols-1 xl:block hidden">#</div>
+              <div class="grid-cols-1 xl:hidden block">Code</div>
               <div class="grid-cols-1">Name</div>
-              <div class="grid-cols-1">Code</div>
+              <div class="grid-cols-1 hidden xl:block">Billing Address</div>
+              <div class="grid-cols-1 hidden xl:block">Currency</div>
             </div>
           </ui-list-item>
           <div class="h-full w-full">
-            @for (client of clients; track client.id; let i = $index) {
+            @for (client of clients; track i; let i = $index) {
               <a
                 routerLink="."
                 [queryParams]="{ selectedClient: client.code }"
@@ -71,13 +78,28 @@
                 class="block relative hover:border-primary hover:border-[1.4px]"
               >
                 <ui-list-item [isSelected]="rla.isActive">
-                  <div class="grid grid-cols-2 items-center">
-                    <div class="grid-cols-1">{{ client.name }}</div>
+                  <div class="grid grid-cols-2 xl:grid-cols-4 items-center">
                     <div class="grid-cols-1">{{ client.code }}</div>
+                    <div class="grid-cols-1">{{ client.name }}</div>
+                    <div class="grid-cols-1 hidden xl:block">
+                      {{ client.billingEmailAddress }}
+                    </div>
+                    <div class="grid-cols-1 hidden xl:block">
+                      {{ client.currency }}
+                    </div>
                   </div>
                 </ui-list-item>
               </a>
+            } @empty {
+              <div>
+                <ui-no-data [isNotFound]="isFilterActivated" />
+              </div>
             }
+            <div class="py-3">
+              @if (isLoadingMore) {
+                <ui-spinner />
+              }
+            </div>
           </div>
         }
       }

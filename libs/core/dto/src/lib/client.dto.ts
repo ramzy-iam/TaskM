@@ -14,89 +14,56 @@ import {
 import { BaseDto, BaseFilterDto } from './base.dto';
 import { Currency, PaymentMethod } from '@TaskM/core/constants';
 import { CastHelper } from '@TaskM/core/helpers';
+import { MarkOptionalFields, TrackProperty } from '@TaskM/core/decorators';
 
 export class CreateClientDto {
+  @TrackProperty
   @Transform(({ value }) => CastHelper.trim(value))
-  @IsString()
-  @IsNotEmpty()
   @MaxLength(20)
   @MinLength(4)
-  name: string;
-
-  @Transform(({ value }) => CastHelper.trim(value))
   @IsString()
   @IsNotEmpty()
+  name: string;
+
+  @TrackProperty
+  @Transform(({ value }) => CastHelper.trim(value))
   @IsUppercase()
   @MaxLength(10)
   @MinLength(2)
+  @IsString()
+  @IsNotEmpty()
   code: string;
 
+  @TrackProperty
   @Transform(({ value }) => CastHelper.toNumber(value))
   @IsPositive()
   paymentDueDays: number;
 
+  @TrackProperty
   @Transform(({ value }) => CastHelper.trim(value))
   @IsEmail()
+  @IsNotEmpty()
   billingEmailAddress: string;
 
+  @TrackProperty
   @Transform(({ value }) => CastHelper.trim(value))
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   billingPeriod: string;
 
+  @TrackProperty
   @Transform(({ value }) => CastHelper.trim(value))
   @IsEnum(Currency)
   currency: Currency;
 
+  @TrackProperty
   @Transform(({ value }) => CastHelper.trim(value))
   @IsEnum(PaymentMethod)
   paymentMethod: PaymentMethod;
 }
 
-export class UpdateClientDto {
-  @Transform(({ value }) => value.trim())
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(20)
-  @MinLength(4)
-  @IsOptional()
-  name?: string;
-
-  @Transform(({ value }) => value.trim())
-  @IsString()
-  @IsNotEmpty()
-  @IsUppercase()
-  @MaxLength(10)
-  @MinLength(2)
-  @IsOptional()
-  code?: string;
-
-  @IsOptional()
-  @Transform(({ value }) => CastHelper.toNumber(value))
-  @IsPositive()
-  paymentDueDays?: number;
-
-  @IsOptional()
-  @Transform(({ value }) => CastHelper.trim(value))
-  @IsEmail()
-  billingEmailAddress?: string;
-
-  @IsOptional()
-  @Transform(({ value }) => CastHelper.trim(value))
-  @IsString()
-  @IsNotEmpty()
-  billingPeriod?: string;
-
-  @IsOptional()
-  @Transform(({ value }) => CastHelper.trim(value))
-  @IsEnum(Currency)
-  currency?: Currency;
-
-  @IsOptional()
-  @Transform(({ value }) => CastHelper.trim(value))
-  @IsEnum(PaymentMethod)
-  paymentMethod?: PaymentMethod;
-}
+@MarkOptionalFields()
+export class UpdateClientDto extends CreateClientDto {}
 
 export class ClientsFilterDto extends BaseFilterDto {
   @IsOptional()
@@ -118,19 +85,19 @@ export class ClientPreviewDto extends BaseDto {
 
   @Expose()
   code: string;
+
+  @Expose()
+  billingEmailAddress: string;
+
+  @Expose()
+  currency: Currency;
 }
 export class ClientDto extends ClientPreviewDto {
   @Expose()
   paymentDueDays: number;
 
   @Expose()
-  billingEmailAddress: string;
-
-  @Expose()
   billingPeriod: string;
-
-  @Expose()
-  currency: Currency;
 
   @Expose()
   paymentMethod: PaymentMethod;
