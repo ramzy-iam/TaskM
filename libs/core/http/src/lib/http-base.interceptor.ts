@@ -4,7 +4,6 @@ import {
   HttpInterceptorFn,
   HttpHandlerFn,
 } from '@angular/common/http';
-import process from 'process';
 import { Observable } from 'rxjs';
 
 export const baseHttpUrlInterceptor: HttpInterceptorFn = (
