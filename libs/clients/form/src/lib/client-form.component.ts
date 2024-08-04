@@ -22,7 +22,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { MessageService } from 'primeng/api';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
@@ -52,7 +51,6 @@ export class ClientFormComponent
 
   constructor(
     private clientService: ClientService,
-    private messageService: MessageService,
     @Optional() public dialogRef: DynamicDialogRef,
   ) {
     super();
@@ -145,7 +143,7 @@ export class ClientFormComponent
     this.formValueChangesSubscription = this.form.valueChanges
       .pipe(
         filter(() => !!this.autoSave),
-        debounceTime(1500),
+        debounceTime(2000),
         distinctUntilChanged(
           (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr),
         ),

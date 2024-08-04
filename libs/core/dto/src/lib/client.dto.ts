@@ -10,6 +10,8 @@ import {
   IsPositive,
   IsUppercase,
   IsUUID,
+  ValidationArguments,
+  Matches,
 } from 'class-validator';
 import { BaseDto, BaseFilterDto } from './base.dto';
 import { Currency, PaymentMethod } from '@TaskM/core/constants';
@@ -30,8 +32,12 @@ export class CreateClientDto {
   @IsUppercase()
   @MaxLength(10)
   @MinLength(2)
-  @IsString()
+  @Matches(/^\S*$/, {
+    message: (args: ValidationArguments) =>
+      `${args.property} should not contain any spaces`,
+  })
   @IsNotEmpty()
+  @IsString()
   code: string;
 
   @TrackProperty
@@ -67,11 +73,15 @@ export class UpdateClientDto extends CreateClientDto {}
 
 export class ClientsFilterDto extends BaseFilterDto {
   @IsOptional()
-  @IsString()
-  @IsNotEmpty()
   @IsUppercase()
   @MaxLength(10)
   @MinLength(2)
+  @Matches(/^\S*$/, {
+    message: (args: ValidationArguments) =>
+      `${args.property} should not contain any spaces`,
+  })
+  @IsNotEmpty()
+  @IsString()
   code?: string;
 
   @IsOptional()

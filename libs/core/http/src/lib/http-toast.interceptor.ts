@@ -1,15 +1,13 @@
-import { Injectable, inject } from '@angular/core';
+import { inject } from '@angular/core';
 import {
   HttpEvent,
-  HttpInterceptor,
-  HttpHandler,
   HttpRequest,
   HttpErrorResponse,
   HttpResponse,
   HttpInterceptorFn,
   HttpHandlerFn,
 } from '@angular/common/http';
-import { Observable, catchError, map, of, throwError } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { ToastOptions } from '@TaskM/core/types';
 import {
@@ -25,7 +23,7 @@ export const HttpToastInterceptor: HttpInterceptorFn = (
   const messageService = inject(MessageService);
 
   const handleSuccess = (
-    event: HttpResponse<unknown>,
+    _: HttpResponse<unknown>,
     req: HttpRequest<unknown>,
   ) => {
     const options = getToastOptions(req);
@@ -118,8 +116,7 @@ export const HttpToastInterceptor: HttpInterceptorFn = (
     }),
     catchError((error: HttpErrorResponse) => {
       handleError(error, request);
-      return of();
-      // return throwError(() => error);
+      return throwError(() => error);
     }),
   );
 };
