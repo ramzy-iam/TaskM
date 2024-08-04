@@ -23,6 +23,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-client-form',
@@ -48,9 +49,12 @@ export class ClientFormComponent
   loading = false;
   private initialFormValues: any;
   private formValueChangesSubscription!: Subscription;
+  private codeParam!: string;
 
   constructor(
     private clientService: ClientService,
+    private router: Router,
+    private route: ActivatedRoute,
     @Optional() public dialogRef: DynamicDialogRef,
   ) {
     super();
@@ -66,6 +70,10 @@ export class ClientFormComponent
   }
 
   ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
+      this.codeParam = params['selectedCode'];
+    });
+
     this.initializeForm(this._client);
     this.triggerAutoSave();
   }
@@ -123,6 +131,9 @@ export class ClientFormComponent
         if (this.dialogRef && !this.client?.id) this.dialogRef.close();
         // Store form values
         this.initialFormValues = this.form.getRawValue();
+        // Update query params if the code has changed
+        this.trackCodeChanges();
+
         this.clientService.triggerChanges(client);
       },
       error: () => {
@@ -151,6 +162,16 @@ export class ClientFormComponent
       .subscribe(() => {
         this.onSubmit();
       });
+  }
+
+  private trackCodeChanges() {
+    if (this.client.id && this.form.get('code')?.value !== this.codeParam) {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { selectedClient: this.form.get('code')?.value },
+        queryParamsHandling: 'merge',
+      });
+    }
   }
 
   hasError(controlName: string, errorName: string): boolean {
