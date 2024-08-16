@@ -68,8 +68,39 @@ export class CreateClientDto {
   paymentMethod: PaymentMethod;
 }
 
-@MarkOptionalFields()
-export class UpdateClientDto extends CreateClientDto {}
+export class UpdateClientDto {
+  @Transform(({ value }) => CastHelper.trim(value))
+  @MaxLength(20)
+  @MinLength(4)
+  @IsString()
+  @IsOptional()
+  name?: string;
+
+  @Transform(({ value }) => CastHelper.toNumber(value))
+  @IsPositive()
+  @IsOptional()
+  paymentDueDays?: number;
+
+  @Transform(({ value }) => CastHelper.trim(value))
+  @IsEmail()
+  @IsOptional()
+  billingEmailAddress?: string;
+
+  @Transform(({ value }) => CastHelper.trim(value))
+  @IsOptional()
+  @IsString()
+  billingPeriod?: string;
+
+  @Transform(({ value }) => CastHelper.trim(value))
+  @IsEnum(Currency)
+  @IsOptional()
+  currency?: Currency;
+
+  @Transform(({ value }) => CastHelper.trim(value))
+  @IsEnum(PaymentMethod)
+  @IsOptional()
+  paymentMethod?: PaymentMethod;
+}
 
 export class ClientsFilterDto extends BaseFilterDto {
   @IsOptional()

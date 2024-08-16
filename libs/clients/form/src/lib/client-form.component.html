@@ -18,11 +18,7 @@
             />
             <label for="name">Name</label>
           </p-floatLabel>
-          <small class="text-red-400">
-            @if (hasError('name', 'required')) {
-              <p>Name is required.</p>
-            }
-          </small>
+          <input-error [control]="form.get('name')!" [formGroup]="form" />
         </div>
       </div>
       <div class="grid grid-cols-2">
@@ -37,11 +33,7 @@
             />
             <label for="code">Code</label>
           </p-floatLabel>
-          <small class="text-red-400">
-            @if (hasError('code', 'required')) {
-              <p>Code is required.</p>
-            }
-          </small>
+          <input-error [control]="form.get('code')!" [formGroup]="form" />
         </div>
       </div>
       <div class="grid grid-cols-2 gap-2">
@@ -59,11 +51,7 @@
             />
             <label for="currency">Currency</label>
           </p-floatLabel>
-          <small class="text-red-400">
-            @if (hasError('currency', 'required')) {
-              <p>Currency is required.</p>
-            }
-          </small>
+          <input-error [control]="form.get('currency')!" [formGroup]="form" />
         </div>
         <div class="col-span-1 pt-8">
           <p-floatLabel>
@@ -79,11 +67,10 @@
             />
             <label for="paymentMethod">Payment Method</label>
           </p-floatLabel>
-          <small class="text-red-400">
-            @if (hasError('paymentMethod', 'required')) {
-              <p>Payment Method is required.</p>
-            }
-          </small>
+          <input-error
+            [control]="form.get('paymentMethod')!"
+            [formGroup]="form"
+          />
         </div>
       </div>
       <div class="grid grid-cols-2">
@@ -99,14 +86,10 @@
             />
             <label for="billingEmailAddress">Billing Address</label>
           </p-floatLabel>
-          <small class="text-red-400">
-            @if (hasError('billingEmailAddress', 'required')) {
-              <p>Billing Address is required.</p>
-            }
-            @if (hasError('billingEmailAddress', 'email')) {
-              <p>Please enter a valid email address.</p>
-            }
-          </small>
+          <input-error
+            [control]="form.get('billingEmailAddress')!"
+            [formGroup]="form"
+          />
         </div>
       </div>
       <div class="grid grid-cols-2 gap-2">
@@ -121,11 +104,10 @@
             />
             <label for="billingPeriod">Billing Period</label>
           </p-floatLabel>
-          <small class="text-red-400">
-            @if (hasError('billingPeriod', 'required')) {
-              <p>Billing period is required.</p>
-            }
-          </small>
+          <input-error
+            [control]="form.get('billingPeriod')!"
+            [formGroup]="form"
+          />
         </div>
         <div class="col-span-1 pt-8">
           <p-floatLabel>
@@ -138,11 +120,10 @@
             />
             <label for="paymentDueDays">Payment Due Days</label>
           </p-floatLabel>
-          <small class="text-red-400">
-            @if (hasError('paymentDueDays', 'required')) {
-              <p>Payment Due Days is required.</p>
-            }
-          </small>
+          <input-error
+            [control]="form.get('paymentDueDays')!"
+            [formGroup]="form"
+          />
         </div>
       </div>
     </div>

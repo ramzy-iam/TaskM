@@ -16,14 +16,14 @@ import {
   Subscription,
 } from 'rxjs';
 import { ClientDto } from '@TaskM/core/dto';
-import { BaseEnumComponent } from '@TaskM/shared/ui';
+import { BaseEnumComponent, FormUtilsService } from '@TaskM/shared/misc';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormInputErrorComponent } from '@TaskM/shared/ui';
 
 @Component({
   selector: 'app-client-form',
@@ -37,6 +37,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     FloatLabelModule,
     DropdownModule,
     InputNumberModule,
+    FormInputErrorComponent,
   ],
   templateUrl: './client-form.component.html',
 })
@@ -49,13 +50,11 @@ export class ClientFormComponent
   loading = false;
   private initialFormValues: any;
   private formValueChangesSubscription!: Subscription;
-  private codeParam!: string;
 
   constructor(
     private clientService: ClientService,
-    private router: Router,
-    private route: ActivatedRoute,
     @Optional() public dialogRef: DynamicDialogRef,
+    private formUtils: FormUtilsService,
   ) {
     super();
   }
@@ -70,10 +69,6 @@ export class ClientFormComponent
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe((params) => {
-      this.codeParam = params['selectedCode'];
-    });
-
     this.initializeForm(this._client);
     this.triggerAutoSave();
   }
@@ -87,7 +82,14 @@ export class ClientFormComponent
   private initializeForm(client: ClientDto | null) {
     this.form = new FormGroup({
       name: new FormControl<string>(client?.name ?? '', [Validators.required]),
-      code: new FormControl<string>(client?.code ?? '', [Validators.required]),
+      code: new FormControl<string>(
+        { value: client?.code ?? '', disabled: !!client?.id },
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(10),
+        ],
+      ),
       billingEmailAddress: new FormControl<string>(
         client?.billingEmailAddress ?? '',
         [Validators.required, Validators.email],
@@ -131,18 +133,17 @@ export class ClientFormComponent
         if (this.dialogRef && !this.client?.id) this.dialogRef.close();
         // Store form values
         this.initialFormValues = this.form.getRawValue();
-        // Update query params if the code has changed
-        this.trackCodeChanges();
-
         this.clientService.triggerChanges(client);
       },
-      error: () => {
+      error: (error) => {
         // Unsubscribe before resetting the form to avoid triggering the update
         if (this.formValueChangesSubscription) {
           this.formValueChangesSubscription.unsubscribe();
         }
 
-        if (this.client.id) this.form.patchValue(this.initialFormValues); // Reset form with initial values on error
+        this.formUtils.handleErrors(this.form, error.error);
+
+        if (this.client?.id) this.form.patchValue(this.initialFormValues); // Reset form with initial values on error
 
         // Resubscribe to form value changes
         this.triggerAutoSave();
@@ -154,7 +155,7 @@ export class ClientFormComponent
     this.formValueChangesSubscription = this.form.valueChanges
       .pipe(
         filter(() => !!this.autoSave),
-        debounceTime(2000),
+        debounceTime(3000),
         distinctUntilChanged(
           (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr),
         ),
@@ -162,20 +163,5 @@ export class ClientFormComponent
       .subscribe(() => {
         this.onSubmit();
       });
-  }
-
-  private trackCodeChanges() {
-    if (this.client.id && this.form.get('code')?.value !== this.codeParam) {
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: { selectedClient: this.form.get('code')?.value },
-        queryParamsHandling: 'merge',
-      });
-    }
-  }
-
-  hasError(controlName: string, errorName: string): boolean {
-    const control = this.form.get(controlName);
-    return (control?.touched && control.hasError(errorName)) ?? false;
   }
 }

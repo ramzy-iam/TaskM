@@ -24,8 +24,6 @@ export class ClientsService {
   }
 
   async update(id: string, clientDto: UpdateClientDto) {
-    await this.validateBeforeCreateOrUpdate(clientDto.code, id);
-
     await this.clientsRepository.update(
       { id },
       UtilsHelper.convertUndefinedToNull(clientDto),

@@ -72,8 +72,11 @@ export const HttpToastInterceptor: HttpInterceptorFn = (
     displayCondition === undefined ? true : displayCondition;
 
   const getErrorMessage = async (error: HttpErrorResponse): Promise<string> => {
-    if (error.error?.message) {
-      return parseErrorMessage(error.error.message);
+    const firstErrorKey = Object.keys(error.error)[0];
+    if (firstErrorKey !== 'message' || error.error?.message) {
+      return parseErrorMessage(
+        error.error[firstErrorKey] || error.error['message'],
+      );
     } else if (
       error.error instanceof Blob &&
       error.error.type === 'application/json'

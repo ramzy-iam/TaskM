@@ -86,7 +86,7 @@ export class ClientListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.filterForm.valueChanges
-      .pipe(debounceTime(800), distinctUntilChanged())
+      .pipe(debounceTime(1000), distinctUntilChanged())
       .subscribe(({ ...filters }) => {
         this.isFilterActivated = this.formUtilsService.isAnyFilterActivated(
           this.filterForm,
@@ -167,7 +167,7 @@ export class ClientListComponent implements OnInit, OnDestroy {
     this.isLoadingMore = isLoadingMore;
   }
 
-  closeChild(): void {
+  onCloseChild(): void {
     this.selectedClientCode = null;
     this.selectClient(null);
   }

@@ -108,23 +108,10 @@
       <div
         class="relative h-full- max-h-full pb-3 px-8 m-1 mb-2 bg-white overflow-x-auto overflow-y-scroll"
       >
-        <div
-          class="flex sticky z-9 top-0 right-0 justify-end items-center bg-white"
-        >
-          <span
-            title="close"
-            (click)="closeChild()"
-            class="self-end p-2 flex justify-end items-end cursor-pointer"
-          >
-            <ng-icon name="radixCross2" size="25"></ng-icon>
-          </span>
-        </div>
-        <div class="flex flex-col bg-white pb-2">
-          <app-client-details
-            (clientNotFound)="closeChild()"
-            [code]="selectedClientCode"
-          ></app-client-details>
-        </div>
+        <app-client-details
+          (close)="onCloseChild()"
+          [code]="selectedClientCode"
+        ></app-client-details>
       </div>
     }
   </div>

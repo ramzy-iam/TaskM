@@ -17,4 +17,13 @@ export class FormUtilsService {
       );
     });
   }
+
+  handleErrors(form: FormGroup, errors: { [key: string]: string }) {
+    Object.keys(errors).forEach((field) => {
+      const control = form.get(field);
+      if (control) {
+        control.setErrors({ backend: errors[field] });
+      }
+    });
+  }
 }
