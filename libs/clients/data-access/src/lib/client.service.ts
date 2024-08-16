@@ -28,8 +28,8 @@ export class ClientService extends HttpBaseService {
     this.changes$.next(client);
   }
 
-  getChanges(): Subject<Client> {
-    return this.changes$;
+  getChanges<T extends Client = Client>(): Subject<T> {
+    return this.changes$ as unknown as Subject<T>;
   }
 
   create(
