@@ -16,7 +16,19 @@ import {
 import { BaseDto, BaseFilterDto } from './base.dto';
 import { Currency, PaymentMethod } from '@TaskM/core/constants';
 import { CastHelper } from '@TaskM/core/helpers';
-import { MarkOptionalFields, TrackProperty } from '@TaskM/core/decorators';
+import { TrackProperty } from '@TaskM/core/decorators';
+
+export class ClientBaseDto {
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  id?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  code?: string;
+}
 
 export class CreateClientDto {
   @TrackProperty

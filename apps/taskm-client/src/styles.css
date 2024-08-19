@@ -38,6 +38,12 @@
   .p-button .p-button-icon-left {
     margin-right: 0.5rem;
   }
+
+  .p-dropdown,
+  .p-autocomplete,
+  .p-calendar {
+    width: 100%;
+  }
 }
 
 @layer tailwind-components {

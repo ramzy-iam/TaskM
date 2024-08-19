@@ -29,7 +29,12 @@
         "scripts": [],
         "customWebpackConfig": {
           "path": "apps/taskm-client/webpack.config.js"
-        }
+        },
+        "allowedCommonJsDependencies": [
+          "dayjs",
+          "dayjs/plugin/duration",
+          "dayjs/plugin/utc"
+        ]
       },
       "configurations": {
         "production": {

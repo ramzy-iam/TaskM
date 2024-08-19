@@ -1,11 +1,11 @@
 /* eslint-disable */
 export default {
-  displayName: 'core-helpers',
-  preset: '../../../jest.preset.js',
+  displayName: 'core-helpers-backend',
+  preset: '../../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../../coverage/libs/core/helpers',
+  coverageDirectory: '../../../../coverage/libs/core/helpers/backend',
 };

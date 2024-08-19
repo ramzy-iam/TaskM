@@ -33,12 +33,6 @@ export class ProjectsController {
   }
 
   @Serialize(ProjectDto)
-  @Get(':id')
-  getOne(@Param('id') id: string) {
-    return this.projectsService.getOne(id);
-  }
-
-  @Serialize(ProjectDto)
   @Patch(':id')
   update(@Param('id') id: string, @Body() projectDto: UpdateProjectDto) {
     return this.projectsService.update(id, projectDto);
@@ -48,5 +42,17 @@ export class ProjectsController {
   @Get()
   findAll(@Query() filters: ProjectsFilterDto) {
     return this.projectsService.findAll<Pagination<Project>>(filters);
+  }
+
+  @Serialize(ProjectDto)
+  @Get('one')
+  findOne(@Query() filters: ProjectsFilterDto) {
+    return this.projectsService.findOne(filters);
+  }
+
+  @Serialize(ProjectDto)
+  @Get(':id')
+  getOne(@Param('id') id: string) {
+    return this.projectsService.getOne(id);
   }
 }

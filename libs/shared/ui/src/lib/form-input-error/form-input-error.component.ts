@@ -18,12 +18,15 @@ import { getValidatorErrorMessage } from './validations-utils';
 export class FormInputErrorComponent {
   @Input() control!: AbstractControl;
   @Input() formGroup?: FormGroup;
+  @Input() fieldName?: string;
 
   get errorMessage() {
     for (const validatorName in this.control?.errors) {
       if (this.control.touched) {
         const fieldName =
-          this.getControlName(this.formGroup, this.control) || 'This field';
+          this.fieldName ||
+          this.getControlName(this.formGroup as FormGroup, this.control) ||
+          'This field';
         return getValidatorErrorMessage(
           validatorName,
           this.control.errors[validatorName],

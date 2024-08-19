@@ -10,8 +10,7 @@ import {
 import { Nullable, ToastOptions } from '@TaskM/core/types';
 import { HttpBaseService } from '@TaskM/core/http';
 import { TOAST_COMMON_MESSAGES } from '@TaskM/core/constants';
-
-type Client = ClientPreviewDto | ClientDto;
+import { Client } from './client';
 
 @Injectable({
   providedIn: 'root',

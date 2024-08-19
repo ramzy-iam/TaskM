@@ -34,7 +34,7 @@ const toBoolean = (value?: BOOLEAN_ENUM): boolean | undefined => {
 
 const toNumber = (
   value?: string,
-  opts: ToNumberOptions = {}
+  opts: ToNumberOptions = {},
 ): number | undefined => {
   let newValue: number | undefined = undefined;
 
@@ -43,8 +43,7 @@ const toNumber = (
     else return;
   }
 
-  if (typeof newValue === 'undefined')
-    newValue = Number.parseInt(value as string, 10);
+  if (typeof newValue === 'undefined') newValue = Number(value);
 
   if (opts.min && newValue < opts.min) newValue = opts.min;
 

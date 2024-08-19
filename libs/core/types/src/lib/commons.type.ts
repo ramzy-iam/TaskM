@@ -21,3 +21,9 @@ export interface ToastOptions {
     onSuccess?: boolean;
   };
 }
+
+export type DateComparisonType =
+  | 'greater'
+  | 'greaterOrEqual'
+  | 'less'
+  | 'lessOrEqual';

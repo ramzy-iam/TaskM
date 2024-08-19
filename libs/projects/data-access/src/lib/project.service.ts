@@ -10,8 +10,7 @@ import {
 import { Nullable, ToastOptions } from '@TaskM/core/types';
 import { HttpBaseService } from '@TaskM/core/http';
 import { TOAST_COMMON_MESSAGES } from '@TaskM/core/constants';
-
-type Project = ProjectPreviewDto | ProjectDto;
+import { Project } from './project';
 
 @Injectable({
   providedIn: 'root',
@@ -28,8 +27,8 @@ export class ProjectService extends HttpBaseService {
     this.changes$.next(project);
   }
 
-  getChanges(): Subject<Project> {
-    return this.changes$;
+  getChanges<T extends Project = Project>(): Subject<T> {
+    return this.changes$ as unknown as Subject<T>;
   }
 
   create(

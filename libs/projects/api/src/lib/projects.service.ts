@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { ClientsService } from '@TaskM/clients/api';
 import { ProjectDateFilterField } from '@TaskM/core/constants';
 import { Project, ProjectsRepository } from '@TaskM/core/db';
@@ -7,7 +11,8 @@ import {
   CreateProjectDto,
   UpdateProjectDto,
 } from '@TaskM/core/dto';
-import { DayjsHelper, paginateResult, UtilsHelper } from '@TaskM/core/helpers';
+import { DayjsHelper, UtilsHelper } from '@TaskM/core/helpers';
+import { paginateResult } from '@TaskM/core/helpers/backend';
 
 @Injectable()
 export class ProjectsService {
@@ -17,21 +22,34 @@ export class ProjectsService {
   ) {}
 
   async create(projectDto: CreateProjectDto) {
-    await this.validateBeforeCreateOrUpdate(projectDto.poId);
+    const client = await this.clientsService.findOne({
+      code: projectDto.client?.code,
+      clientId: projectDto.client?.id,
+    });
+    if (!client)
+      throw new BadRequestException(
+        `Client with code '${projectDto.client?.code}' not found`,
+      );
+
+    await this.validateBeforeCreateOrUpdate(projectDto.clientPoId);
 
     const project = this.projectsRepository.create(projectDto);
-    const { internalPoId } = await this.generateSpecialFields(project.clientId);
+    const { poId } = await this.generateSpecialFields(project.clientId);
 
-    project.internalPoId = internalPoId;
+    project.poId = poId;
+    project.client = client;
 
     return this.projectsRepository.save(project);
   }
 
   getOne(id: string) {
-    return this.projectsRepository.scoped.filterById(id).getOneOrFail();
+    return this.projectsRepository.scoped
+      .filterById(id)
+      .joinClient()
+      .getOneOrFail();
   }
 
-  async update(id: string, projectDto: Partial<UpdateProjectDto>) {
+  async update(id: string, projectDto: UpdateProjectDto) {
     await this.validateBeforeCreateOrUpdate(projectDto.name);
 
     await this.projectsRepository.update(
@@ -42,17 +60,17 @@ export class ProjectsService {
   }
 
   private async validateBeforeCreateOrUpdate(
-    poId?: string,
+    clientPoId?: string,
     projectId?: string,
   ) {
-    if (!poId) return;
+    if (!clientPoId) return;
     const existingProject = await this.projectsRepository.scoped
-      .filterByPoId(poId)
+      .filterByClientPoId(clientPoId)
       .getOne();
 
     if (existingProject && (!projectId || existingProject.id !== projectId))
       throw new ConflictException(
-        `There is already a project with the PO ID '${poId}'`,
+        `There is already a project with the ClientPO ID '${clientPoId}'`,
       );
   }
 
@@ -63,8 +81,10 @@ export class ProjectsService {
     if (filters?.clientId) query.filterByClientId(filters?.clientId);
     if (filters?.taskType) query.filterByTaskType(filters?.taskType);
     if (filters?.status) query.filterByStatus(filters?.status);
+    if (filters?.poId) query.filterByPoId(filters?.poId);
 
     query
+      .joinClient()
       .filterByDate(filters?.from, filters?.to, filters?.dateField)
       ._orderBy(filters?.orderField, filters?.order);
 
@@ -93,6 +113,13 @@ export class ProjectsService {
     const poId = `${client.code}${year}${month}${day}`;
     const newNumber = (monthProjectCount + 1).toString().padStart(4, '0');
 
-    return { internalPoId: `${newNumber}. ${poId}-${newNumber}` };
+    return { poId: `${newNumber}. ${poId}-${newNumber}` };
+  }
+  findOne(filters?: ProjectsFilterDto) {
+    const query = this.projectsRepository.scoped;
+    if (filters?.id) query.filterById(filters?.id);
+    if (filters?.poId) query.filterByPoId(filters?.poId);
+
+    return query.joinClient().getOne();
   }
 }
