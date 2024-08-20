@@ -17,7 +17,7 @@ import {
   max,
   Subscription,
 } from 'rxjs';
-import { ProjectDto } from '@TaskM/core/dto';
+import { BaseClientDto, ProjectDto } from '@TaskM/core/dto';
 import { BaseEnumComponent, FormUtilsService } from '@TaskM/shared/misc';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -26,19 +26,16 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FormInputErrorComponent } from '@TaskM/shared/ui';
-import { ClientService } from '@TaskM/clients/data-access';
-import { Currency, CurrencyToIntlNumberFormat } from '@TaskM/core/constants';
-import {
-  AutoCompleteCompleteEvent,
-  AutoCompleteModule,
-  AutoCompleteSelectEvent,
-} from 'primeng/autocomplete';
+import {} from '@TaskM/clients/data-access';
+import { CurrencyToIntlNumberFormat } from '@TaskM/core/constants';
+
 import { CalendarModule } from 'primeng/calendar';
 import {
   dateComparisonValidator,
   dateComparisonWithTodayValidator,
 } from '@TaskM/shared/misc';
 import { DayjsHelper } from '@TaskM/core/helpers';
+import { ClientAutocompleteComponent } from '@TaskM/clients/form';
 
 @Component({
   selector: 'app-project-form',
@@ -53,8 +50,8 @@ import { DayjsHelper } from '@TaskM/core/helpers';
     DropdownModule,
     InputNumberModule,
     FormInputErrorComponent,
-    AutoCompleteModule,
     CalendarModule,
+    ClientAutocompleteComponent,
   ],
   templateUrl: './project-form.component.html',
 })
@@ -67,11 +64,6 @@ export class ProjectFormComponent
   loading = false;
   private initialFormValues: any;
   private formValueChangesSubscription!: Subscription;
-  filteredClients: { name: string; value: string; currency: Currency }[] = [];
-  totalRecords = 0;
-  searchQuery = '';
-  page = 1;
-  limit = 15;
   clientCurrency: string = '';
   CurrencyToIntlNumberFormat = CurrencyToIntlNumberFormat;
   maxReceivedAtDate!: Date;
@@ -81,7 +73,6 @@ export class ProjectFormComponent
 
   constructor(
     private projectService: ProjectService,
-    private clientService: ClientService,
     @Optional() public dialogRef: DynamicDialogRef,
     private formUtils: FormUtilsService,
   ) {
@@ -112,25 +103,7 @@ export class ProjectFormComponent
   private initializeForm(project: ProjectDto | null) {
     this.form = new FormGroup(
       {
-        client: new FormGroup({
-          id: new FormControl<string | undefined>(
-            {
-              value: project?.client?.id,
-              disabled: true,
-            },
-            [Validators.required],
-          ),
-          code: new FormControl<string | undefined>(
-            {
-              value: project?.client?.code,
-              disabled: true,
-            },
-            [Validators.required],
-          ),
-          name: new FormControl<string>(project?.client?.name ?? '', [
-            Validators.required,
-          ]),
-        }),
+        client: this.formUtils.createMinimalClientForm(null),
         name: new FormControl<string>(project?.name ?? '', [
           Validators.required,
         ]),
@@ -300,44 +273,7 @@ export class ProjectFormComponent
     return this.form.get(path) as FormGroup;
   }
 
-  searchClients(event: AutoCompleteCompleteEvent) {
-    this.searchQuery = event.query;
-    this.page = 1; // Reset to first page on new search
-    this.loadClients();
-  }
-
-  loadClients() {
-    this.clientService
-      .getList(
-        { page: this.page, limit: this.limit, query: this.searchQuery },
-        {
-          error: { message: 'Failed to load clients' },
-          success: { onSuccess: false },
-        },
-      )
-      .pipe(
-        map((data) =>
-          data.items.map((client) => ({
-            name: client.name,
-            value: client.id,
-            currency: client.currency,
-            code: client.code,
-          })),
-        ),
-      )
-      .subscribe((response) => {
-        this.filteredClients = response;
-      });
-  }
-
-  onClientSelect(event: AutoCompleteSelectEvent) {
-    this.clientCurrency = event.value?.currency ?? '';
-    this.form.patchValue({
-      client: {
-        id: event.value.value,
-        name: event.value.name,
-        code: event.value.code,
-      },
-    });
+  onClientSelect(client: BaseClientDto | null) {
+    this.clientCurrency = client?.currency ?? '';
   }
 }

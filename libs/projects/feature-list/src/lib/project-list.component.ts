@@ -10,6 +10,7 @@ import {
   ListItemComponent,
   NoDataComponent,
   SpinnerComponent,
+  TagComponent,
 } from '@TaskM/shared/ui';
 import { Project, ProjectService } from '@TaskM/projects/data-access';
 import { DialogModule } from 'primeng/dialog';
@@ -32,8 +33,15 @@ import { ProjectDetailsComponent } from '@TaskM/projects/feature-details';
 import { ProjectFormComponent } from '@TaskM/projects/form';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FormUtilsService, ScrollNearEndDirective } from '@TaskM/shared/misc';
-import { PAGINATION } from '@TaskM/core/constants';
+import {
+  PAGINATION,
+  ProjectStatus,
+  ProjectTagSeverity,
+} from '@TaskM/core/constants';
 import { Nullable } from '@TaskM/core/types';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { DropdownModule } from 'primeng/dropdown';
+import { ClientAutocompleteComponent } from '@TaskM/clients/form';
 
 @Component({
   selector: 'app-project-list',
@@ -56,6 +64,10 @@ import { Nullable } from '@TaskM/core/types';
     SpinnerComponent,
     ScrollNearEndDirective,
     NoDataComponent,
+    TagComponent,
+    MultiSelectModule,
+    DropdownModule,
+    ClientAutocompleteComponent,
   ],
   providers: [DialogService, provideIcons({ radixCross2 })],
   templateUrl: './project-list.component.html',
@@ -68,27 +80,34 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   private limit = PAGINATION.DEFAULT_LIMIT;
   private hasMore = true;
   filterForm = new FormGroup({
-    query: new FormControl<string>(''),
+    query: new FormControl<string | null>(null),
+    selectedStatus: new FormControl<string | null>(null),
+    client: this.formUtils.createMinimalClientForm(null),
   });
   private projectsSubject = new BehaviorSubject<Project[]>([]);
   projects$ = this.projectsSubject.asObservable();
   selectedProjectCode: string | null = null;
   dialogRef?: DynamicDialogRef;
   isFilterActivated = false;
+  projectTagSeverity = ProjectTagSeverity;
+  projectStatus = Object.keys(ProjectStatus).map((key) => ({
+    code: key,
+    name: ProjectStatus[key as keyof typeof ProjectStatus],
+  }));
 
   constructor(
     private projectService: ProjectService,
     private route: ActivatedRoute,
     private router: Router,
     private dialogService: DialogService,
-    private formUtilsService: FormUtilsService,
+    private formUtils: FormUtilsService,
   ) {}
 
   ngOnInit(): void {
     this.filterForm.valueChanges
       .pipe(debounceTime(1000), distinctUntilChanged())
       .subscribe(({ ...filters }) => {
-        this.isFilterActivated = this.formUtilsService.isAnyFilterActivated(
+        this.isFilterActivated = this.formUtils.isAnyFilterActivated(
           this.filterForm,
         );
         this.resetAndFetchProjects(filters);

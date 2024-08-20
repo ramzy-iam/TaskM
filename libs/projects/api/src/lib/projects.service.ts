@@ -4,7 +4,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { ClientsService } from '@TaskM/clients/api';
-import { ProjectDateFilterField } from '@TaskM/core/constants';
+import { ProjectDateFilterField, TaskType } from '@TaskM/core/constants';
 import { Project, ProjectsRepository } from '@TaskM/core/db';
 import {
   ProjectsFilterDto,
@@ -34,7 +34,10 @@ export class ProjectsService {
     await this.validateBeforeCreateOrUpdate(projectDto.clientPoId);
 
     const project = this.projectsRepository.create(projectDto);
-    const { poId } = await this.generateSpecialFields(project.clientId);
+    const { poId } = await this.generateSpecialFields(
+      project.taskType,
+      project.clientId,
+    );
 
     project.poId = poId;
     project.client = client;
@@ -95,7 +98,7 @@ export class ProjectsService {
     ) as Promise<P>;
   }
 
-  private async generateSpecialFields(clientId: string) {
+  private async generateSpecialFields(taskType: TaskType, clientId: string) {
     const client = await this.clientsService.getOne(clientId);
     const today = DayjsHelper.new();
     const from = today.endOf('M').toDate();
@@ -106,14 +109,12 @@ export class ProjectsService {
       .withDeleted()
       .getCount();
 
-    const year = today.format('YY');
-    const month = today.format('MM');
-    const day = today.format('DD');
+    const todayFormatted = today.format('DDMMYYYY');
 
-    const poId = `${client.code}${year}${month}${day}`;
-    const newNumber = (monthProjectCount + 1).toString().padStart(4, '0');
+    const poId = `${taskType}${todayFormatted}${client.code}`;
+    const newNumber = (monthProjectCount + 1).toString().padStart(3, '0');
 
-    return { poId: `${newNumber}. ${poId}-${newNumber}` };
+    return { poId: `${poId}${newNumber}` };
   }
   findOne(filters?: ProjectsFilterDto) {
     const query = this.projectsRepository.scoped;

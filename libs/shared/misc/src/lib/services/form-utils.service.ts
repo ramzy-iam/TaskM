@@ -1,5 +1,11 @@
+import { BaseClientDto } from '@TaskM/core/dto';
 import { Injectable } from '@angular/core';
-import { FormGroup, AbstractControl } from '@angular/forms';
+import {
+  FormGroup,
+  AbstractControl,
+  FormControl,
+  Validators,
+} from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +30,30 @@ export class FormUtilsService {
       if (control) {
         control.setErrors({ backend: errors[field] });
       }
+    });
+  }
+
+  createMinimalClientForm(
+    client: BaseClientDto | null,
+    required = true,
+  ): FormGroup {
+    const validators = required ? [Validators.required] : [];
+    return new FormGroup({
+      id: new FormControl<string | undefined>(
+        {
+          value: client?.id,
+          disabled: true,
+        },
+        [...validators],
+      ),
+      code: new FormControl<string | undefined>(
+        {
+          value: client?.code,
+          disabled: true,
+        },
+        [...validators],
+      ),
+      name: new FormControl<string>(client?.name ?? '', [...validators]),
     });
   }
 }

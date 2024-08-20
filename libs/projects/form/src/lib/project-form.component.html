@@ -7,21 +7,15 @@
   >
     <div class="flex flex-col gap-x-4">
       <div class="grid grid-cols-2">
-        <div class="col-span-full pt-8" formGroupName="client">
-          <p-floatLabel>
-            <p-autoComplete
-              formControlName="name"
-              [suggestions]="filteredClients"
-              (completeMethod)="searchClients($event)"
-              field="name"
-              [dropdown]="true"
-              (onSelect)="onClientSelect($event)"
-              [forceSelection]="true"
-              placeholder="Select a client"
-              inputId="clientName"
-            ></p-autoComplete>
-            <label for="clientName">Client</label>
-          </p-floatLabel>
+        <div class="col-span-full pt-8">
+          <app-client-autocomplete
+            [form]="form"
+            inputId="clientName"
+            [floatLabel]="true"
+            label="Client"
+            (selectClient)="onClientSelect($event)"
+            [showClear]="true"
+          />
           <input-error
             [fieldName]="'Client'"
             [control]="form.get('client.name')!"

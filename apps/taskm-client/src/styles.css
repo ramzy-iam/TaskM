@@ -44,6 +44,31 @@
   .p-calendar {
     width: 100%;
   }
+
+  p-tag {
+    font-size: 14px;
+    .p-tag {
+      font-size: 0.75em !important;
+      padding: 0.25em 0.4em !important;
+    }
+  }
+
+  .p-autocomplete-input.p-inputtext {
+    width: 100% !important;
+  }
+
+  .p-multiselect-flex .p-multiselect {
+    display: flex !important;
+  }
+
+  .input-like-text {
+    .p-multiselect,
+    .p-autocomplete-input.p-inputtext,
+    .p-dropdown {
+      box-shadow: none !important;
+      border: none !important;
+    }
+  }
 }
 
 @layer tailwind-components {

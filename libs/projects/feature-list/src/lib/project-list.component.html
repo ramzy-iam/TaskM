@@ -11,10 +11,27 @@
           </div>
           <div>
             <form [formGroup]="filterForm">
-              <ui-input-search
-                [control]="filterForm.controls.query"
-                [attributes]="{ placeholder: 'Search' }"
-              />
+              <div class="grid grid-cols-[270px_repeat(8,minmax(0,1fr))] gap-4">
+                <ui-input-search
+                  [control]="filterForm.controls.query"
+                  [attributes]="{ placeholder: 'Search' }"
+                  class="col-span-1"
+                />
+                <p-dropdown
+                  [options]="projectStatus"
+                  formControlName="selectedStatus"
+                  placeholder="Status"
+                  showClear="true"
+                  optionLabel="name"
+                  class="col-span-2 input-like-text"
+                />
+                <app-client-autocomplete
+                  [form]="filterForm"
+                  inputId="clientName"
+                  class="col-span-2 input-like-text"
+                  [showClear]="true"
+                />
+              </div>
             </form>
           </div>
         </div>
@@ -65,8 +82,8 @@
               class="grid grid-cols-2 xl:grid-cols-5 text-black/95 font-semibold"
             >
               <div class="grid-cols-1">PO ID</div>
-              <div class="grid-cols-1">Client PO ID</div>
               <div class="grid-cols-1">Name</div>
+              <div class="grid-cols-1 pl-4">Status</div>
               <div class="grid-cols-1 hidden xl:block">Task</div>
               <div class="grid-cols-1 hidden xl:block">Lang</div>
             </div>
@@ -86,14 +103,18 @@
                     <div class="grid-cols-1 truncate" [title]="project.poId">
                       {{ project.poId }}
                     </div>
-                    <div
-                      class="grid-cols-1 truncate"
-                      [title]="project.clientPoId"
-                    >
-                      {{ project.clientPoId }}
-                    </div>
+
                     <div class="grid-cols-1 truncate" [title]="project.name">
                       {{ project.name }}
+                    </div>
+                    <div
+                      class="grid-cols-1 truncate pl-4"
+                      [title]="project.status"
+                    >
+                      <ui-tag
+                        [value]="project.status"
+                        [severity]="projectTagSeverity[project.status]"
+                      ></ui-tag>
                     </div>
                     <div
                       class="grid-cols-1 truncate"

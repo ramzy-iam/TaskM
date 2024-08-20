@@ -42,13 +42,13 @@ export enum LoadUnit {
 }
 
 export enum ProjectStatus {
-  DELIVERED_WAITING_QA = 'Delivered & waiting QA',
-  COMPLETED = 'Completed',
   NOT_STARTED = 'Not Started',
-  DELIVERED_CLOSED = 'Delivered & closed',
+  COMPLETED = 'Completed',
   IN_PROGRESS = 'In progress',
   CANCELLED = 'Cancelled',
   ON_HOLD = 'On Hold',
+  DELIVERED_WAITING_QA = 'Delivered & waiting QA',
+  DELIVERED_CLOSED = 'Delivered & closed',
 }
 
 export enum TaskStatus {

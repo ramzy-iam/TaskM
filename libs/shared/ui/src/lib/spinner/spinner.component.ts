@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { CommonModule, NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'ui-spinner',
