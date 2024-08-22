@@ -46,6 +46,7 @@ import { CalendarModule } from 'primeng/calendar';
               field="name"
               [dropdown]="dropdown()"
               (onSelect)="onClientSelect($event)"
+              (onClear)="onClientUnselect()"
               [forceSelection]="true"
               [showClear]="showClear()"
               placeholder="Client"
@@ -62,6 +63,7 @@ import { CalendarModule } from 'primeng/calendar';
             field="name"
             [dropdown]="dropdown()"
             (onSelect)="onClientSelect($event)"
+            (onClear)="onClientUnselect()"
             [forceSelection]="true"
             [showClear]="showClear()"
             placeholder="Client"
@@ -122,22 +124,32 @@ export class ClientAutocompleteComponent {
   }
 
   onClientSelect(event: AutoCompleteSelectEvent) {
+    const fields = {
+      id: event.value.value,
+      name: event.value.name,
+      code: event.value.code,
+    };
     this.form().patchValue({
-      client: {
-        id: event.value.value,
-        name: event.value.name,
-        code: event.value.code,
-      },
+      client: fields,
     });
     this.selectClient.emit(
       event.value
         ? {
-            id: event.value.value,
-            name: event.value?.name,
-            code: event.value?.code,
+            ...fields,
             currency: event.value?.currency,
           }
         : null,
     );
+  }
+
+  onClientUnselect() {
+    const event = {
+      value: {
+        name: null,
+        value: null,
+        currency: null,
+      },
+    } as AutoCompleteSelectEvent;
+    this.onClientSelect(event);
   }
 }

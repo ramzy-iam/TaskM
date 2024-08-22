@@ -30,7 +30,7 @@ export class BaseFilterDto {
 
   @IsOptional()
   @IsString()
-  query?: string;
+  query?: string | null;
 
   @Transform(({ value }) =>
     CastHelper.toNumber(value, {
@@ -79,12 +79,12 @@ export class ClientOwnedFilterDto extends BaseFilterDto {
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  clientCode?: string;
+  clientCode?: string | null;
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
   @IsUUID()
-  clientId?: string;
+  clientId?: string | null;
 }
 
 export class BaseClientDto {

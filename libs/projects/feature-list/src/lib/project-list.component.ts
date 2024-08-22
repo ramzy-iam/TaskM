@@ -37,6 +37,8 @@ import {
   PAGINATION,
   ProjectStatus,
   ProjectTagSeverity,
+  TASK_TYPES_WITH_LABEL,
+  TaskType,
 } from '@TaskM/core/constants';
 import { Nullable } from '@TaskM/core/types';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -79,11 +81,22 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   private page = PAGINATION.DEFAULT_PAGE;
   private limit = PAGINATION.DEFAULT_LIMIT;
   private hasMore = true;
-  filterForm = new FormGroup({
-    query: new FormControl<string | null>(null),
-    selectedStatus: new FormControl<string | null>(null),
-    client: this.formUtils.createMinimalClientForm(null),
-  });
+  filterForm!: FormGroup<{
+    query: FormControl<string | null>;
+    status: FormControl<{
+      code: string;
+      name: string;
+    } | null>;
+    taskType: FormControl<{
+      code: string;
+      name: string;
+    } | null>;
+    client: FormGroup<{
+      id: FormControl<string | null | undefined>;
+      code: FormControl<string | null | undefined>;
+      name: FormControl<string | null | undefined>;
+    }>;
+  }>;
   private projectsSubject = new BehaviorSubject<Project[]>([]);
   projects$ = this.projectsSubject.asObservable();
   selectedProjectCode: string | null = null;
@@ -93,6 +106,10 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   projectStatus = Object.keys(ProjectStatus).map((key) => ({
     code: key,
     name: ProjectStatus[key as keyof typeof ProjectStatus],
+  }));
+  taskTypes = TASK_TYPES_WITH_LABEL.map(({ value, name }) => ({
+    code: value,
+    name,
   }));
 
   constructor(
@@ -104,15 +121,8 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.filterForm.valueChanges
-      .pipe(debounceTime(1000), distinctUntilChanged())
-      .subscribe(({ ...filters }) => {
-        this.isFilterActivated = this.formUtils.isAnyFilterActivated(
-          this.filterForm,
-        );
-        this.resetAndFetchProjects(filters);
-      });
-
+    this.initFiltersForm();
+    this.onFilterChanges();
     this.loadInitialProjects();
 
     this.projectService.getChanges().subscribe((project) => {
@@ -205,7 +215,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   onNearEndScroll(): void {
     if (!this.isLoadingMore && this.hasMore) {
       this.setLoadingState(false, true);
-      this.fetchProjects(this.filterForm.getRawValue());
+      this.fetchProjects(this.filterForm.getRawValue() as ProjectsFilterDto);
     }
   }
 
@@ -215,5 +225,31 @@ export class ProjectListComponent implements OnInit, OnDestroy {
 
   private loadInitialProjects(): void {
     this.fetchProjects();
+  }
+
+  private onFilterChanges() {
+    this.filterForm.valueChanges
+      .pipe(debounceTime(1000), distinctUntilChanged())
+      .subscribe(({ ...formValues }) => {
+        this.isFilterActivated = this.formUtils.isAnyFilterActivated(
+          this.filterForm,
+        );
+
+        const filters = {} as ProjectsFilterDto;
+        filters.query = formValues.query;
+        filters.status = formValues.status?.code as ProjectStatus;
+        filters.taskType = formValues.taskType?.code as TaskType;
+        filters.clientCode = formValues?.client?.code;
+
+        this.resetAndFetchProjects(filters);
+      });
+  }
+  private initFiltersForm() {
+    this.filterForm = new FormGroup({
+      query: new FormControl<string | null>(null),
+      status: new FormControl<{ code: string; name: string } | null>(null),
+      taskType: new FormControl<{ code: string; name: string } | null>(null),
+      client: this.formUtils.createMinimalClientForm(null),
+    });
   }
 }

@@ -82,6 +82,7 @@ export class ProjectsService {
     if (filters?.query) query.filterByName(filters?.query);
     if (filters?.withDeleted) query.withDeleted();
     if (filters?.clientId) query.filterByClientId(filters?.clientId);
+    if (filters?.clientCode) query.filterByClientCode(filters?.clientCode);
     if (filters?.taskType) query.filterByTaskType(filters?.taskType);
     if (filters?.status) query.filterByStatus(filters?.status);
     if (filters?.poId) query.filterByPoId(filters?.poId);
@@ -101,20 +102,20 @@ export class ProjectsService {
   private async generateSpecialFields(taskType: TaskType, clientId: string) {
     const client = await this.clientsService.getOne(clientId);
     const today = DayjsHelper.new();
-    const from = today.endOf('M').toDate();
-    const to = today.startOf('M').toDate();
+    const from = today.startOf('M').toDate();
+    const to = today.endOf('M').toDate();
     const monthProjectCount = await this.projectsRepository.scoped
       .filterByDate(from, to, ProjectDateFilterField.CREATED_AT)
       .filterByClientId(clientId)
       .withDeleted()
       .getCount();
 
-    const todayFormatted = today.format('DDMMYYYY');
+    const todayFormatted = today.format('YYMMDD');
 
-    const poId = `${taskType}${todayFormatted}${client.code}`;
     const newNumber = (monthProjectCount + 1).toString().padStart(3, '0');
+    const poId = `${client.code}-${todayFormatted}-${taskType}-${newNumber}`;
 
-    return { poId: `${poId}${newNumber}` };
+    return { poId };
   }
   findOne(filters?: ProjectsFilterDto) {
     const query = this.projectsRepository.scoped;

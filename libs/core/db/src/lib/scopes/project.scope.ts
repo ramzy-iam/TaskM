@@ -31,6 +31,12 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
     });
   }
 
+  filterByClientCode(clientCode: string) {
+    return this.andWhere(`client.code = :clientCode`, {
+      clientCode,
+    });
+  }
+
   filterByName(name: string) {
     return this.andWhere('Projects.name ILIKE :name', {
       name: `%${name}%`,

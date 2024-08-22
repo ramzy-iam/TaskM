@@ -30,7 +30,11 @@ export type TagSeverity =
   | 'secondary'
   | 'info'
   | 'warning'
-  | 'danger'
-  | 'contrast';
+  | 'danger';
 
-export type CustomTagSeverity = TagSeverity | 'orange' | 'green' | 'red';
+export type CustomTagSeverity =
+  | TagSeverity
+  | 'primary'
+  | 'orange'
+  | 'green'
+  | 'red';

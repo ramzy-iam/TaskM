@@ -176,19 +176,28 @@ export class ProjectsFilterDto extends ClientOwnedFilterDto {
   @IsEnum(ProjectDateFilterField)
   dateField?: ProjectDateFilterField;
 
-  @Transform(({ value }) => CastHelper.trim(value))
+  @Transform(({ value }) =>
+    value
+      ? (ProjectStatus[CastHelper.trim(value) as keyof typeof ProjectStatus] ??
+        value)
+      : null,
+  )
   @IsOptional()
   @IsEnum(ProjectStatus)
-  status?: ProjectStatus;
+  status?: ProjectStatus | null;
 
-  @Transform(({ value }) => CastHelper.trim(value))
+  @Transform(({ value }) =>
+    value
+      ? (TaskType[CastHelper.trim(value) as keyof typeof TaskType] ?? value)
+      : null,
+  )
   @IsOptional()
   @IsEnum(TaskType)
-  taskType?: TaskType;
+  taskType?: TaskType | null;
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
-  poId?: string;
+  poId?: string | null;
 }
 
 export class ProjectPreviewDto extends BaseDto {

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpHeaders } from '@angular/common/http';
-import { ToastOptions } from '@TaskM/core/types';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
+import { Nullable, ToastOptions } from '@TaskM/core/types';
 import { TOAST_HEADER_KEY } from '@TaskM/core/constants';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HttpBaseService {
-  createHeaders(
+  protected createHeaders(
     options?: ToastOptions,
     additionalHeaders?: { [key: string]: string },
   ): HttpHeaders {
@@ -49,5 +49,17 @@ export class HttpBaseService {
       },
     };
     return this.createHeaders(mergedOptions);
+  }
+
+  protected createHttpParams<P>(filters?: Nullable<P>): HttpParams {
+    let params = new HttpParams();
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params = params.set(key, String(value));
+        }
+      });
+    }
+    return params;
   }
 }

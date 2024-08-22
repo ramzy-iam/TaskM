@@ -9,7 +9,6 @@ const defaultSeverities: CustomTagSeverity[] = [
   'info',
   'warning',
   'danger',
-  'contrast',
   undefined,
 ];
 
@@ -25,7 +24,7 @@ export class TagComponent {
   rounded = input<boolean>(false);
 
   isCustomSeverity(): TagSeverity {
-    return !defaultSeverities.includes(this.severity())
+    return defaultSeverities.includes(this.severity())
       ? (this.severity() as TagSeverity)
       : undefined;
   }

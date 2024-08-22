@@ -5,7 +5,7 @@ export const ProjectTagSeverity: { [key in ProjectStatus]: CustomTagSeverity } =
   {
     [ProjectStatus.DELIVERED_WAITING_QA]: 'success',
     [ProjectStatus.COMPLETED]: 'success',
-    [ProjectStatus.NOT_STARTED]: 'warning',
+    [ProjectStatus.NOT_STARTED]: 'primary',
     [ProjectStatus.DELIVERED_CLOSED]: 'warning',
     [ProjectStatus.IN_PROGRESS]: 'info',
     [ProjectStatus.CANCELLED]: 'danger',

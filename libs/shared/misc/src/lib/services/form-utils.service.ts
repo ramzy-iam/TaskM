@@ -33,27 +33,18 @@ export class FormUtilsService {
     });
   }
 
-  createMinimalClientForm(
-    client: BaseClientDto | null,
-    required = true,
-  ): FormGroup {
+  createMinimalClientForm(client: BaseClientDto | null, required = true) {
     const validators = required ? [Validators.required] : [];
     return new FormGroup({
-      id: new FormControl<string | undefined>(
-        {
-          value: client?.id,
-          disabled: true,
-        },
-        [...validators],
-      ),
-      code: new FormControl<string | undefined>(
-        {
-          value: client?.code,
-          disabled: true,
-        },
-        [...validators],
-      ),
-      name: new FormControl<string>(client?.name ?? '', [...validators]),
+      id: new FormControl<string | undefined | null>(client?.id, [
+        ...validators,
+      ]),
+      code: new FormControl<string | undefined | null>(client?.code, [
+        ...validators,
+      ]),
+      name: new FormControl<string | undefined | null>(client?.name ?? '', [
+        ...validators,
+      ]),
     });
   }
 }

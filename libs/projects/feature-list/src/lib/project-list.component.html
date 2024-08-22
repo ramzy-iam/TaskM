@@ -11,25 +11,35 @@
           </div>
           <div>
             <form [formGroup]="filterForm">
-              <div class="grid grid-cols-[270px_repeat(8,minmax(0,1fr))] gap-4">
+              <div
+                class="grid grid-cols-[270px_repeat(11,minmax(0,1fr))] gap-4"
+              >
                 <ui-input-search
                   [control]="filterForm.controls.query"
                   [attributes]="{ placeholder: 'Search' }"
                   class="col-span-1"
-                />
-                <p-dropdown
-                  [options]="projectStatus"
-                  formControlName="selectedStatus"
-                  placeholder="Status"
-                  showClear="true"
-                  optionLabel="name"
-                  class="col-span-2 input-like-text"
                 />
                 <app-client-autocomplete
                   [form]="filterForm"
                   inputId="clientName"
                   class="col-span-2 input-like-text"
                   [showClear]="true"
+                />
+                <p-dropdown
+                  [options]="projectStatus"
+                  formControlName="status"
+                  placeholder="Status"
+                  showClear="true"
+                  optionLabel="name"
+                  class="col-span-2 input-like-text"
+                />
+                <p-dropdown
+                  [options]="taskTypes"
+                  formControlName="taskType"
+                  placeholder="Task"
+                  showClear="true"
+                  optionLabel="name"
+                  class="col-span-2 input-like-text"
                 />
               </div>
             </form>
