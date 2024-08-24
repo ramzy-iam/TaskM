@@ -13,6 +13,13 @@ export const appRoutes: Route[] = [
             (c) => c.ClientListComponent,
           ),
       },
+      {
+        path: 'projects',
+        loadComponent: () =>
+          import('@TaskM/projects/feature-list').then(
+            (c) => c.ProjectListComponent,
+          ),
+      },
     ],
   },
 ];

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import {
   ClientDto,
@@ -10,8 +10,7 @@ import {
 import { Nullable, ToastOptions } from '@TaskM/core/types';
 import { HttpBaseService } from '@TaskM/core/http';
 import { TOAST_COMMON_MESSAGES } from '@TaskM/core/constants';
-
-type Client = ClientPreviewDto | ClientDto;
+import { Client } from './client';
 
 @Injectable({
   providedIn: 'root',
@@ -28,8 +27,8 @@ export class ClientService extends HttpBaseService {
     this.changes$.next(client);
   }
 
-  getChanges(): Subject<Client> {
-    return this.changes$;
+  getChanges<T extends Client = Client>(): Subject<T> {
+    return this.changes$ as unknown as Subject<T>;
   }
 
   create(
@@ -70,7 +69,7 @@ export class ClientService extends HttpBaseService {
     };
 
     return this.http.get<PaginationDto<ClientPreviewDto>>(this.url, {
-      params: filters as HttpParams,
+      params: this.createHttpParams(filters),
       headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
     });
   }
@@ -96,7 +95,7 @@ export class ClientService extends HttpBaseService {
     };
 
     return this.http.get<ClientDto | null>(`${this.url}/one`, {
-      params: { ...filters },
+      params: this.createHttpParams(filters),
       headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
     });
   }

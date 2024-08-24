@@ -23,3 +23,18 @@ export enum BOOLEAN_ENUM {
   FALSE = 'false',
   ZERO = '0',
 }
+
+export type TagSeverity =
+  | undefined
+  | 'success'
+  | 'secondary'
+  | 'info'
+  | 'warning'
+  | 'danger';
+
+export type CustomTagSeverity =
+  | TagSeverity
+  | 'primary'
+  | 'orange'
+  | 'green'
+  | 'red';

@@ -1,8 +1,16 @@
-import { PAGINATION } from '@TaskM/core/constants';
+import { Currency, PAGINATION } from '@TaskM/core/constants';
 import { CastHelper } from '@TaskM/core/helpers';
 import { OrderType } from '@TaskM/core/types';
 import { Expose, Transform } from 'class-transformer';
-import { IsOptional, IsPositive, IsString, Max, Min } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsPositive,
+  IsString,
+  IsUUID,
+  Max,
+  Min,
+} from 'class-validator';
 
 export class BaseDto {
   @Expose()
@@ -17,8 +25,12 @@ export class BaseDto {
 
 export class BaseFilterDto {
   @IsOptional()
+  @IsUUID()
+  id?: string;
+
+  @IsOptional()
   @IsString()
-  query?: string;
+  query?: string | null;
 
   @Transform(({ value }) =>
     CastHelper.toNumber(value, {
@@ -52,4 +64,39 @@ export class BaseFilterDto {
   @Transform(({ value }) => CastHelper.toBoolean(value))
   @IsOptional()
   withDeleted?: boolean;
+}
+
+export class ClientOwnedDto {
+  @Transform(({ value }) => CastHelper.trim(value))
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  clientCode?: string;
+}
+
+export class ClientOwnedFilterDto extends BaseFilterDto {
+  @Transform(({ value }) => CastHelper.trim(value))
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  clientCode?: string | null;
+
+  @Transform(({ value }) => CastHelper.trim(value))
+  @IsOptional()
+  @IsUUID()
+  clientId?: string | null;
+}
+
+export class BaseClientDto {
+  @Expose()
+  id: string;
+
+  @Expose()
+  code: string;
+
+  @Expose()
+  name: string;
+
+  @Expose()
+  currency: Currency;
 }

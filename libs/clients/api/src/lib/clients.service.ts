@@ -5,7 +5,8 @@ import {
   CreateClientDto,
   UpdateClientDto,
 } from '@TaskM/core/dto';
-import { paginateResult, UtilsHelper } from '@TaskM/core/helpers';
+import { UtilsHelper } from '@TaskM/core/helpers';
+import { paginateResult } from '@TaskM/core/helpers/backend';
 
 @Injectable()
 export class ClientsService {
@@ -24,8 +25,6 @@ export class ClientsService {
   }
 
   async update(id: string, clientDto: UpdateClientDto) {
-    await this.validateBeforeCreateOrUpdate(clientDto.code, id);
-
     await this.clientsRepository.update(
       { id },
       UtilsHelper.convertUndefinedToNull(clientDto),

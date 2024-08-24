@@ -10,7 +10,7 @@ import { Client } from './client.entity';
 import { DateTzColumn } from './db.decorator';
 
 @Entity({ name: 'Projects' })
-@Unique(['internalPoId'])
+@Unique(['poId'])
 export class Project extends AppBaseEntity {
   @Column()
   name: string;
@@ -41,18 +41,26 @@ export class Project extends AppBaseEntity {
   lang: Language;
 
   @Column()
+  clientPoId: string;
+
+  /**
+   * This is the internal poId
+   */
+  @Column()
   poId: string;
 
-  @Column()
-  internalPoId: string;
-
-  @Column()
+  @Column({
+    type: 'decimal',
+    precision: 20,
+    scale: 6,
+  })
   count: number;
 
-  @Column()
-  reference: string;
-
-  @Column()
+  @Column({
+    type: 'decimal',
+    precision: 20,
+    scale: 6,
+  })
   rate: number;
 
   @Column({

@@ -19,10 +19,21 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
       poId,
     });
   }
+  filterByClientPoId(clientPoId: string) {
+    return this.andWhere('Projects.clientPoId = :clientPoId', {
+      clientPoId,
+    });
+  }
 
   filterByClientId(clientId: string) {
     return this.andWhere('Projects.clientId = :clientId', {
       clientId,
+    });
+  }
+
+  filterByClientCode(clientCode: string) {
+    return this.andWhere(`client.code = :clientCode`, {
+      clientCode,
     });
   }
 
@@ -33,9 +44,9 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
   }
 
   filterByDate(
-    from?: Date,
-    to?: Date,
-    dateField: ProjectDateFilterField = ProjectDateFilterField.CREATED_AT,
+    from?: Date | null,
+    to?: Date | null,
+    dateField: ProjectDateFilterField | null = ProjectDateFilterField.CREATED_AT,
   ) {
     if (from && to)
       return this.andWhere(
@@ -61,7 +72,7 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
     field: string = ProjectDateFilterField.CREATED_AT,
     order: OrderType = 'DESC',
   ) {
-    return this.addOrderBy(field, order);
+    return this.addOrderBy(`Projects.${field}`, order);
   }
 
   filterByStatus(status: ProjectStatus) {
@@ -74,5 +85,9 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
     return this.andWhere('Projects.taskType = :taskType', {
       taskType,
     });
+  }
+
+  joinClient() {
+    return this.leftJoinAndSelect('Projects.client', 'client');
   }
 }

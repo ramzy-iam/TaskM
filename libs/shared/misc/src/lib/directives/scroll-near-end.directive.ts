@@ -11,7 +11,13 @@ export class ScrollNearEndDirective {
   windowScrollEvent(event: Event) {
     const target = event.target as HTMLElement;
 
-    if (target.offsetHeight + target.scrollTop >= target.scrollHeight)
+    const scrollPercentage =
+      (target.scrollTop / (target.scrollHeight - target.offsetHeight)) * 100;
+
+    const threshold = 99;
+    const errorMargin = 0.1;
+
+    if (Math.floor(scrollPercentage) >= threshold - errorMargin)
       this.nearEnd.emit();
   }
 }

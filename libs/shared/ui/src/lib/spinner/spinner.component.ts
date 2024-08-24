@@ -1,10 +1,13 @@
-import { Component, Input } from '@angular/core';
-import { CommonModule, NgClass } from '@angular/common';
+import { Component, input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 @Component({
   selector: 'ui-spinner',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProgressBarModule],
   templateUrl: './spinner.component.html',
 })
-export class SpinnerComponent {}
+export class SpinnerComponent {
+  bar = input<boolean>(false);
+}

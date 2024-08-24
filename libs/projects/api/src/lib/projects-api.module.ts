@@ -13,7 +13,11 @@ import { ClientsService } from '@TaskM/clients/api';
 @Module({
   imports: [TypeOrmModule.forFeature([Project, Client])],
   controllers: [ProjectsController],
-  providers: [ProjectsService, ProjectsRepository, ClientsRepository],
-  exports: [ProjectsService, ClientsService],
+  providers: [
+    ProjectsService,
+    ProjectsRepository,
+    ClientsService,
+    ClientsRepository,
+  ],
 })
 export class ProjectsApiModule {}

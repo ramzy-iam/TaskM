@@ -18,19 +18,15 @@ async function bootstrap() {
       whitelist: true,
       stopAtFirstError: true,
       exceptionFactory: (errors) => {
-        const result = errors.map((error) => {
+        const errorsMessages: { [key: string]: string } = {};
+        errors.forEach((error) => {
           let message = error.constraints
             ? error.constraints[Object.keys(error.constraints)[0]]
             : '';
 
-          message = message.replace(`${error.property} `, '');
-
-          return {
-            property: error.property,
-            message,
-          };
+          errorsMessages[error.property] = message;
         });
-        return new BadRequestException(result);
+        return new BadRequestException(errorsMessages);
       },
     }),
   );

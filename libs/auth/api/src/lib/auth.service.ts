@@ -11,7 +11,8 @@ import { UsersService } from '@TaskM/users/api';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-import { EmailHelper, DayjsHelper } from '@TaskM/core/helpers';
+import { DayjsHelper } from '@TaskM/core/helpers';
+import { EmailHelper } from '@TaskM/core/helpers/backend';
 import {
   JWT_EXPIRY_DATE,
   ACCOUNT_VERIFICATION_EXPIRY_TIME,
@@ -33,7 +34,7 @@ export class AuthService {
   private emailHelper: EmailHelper;
   constructor(
     private usersService: UsersService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) {
     this.emailHelper = EmailHelper.getInstance();
   }
@@ -57,7 +58,7 @@ export class AuthService {
 
   async validateUser(
     email: string,
-    password: string
+    password: string,
   ): Promise<User | null | undefined> {
     const user = await this.usersService.findOne({ email });
 
@@ -121,7 +122,7 @@ export class AuthService {
     });
     if (!response.accepted.length)
       throw new InternalServerErrorException(
-        'Failed to send the verification link by mail'
+        'Failed to send the verification link by mail',
       );
 
     return { message: 'Verification link sent successfully' };
@@ -176,7 +177,7 @@ export class AuthService {
 
     if (!user)
       throw new BadRequestException(
-        'There is no user with given email address'
+        'There is no user with given email address',
       );
 
     const {
@@ -211,7 +212,7 @@ export class AuthService {
 
     if (!user)
       throw new BadRequestException(
-        'There is no user with given email address'
+        'There is no user with given email address',
       );
 
     if (resetToken !== user.passwordResetToken)
@@ -249,7 +250,7 @@ export class AuthService {
 
   async updateActiveWorkspace(
     userId: number,
-    workspaceId: number
+    workspaceId: number,
   ): Promise<void> {
     return this.usersService.updateActiveWorkspace(userId, workspaceId);
   }

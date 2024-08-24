@@ -5,6 +5,13 @@ export enum Currency {
   XAF = 'XAF',
 }
 
+export const CurrencyToIntlNumberFormat: { [key: string]: string } = {
+  USD: 'USD',
+  EURO: 'EUR',
+  CAD: 'CAD',
+  XAF: 'XAF',
+};
+
 export enum TaskType {
   TRA = 'TRA',
   EDIT = 'EDIT',
@@ -35,13 +42,13 @@ export enum LoadUnit {
 }
 
 export enum ProjectStatus {
-  DELIVERED_WAITING_QA = 'Delivered & waiting QA',
-  COMPLETED = 'Completed',
   NOT_STARTED = 'Not Started',
-  DELIVERED_CLOSED = 'Delivered & closed',
+  COMPLETED = 'Completed',
   IN_PROGRESS = 'In progress',
   CANCELLED = 'Cancelled',
   ON_HOLD = 'On Hold',
+  DELIVERED_WAITING_QA = 'Delivered & waiting QA',
+  DELIVERED_CLOSED = 'Delivered & closed',
 }
 
 export enum TaskStatus {
@@ -78,98 +85,195 @@ export enum Language {
 }
 
 export const LANGUAGES_WITH_LABEL = [
-  { name: 'French', code: Language.Fr },
-  { name: 'English', code: Language.En },
+  { name: 'French', value: Language.Fr },
+  { name: 'English', value: Language.En },
 
-  { name: 'English - French', code: Language['En-Fr'] },
-  { name: 'English - French', code: Language['En-Fr'] },
+  { name: 'English - French', value: Language['En-Fr'] },
+  { name: 'English - French', value: Language['En-Fr'] },
   {
     name: 'English (United Kingdom) - French (France)',
-    code: Language['EnUK-FrFR'],
+    value: Language['EnUK-FrFR'],
   },
   {
     name: 'English (United Kingdom) - French (Canada)',
-    code: Language['EnUK-FrCA'],
+    value: Language['EnUK-FrCA'],
   },
   {
     name: 'English (United States) - French (France)',
-    code: Language['EnUS-FrFR'],
+    value: Language['EnUS-FrFR'],
   },
   {
     name: 'English (United States) - French (Canada)',
-    code: Language['EnUS-FrCA'],
+    value: Language['EnUS-FrCA'],
   },
 
-  { name: 'French - English ', code: Language['Fr-En'] },
+  { name: 'French - English ', value: Language['Fr-En'] },
   {
     name: 'French (France) - English (United Kingdom)',
-    code: Language['FrFR-EnUK'],
+    value: Language['FrFR-EnUK'],
   },
   {
     name: 'French (France) - English (United States)',
-    code: Language['FrFR-EnUS'],
+    value: Language['FrFR-EnUS'],
   },
   {
     name: 'French (Canada) - English (United Kingdom)',
-    code: Language['FrCA-EnUK'],
+    value: Language['FrCA-EnUK'],
   },
   {
     name: 'French (Canada) - English (United States)',
-    code: Language['FrCA-EnUS'],
+    value: Language['FrCA-EnUS'],
   },
   {
     name: 'French (Canada) - English (Canada)',
-    code: Language['FrCA-EnCA'],
+    value: Language['FrCA-EnCA'],
   },
 
-  { name: 'Spanish - French   ', code: Language['Spa-Fr'] },
-  { name: 'Spanish - French (France)   ', code: Language['Spa-FrFR'] },
-  { name: 'Spanish - French (Canada)   ', code: Language['Spa-FrCA'] },
+  { name: 'Spanish - French', value: Language['Spa-Fr'] },
+  { name: 'Spanish - French (France)', value: Language['Spa-FrFR'] },
+  { name: 'Spanish - French (Canada)', value: Language['Spa-FrCA'] },
 
-  { name: 'German - French   ', code: Language['Ger-Fr'] },
-  { name: 'German - French (France)   ', code: Language['Ger-FrFR'] },
-  { name: 'German - French (Canada)', code: Language['Ger- FrCA'] },
+  { name: 'German - French', value: Language['Ger-Fr'] },
+  { name: 'German - French (France)', value: Language['Ger-FrFR'] },
+  { name: 'German - French (Canada)', value: Language['Ger- FrCA'] },
 ];
 
 export const TASK_TYPES_WITH_LABEL = [
   {
     name: 'Translation',
-    code: TaskType.TRA,
+    value: TaskType.TRA,
   },
   {
     name: 'Editing',
-    code: TaskType.EDIT,
+    value: TaskType.EDIT,
   },
   {
     name: 'Proofreading',
-    code: TaskType.PROOF,
+    value: TaskType.PROOF,
   },
   {
     name: 'Translation, Editing & Proofreading',
-    code: TaskType.TEP,
+    value: TaskType.TEP,
   },
   {
     name: 'Transcreation',
-    code: TaskType.TRCEA,
+    value: TaskType.TRCEA,
   },
   {
     name: 'Transcription',
-    code: TaskType.TRANS,
+    value: TaskType.TRANS,
   },
   {
     name: 'Machine Post Editing',
-    code: TaskType.MPTE,
+    value: TaskType.MPTE,
   },
   {
     name: 'Subtitling',
-    code: TaskType.SUBT,
+    value: TaskType.SUBT,
   },
   {
     name: 'Desktop Publishing',
-    code: TaskType.DTP,
+    value: TaskType.DTP,
   },
   {
     name: 'Voice Over',
-    code: TaskType.VO,
+    value: TaskType.VO,
   },
 ];
+
+export const TASK_LABELS: { [key: string]: { name: string } } = {
+  [TaskType.TRA]: {
+    name: 'Translation',
+  },
+  [TaskType.EDIT]: {
+    name: 'Editing',
+  },
+  [TaskType.PROOF]: {
+    name: 'Proofreading',
+  },
+  [TaskType.TEP]: {
+    name: 'Translation, Editing & Proofreading',
+  },
+  [TaskType.TRCEA]: {
+    name: 'Transcreation',
+  },
+  [TaskType.TRANS]: {
+    name: 'Transcription',
+  },
+  [TaskType.MPTE]: {
+    name: 'Machine Post Editing',
+  },
+  [TaskType.SUBT]: {
+    name: 'Subtitling',
+  },
+  [TaskType.DTP]: {
+    name: 'Desktop Publishing',
+  },
+  [TaskType.VO]: {
+    name: 'Voice Over',
+  },
+};
+
+export const LANGUAGE_LABELS: { [key: string]: { name: string } } = {
+  [Language.Fr]: {
+    name: 'French',
+  },
+  [Language.En]: {
+    name: 'English',
+  },
+
+  [Language['En-Fr']]: {
+    name: 'English - French',
+  },
+  [Language['EnUK-FrFR']]: {
+    name: 'English (United Kingdom) - French (France)',
+  },
+  [Language['EnUK-FrCA']]: {
+    name: 'English (United Kingdom) - French (Canada)',
+  },
+  [Language['EnUS-FrFR']]: {
+    name: 'English (United States) - French (France)',
+  },
+  [Language['EnUS-FrCA']]: {
+    name: 'English (United States) - French (Canada)',
+  },
+
+  [Language['Fr-En']]: {
+    name: 'French - English ',
+  },
+  [Language['FrFR-EnUK']]: {
+    name: 'French (France) - English (United Kingdom)',
+  },
+  [Language['FrFR-EnUS']]: {
+    name: 'French (France) - English (United States)',
+  },
+  [Language['FrCA-EnUK']]: {
+    name: 'French (Canada) - English (United Kingdom)',
+  },
+  [Language['FrCA-EnUS']]: {
+    name: 'French (Canada) - English (United States)',
+  },
+  [Language['FrCA-EnCA']]: {
+    name: 'French (Canada) - English (Canada)',
+  },
+
+  [Language['Spa-Fr']]: {
+    name: 'Spanish - French',
+  },
+  [Language['Spa-FrFR']]: {
+    name: 'Spanish - French (France)',
+  },
+  [Language['Spa-FrCA']]: {
+    name: 'Spanish - French (Canada)',
+  },
+
+  [Language['Ger-Fr']]: {
+    name: 'German - French',
+  },
+  [Language['Ger-FrFR']]: {
+    name: 'German - French (France)',
+  },
+  [Language['Ger- FrCA']]: {
+    name: 'German - French (Canada)',
+  },
+};

@@ -31,11 +31,20 @@
       "@TaskM/core/db": ["libs/core/db/src/index.ts"],
       "@TaskM/core/decorators": ["libs/core/decorators/src/index.ts"],
       "@TaskM/core/dto": ["libs/core/dto/src/index.ts"],
-      "@TaskM/core/helpers": ["libs/core/helpers/src/index.ts"],
+      "@TaskM/core/helpers": ["libs/core/helpers/shared/src/index.ts"],
+      "@TaskM/core/helpers/backend": ["libs/core/helpers/backend/src/index.ts"],
       "@TaskM/core/http": ["libs/core/http/src/index.ts"],
       "@TaskM/core/interceptors": ["libs/core/interceptors/src/index.ts"],
       "@TaskM/core/types": ["libs/core/types/src/index.ts"],
       "@TaskM/projects/api": ["libs/projects/api/src/index.ts"],
+      "@TaskM/projects/data-access": ["libs/projects/data-access/src/index.ts"],
+      "@TaskM/projects/feature-details": [
+        "libs/projects/feature-details/src/index.ts"
+      ],
+      "@TaskM/projects/feature-list": [
+        "libs/projects/feature-list/src/index.ts"
+      ],
+      "@TaskM/projects/form": ["libs/projects/form/src/index.ts"],
       "@TaskM/shared/layout": ["libs/shared/layout/src/index.ts"],
       "@TaskM/shared/misc": ["libs/shared/misc/src/index.ts"],
       "@TaskM/shared/ui": ["libs/shared/ui/src/index.ts"],
