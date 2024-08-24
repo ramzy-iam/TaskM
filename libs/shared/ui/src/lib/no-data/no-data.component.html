@@ -1,0 +1,9 @@
+<div class="flex flex-col items-center justify-center py-10">
+  <img
+    width="200"
+    [src]="
+      isNotFound ? '/assets/svg/search-no-data.svg' : '/assets/svg/no-data.svg'
+    "
+  />
+  <p class="mt-5">{{ displayedMessage }}</p>
+</div>

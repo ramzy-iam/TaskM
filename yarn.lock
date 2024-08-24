@@ -2468,24 +2468,31 @@
   dependencies:
     uuid "9.0.1"
 
-"@ng-icons/core@^28.0.0":
-  version "28.0.0"
-  resolved "https://registry.yarnpkg.com/@ng-icons/core/-/core-28.0.0.tgz#4de3f4dc17fefacfba7a26577129f2816d37dad5"
-  integrity sha512-rp4W6mHqm8n0JcLnAMpruluw2cWcKJjzKtlwzBVCzyMlOHI4A/YIPZZDYdOLAayIHr1sz1ZNCAYFHSEpixF+hQ==
+"@ng-icons/core@^29.0.0":
+  version "29.0.0"
+  resolved "https://registry.yarnpkg.com/@ng-icons/core/-/core-29.0.0.tgz#9bc584a7b071acfa9ddba495bf1953a4e0826d35"
+  integrity sha512-HAPB4KbMMCkc7SEk/kKzyNzSIRO241bVtXWUMQPr/JuY5Gd7Jh2fFjdue0VIUBP3qjjCEMOhwdZV6zsefrVVaA==
   dependencies:
     tslib "^2.2.0"
 
-"@ng-icons/feather-icons@^28.0.0":
-  version "28.0.0"
-  resolved "https://registry.yarnpkg.com/@ng-icons/feather-icons/-/feather-icons-28.0.0.tgz#c6560d2c4f9f94e32c0dcf08b8fa9e07fdc1bb4f"
-  integrity sha512-l5xNgGtC493RPhkoBlI5krIqMpUJiTiLI2H99T+nEQQfWCbSriMDN7YOKHDdWj4td1K5wyh6tpBdFoPaEPVF1w==
+"@ng-icons/feather-icons@^29.0.0":
+  version "29.0.0"
+  resolved "https://registry.yarnpkg.com/@ng-icons/feather-icons/-/feather-icons-29.0.0.tgz#57fa5fb4f57c19c95e30ccb89e7c492bd38c0df3"
+  integrity sha512-5LMD+NEOrL0F+K8Xt48b+wh5Z23o2ZhGIwWVMetQV3gYad/kSmHqfVX5sUlw9eU+QxSDODTNjT3fc7QwuMHd9w==
   dependencies:
     tslib "^2.2.0"
 
-"@ng-icons/heroicons@^28.0.0":
-  version "28.0.0"
-  resolved "https://registry.yarnpkg.com/@ng-icons/heroicons/-/heroicons-28.0.0.tgz#093e612b2a1d3e314269c10ed9bb16a7591a0f49"
-  integrity sha512-RSGdk1BcCBvlunZK0vysKSeaZueBkEDhSrbEptF+7w2vaOph2erJE9VyUGYhCXxVQ8K1sEkX15w6dxMb6GBaiA==
+"@ng-icons/heroicons@^29.0.0":
+  version "29.0.0"
+  resolved "https://registry.yarnpkg.com/@ng-icons/heroicons/-/heroicons-29.0.0.tgz#43923fa4fbc2410ea0334c3aaeda23a26e3c5d88"
+  integrity sha512-URrPoBZfn60SCXkY/ZuJZzxAV4mAEsIVxIMrp6wQMa/clju2AuKx1FTMFvCjz2mdQR1+k8Pj67BHdcWyPuAZZg==
+  dependencies:
+    tslib "^2.2.0"
+
+"@ng-icons/radix-icons@^29.0.0":
+  version "29.0.0"
+  resolved "https://registry.yarnpkg.com/@ng-icons/radix-icons/-/radix-icons-29.0.0.tgz#9534c9ccb6cf8c96a10209c94bebdeee3c9ad9fc"
+  integrity sha512-t7B2LVGMsrqrwhkjc8zLsw5v6AjBnx/vpDzu2KFF7DitXVDlqNG6HEcy6TVtVHgsNlRamtYR4OoBSZspDApFnw==
   dependencies:
     tslib "^2.2.0"
 
@@ -9982,10 +9989,10 @@ prelude-ls@^1.2.1:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
 
-prettier@^2.6.2:
-  version "2.8.8"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.8.tgz#e8c5d7e98a4305ffe3de2e1fc4aca1a71c28b1da"
-  integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
+prettier@^3.3.3:
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.3.3.tgz#30c54fe0be0d8d12e6ae61dbb10109ea00d53105"
+  integrity sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==
 
 pretty-bytes@^5.6.0:
   version "5.6.0"
@@ -10001,10 +10008,10 @@ pretty-format@^29.0.0, pretty-format@^29.7.0:
     ansi-styles "^5.0.0"
     react-is "^18.0.0"
 
-primeng@^17.18.1:
-  version "17.18.1"
-  resolved "https://registry.yarnpkg.com/primeng/-/primeng-17.18.1.tgz#bd8957acf2f840487e6587773ffb5dbb4d28fb15"
-  integrity sha512-pMuXOgLQw5Xz0w9d3YTp2DAlYR8svK1Jz5gSWAhk6AyH7u7akwL1JX96RXVzLS8v2YeLUCvkMM+QROOvR3yKug==
+primeng@^17.18.6:
+  version "17.18.6"
+  resolved "https://registry.yarnpkg.com/primeng/-/primeng-17.18.6.tgz#d8f6bddf4b7bb376dff6ddfd9dee33f60bce700f"
+  integrity sha512-WnsUWUxNkeqiJf5yrdT/TTzVyCP6R7Z60sr87chh3D7BNuNqh2R5Yd6GI86QVRhE172yt3AjjSIWfqRhzyul5w==
   dependencies:
     tslib "^2.3.0"
 
@@ -10125,6 +10132,11 @@ queue-microtask@^1.2.2:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
+
+radash@^12.1.0:
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/radash/-/radash-12.1.0.tgz#a15a5d745bfe3c3a6428148a606000aefd238560"
+  integrity sha512-b0Zcf09AhqKS83btmUeYBS8tFK7XL2e3RvLmZcm0sTdF1/UUlHSsjXdCcWNxe7yfmAlPve5ym0DmKGtTzP6kVQ==
 
 randombytes@^2.1.0:
   version "2.1.0"

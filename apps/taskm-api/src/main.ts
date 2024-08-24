@@ -16,14 +16,26 @@ async function bootstrap() {
     new ValidationPipe({
       transform: true,
       whitelist: true,
-      exceptionFactory: (errors) => new BadRequestException(errors),
-    })
+      stopAtFirstError: true,
+      exceptionFactory: (errors) => {
+        const errorsMessages: { [key: string]: string } = {};
+        errors.forEach((error) => {
+          let message = error.constraints
+            ? error.constraints[Object.keys(error.constraints)[0]]
+            : '';
+
+          errorsMessages[error.property] = message;
+        });
+        return new BadRequestException(errorsMessages);
+      },
+    }),
   );
 
-  const port = process.env.TASK_MANAGER_API_PORT || 3001;
+  const port = process.env.TASK_MANAGER_API_PORT || 3000;
+  app.enableCors();
   await app.listen(port);
   Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
+    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
   );
 }
 

@@ -1,20 +1,35 @@
 <aside
-  class="flex flex-col fixed top-0 left-0 bottom-0 min-w-[280px] bg-neutral-95 py-10"
+  [ngClass]="{
+    'translate-x-0': isOpen,
+    '-translate-x-full': !isOpen,
+  }"
+  class="fixed top-0 left-0 z-40 pt-16 flex h-screen w-64 flex-col overflow-y-hidden bg-black transition-transform duration-300 ease-linear dark:bg-boxdark"
 >
-  <nav class="mt-24 flex flex-col">
-    <a
-      [routerLink]="[link.link]"
-      *ngFor="let link of links"
-      class="flex items-center px-10 mb-8 font-medium group"
-      routerLinkActive="group is-active"
-      [routerLinkActiveOptions]="{ exact: false }"
-    >
-      <div
-        class="w-10 h-10 rounded-full border border-secondary-borders flex justify-center items-center mr-4 group-[.is-active]:text-white group-[.is-active]:bg-primary-color text-accent-base group-hover:bg-primary-color group-hover:text-white transition-all duration-300 ease-in-out"
-      >
-        <ng-icon [name]="link.icon"></ng-icon>
+  <div
+    class="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear"
+  >
+    <nav class="mt-5 py-10 pr-6 pl-3 lg:mt-9">
+      <div class="mb-6 flex flex-col gap-5">
+        @for (link of links; track $index) {
+          <a
+            [routerLink]="[link.link]"
+            class="group relative flex items-center gap-2.5 rounded-sm p-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4"
+            routerLinkActive="group is-active"
+            [routerLinkActiveOptions]="{ exact: false }"
+            #rla="routerLinkActive"
+            [ngClass]="{
+              'bg-graydark dark:bg-meta-4': rla.isActive,
+            }"
+          >
+            <div
+              class="rounded-full flex justify-center items-center group-[.is-active]:text-white group-[.is-active]:bg-primary-color text-accent-base group-hover:bg-primary-color group-hover:text-white transition-all duration-300 ease-in-out"
+            >
+              <ng-icon [name]="link.icon" size="20"></ng-icon>
+            </div>
+            <span>{{ link.label }}</span>
+          </a>
+        }
       </div>
-      <span>{{ link.label }}</span>
-    </a>
-  </nav>
+    </nav>
+  </div>
 </aside>

@@ -1,0 +1,20 @@
+<div class="relative inline-block">
+  <button
+    class="absolute right-2 bottom-[0.640rem] z-1 flex justify-center items-center cursor-pointer"
+    (click)="onIconClick()"
+  >
+    @if (isEmpty) {
+      <ng-icon name="radixMagnifyingGlass" size="20"></ng-icon>
+    } @else {
+      <ng-icon name="radixCross2" size="20"></ng-icon>
+    }
+  </button>
+
+  <input
+    class="with-icon"
+    type="text"
+    [formControl]="control!"
+    (input)="onInput($event)"
+    pInputText
+  />
+</div>

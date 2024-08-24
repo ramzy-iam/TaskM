@@ -14,7 +14,7 @@ import { WorkspaceUsersService } from '@TaskM/workspace-users/api';
 export class UsersService {
   constructor(
     private usersRepository: UsersRepository,
-    private workspaceUserService: WorkspaceUsersService
+    private workspaceUserService: WorkspaceUsersService,
   ) {}
 
   create(userDto: CreateUserDto) {
@@ -63,17 +63,17 @@ export class UsersService {
     return this.usersRepository.softDelete({ id });
   }
 
-  async update(id: number, updatedUser: Partial<User>) {
+  async update(id: string, updatedUser: Partial<User>) {
     await this.get(id);
     return this.usersRepository.update(
       { id },
-      UtilsHelper.convertUndefinedToNull(updatedUser)
+      UtilsHelper.convertUndefinedToNull(updatedUser),
     );
   }
 
   async updateActiveWorkspace(
     userId: number,
-    activeWorkspaceId: number
+    activeWorkspaceId: number,
   ): Promise<void> {
     this.update(userId, { activeWorkspaceId });
   }
@@ -83,13 +83,13 @@ export class UsersService {
       undefined,
       undefined,
       tokenInvitation,
-      undefined
+      undefined,
     );
     if (!guestWorkspaceUser)
       throw new BadRequestException(`Invalid invitation link`);
     if (DayjsHelper.new().isAfter(guestWorkspaceUser.tokenInvitationExpires))
       throw new BadRequestException(
-        `Invitation to user ${guestWorkspaceUser.user.email} expired`
+        `Invitation to user ${guestWorkspaceUser.user.email} expired`,
       );
     if (
       guestWorkspaceUser.state !== StateUser.CONFIRMED &&
@@ -117,7 +117,7 @@ export class UsersService {
       await this.workspaceUserService.createOrUpdateForInvitation(
         email,
         workspaceId,
-        roleId
+        roleId,
       );
 
     if (!workspaceUser) throw new NotFoundException(`User not found`);
@@ -127,7 +127,7 @@ export class UsersService {
       workspaceUser.tokenInvitation as string,
       workspaceUser.workspace.name,
       workspaceUser.user.lastName,
-      workspaceUser.user.firstName
+      workspaceUser.user.firstName,
     );
     return { message: `Invitation sent successfully to ${email}` };
   }
@@ -136,7 +136,7 @@ export class UsersService {
     const results = await Promise.allSettled(
       emails?.map(async (email) => {
         return this.inviteUser(email, workspaceId, roleId);
-      })
+      }),
     );
 
     const errors = results.filter((o) => o.status === 'rejected');
@@ -154,7 +154,7 @@ export class UsersService {
     const user = await this.get(userId);
     const workspaceUsers = await this.workspaceUserService.findAll(
       undefined,
-      userId
+      userId,
     );
 
     let userActiveWorkspace: Workspace | undefined;
@@ -165,7 +165,7 @@ export class UsersService {
       if (!userActiveWorkspace) {
         await this.updateActiveWorkspace(
           user.id,
-          workspaceUsers[0].workspace.id
+          workspaceUsers[0].workspace.id,
         );
         userActiveWorkspace = workspaceUsers[0].workspace;
       }
@@ -184,7 +184,7 @@ export class UsersService {
       activeWorkspace: {
         ...userActiveWorkspace,
         workspaceUsers: await this.workspaceUserService.findAll(
-          userActiveWorkspace?.id
+          userActiveWorkspace?.id,
         ),
       },
       workspaces: await Promise.all(
@@ -194,10 +194,10 @@ export class UsersService {
             id: workspace.id,
             name: workspace.name,
             workspaceUsers: await this.workspaceUserService.findAll(
-              workspace.id
+              workspace.id,
             ),
           };
-        })
+        }),
       ),
     };
   }

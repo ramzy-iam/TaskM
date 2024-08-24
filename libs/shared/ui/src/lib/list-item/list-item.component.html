@@ -1,0 +1,10 @@
+<div
+  class="w-full p-4 border relative bg-inherit"
+  [ngClass]="{
+    'border-gray': !isSelected,
+    'border-primary': isSelected,
+    'bg-primary/5': isSelectedLoading,
+  }"
+>
+  <ng-content></ng-content>
+</div>
