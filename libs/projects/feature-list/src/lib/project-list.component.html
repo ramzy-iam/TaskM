@@ -124,7 +124,10 @@
                       {{ project.poId }}
                     </div>
 
-                    <div class="grid-cols-1 truncate" [title]="project.name">
+                    <div
+                      class="grid-cols-1 truncate pl-1"
+                      [title]="project.name"
+                    >
                       {{ project.name }}
                     </div>
                     <div
@@ -137,13 +140,13 @@
                       ></ui-tag>
                     </div>
                     <div
-                      class="grid-cols-1 truncate"
+                      class="grid-cols-1 truncate pl-1"
                       [title]="project.taskLabel"
                     >
                       {{ project.taskLabel ?? project.taskType }}
                     </div>
                     <div
-                      class="grid-cols-1 truncate"
+                      class="grid-cols-1 truncate pl-1"
                       [title]="'Internal Deadline'"
                     >
                       {{ project.internalDeadline | date: 'short' }}
