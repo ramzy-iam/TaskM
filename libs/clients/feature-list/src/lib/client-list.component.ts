@@ -107,7 +107,7 @@ export class ClientListComponent implements OnInit, OnDestroy {
 
   showCreateDialog(): void {
     this.dialogRef = this.dialogService.open(ClientFormComponent, {
-      header: 'New client',
+      header: 'New Client',
       breakpoints: { '1199px': '75vw', '575px': '90vw' },
       style: { width: '50vw' },
       modal: true,

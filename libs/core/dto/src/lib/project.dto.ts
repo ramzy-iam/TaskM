@@ -231,7 +231,7 @@ export class ProjectPreviewDto extends BaseDto {
   clientId: string;
 
   @Expose()
-  deadline: Date;
+  internalDeadline: Date;
 
   @Type(() => BaseClientDto)
   @Expose()
@@ -252,7 +252,7 @@ export class ProjectDto extends ProjectPreviewDto {
   clientPM: string;
 
   @Expose()
-  internalDeadline: Date;
+  deadline: Date;
 
   @Expose()
   receivedAt: Date;

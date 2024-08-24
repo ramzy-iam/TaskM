@@ -140,7 +140,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
 
   showCreateDialog(): void {
     this.dialogRef = this.dialogService.open(ProjectFormComponent, {
-      header: 'New project',
+      header: 'New Project',
       breakpoints: { '1199px': '75vw', '575px': '90vw' },
       style: { width: '50vw' },
       modal: true,
