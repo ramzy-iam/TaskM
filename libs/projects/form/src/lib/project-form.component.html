@@ -203,6 +203,8 @@
               dateFormat="dd/mm/yy"
               inputId="receivedAt"
               [maxDate]="maxReceivedAtDate"
+              [showButtonBar]="true"
+              [iconDisplay]="'input'"
             />
             <label for="receivedAt">Received At</label>
           </p-floatLabel>
@@ -223,6 +225,8 @@
               dateFormat="dd/mm/yy"
               inputId="deadline"
               [minDate]="minDeadlineDate"
+              [showButtonBar]="true"
+              [iconDisplay]="'input'"
             />
             <label for="deadline">Deadline</label>
           </p-floatLabel>
@@ -242,6 +246,8 @@
               inputId="internalDeadline"
               [minDate]="minInternalDeadlineDate"
               [maxDate]="maxInternalDeadlineDate"
+              [showButtonBar]="true"
+              [iconDisplay]="'input'"
             />
             <label for="internalDeadline">Internal Deadline</label>
           </p-floatLabel>

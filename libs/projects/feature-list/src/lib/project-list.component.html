@@ -33,6 +33,7 @@
                   optionLabel="name"
                   class="col-span-2 input-like-text"
                 />
+
                 <p-dropdown
                   [options]="taskTypes"
                   formControlName="taskType"
@@ -40,6 +41,15 @@
                   showClear="true"
                   optionLabel="name"
                   class="col-span-2 input-like-text"
+                />
+                <p-calendar
+                  placeholder="Period"
+                  formControlName="period"
+                  selectionMode="range"
+                  class="col-span-3 input-like-text"
+                  showIcon="true"
+                  [iconDisplay]="'input'"
+                  showButtonBar="true"
                 />
               </div>
             </form>
@@ -146,11 +156,9 @@
                 <ui-no-data [isNotFound]="isFilterActivated" />
               </div>
             }
-            <div class="py-3">
-              @if (isLoadingMore) {
-                <ui-spinner />
-              }
-            </div>
+            @if (isLoadingMore) {
+              <ui-spinner [bar]="true" />
+            }
           </div>
         }
       }

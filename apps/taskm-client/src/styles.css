@@ -64,7 +64,8 @@
   .input-like-text {
     .p-multiselect,
     .p-autocomplete-input.p-inputtext,
-    .p-dropdown {
+    .p-dropdown,
+    .p-calendar input {
       box-shadow: none !important;
       border: none !important;
     }

@@ -44,9 +44,9 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
   }
 
   filterByDate(
-    from?: Date,
-    to?: Date,
-    dateField: ProjectDateFilterField = ProjectDateFilterField.CREATED_AT,
+    from?: Date | null,
+    to?: Date | null,
+    dateField: ProjectDateFilterField | null = ProjectDateFilterField.CREATED_AT,
   ) {
     if (from && to)
       return this.andWhere(

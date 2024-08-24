@@ -164,17 +164,17 @@ export class ProjectsFilterDto extends ClientOwnedFilterDto {
   @Transform(({ value }) => CastHelper.toDate(value))
   @IsOptional()
   @IsDate()
-  from?: Date;
+  from?: Date | null;
 
   @Transform(({ value }) => CastHelper.toDate(value))
   @IsOptional()
   @IsDate()
-  to?: Date;
+  to?: Date | null;
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
   @IsEnum(ProjectDateFilterField)
-  dateField?: ProjectDateFilterField;
+  dateField?: ProjectDateFilterField | null;
 
   @Transform(({ value }) =>
     value

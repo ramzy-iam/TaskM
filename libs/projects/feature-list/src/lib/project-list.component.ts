@@ -44,6 +44,8 @@ import { Nullable } from '@TaskM/core/types';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from 'primeng/dropdown';
 import { ClientAutocompleteComponent } from '@TaskM/clients/form';
+import { CalendarModule } from 'primeng/calendar';
+import { DayjsHelper } from '@TaskM/core/helpers';
 
 @Component({
   selector: 'app-project-list',
@@ -70,6 +72,7 @@ import { ClientAutocompleteComponent } from '@TaskM/clients/form';
     MultiSelectModule,
     DropdownModule,
     ClientAutocompleteComponent,
+    CalendarModule,
   ],
   providers: [DialogService, provideIcons({ radixCross2 })],
   templateUrl: './project-list.component.html',
@@ -96,6 +99,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
       code: FormControl<string | null | undefined>;
       name: FormControl<string | null | undefined>;
     }>;
+    period: FormControl<Date[] | null | undefined>;
   }>;
   private projectsSubject = new BehaviorSubject<Project[]>([]);
   projects$ = this.projectsSubject.asObservable();
@@ -147,8 +151,9 @@ export class ProjectListComponent implements OnInit, OnDestroy {
 
   private resetAndFetchProjects(filters?: Nullable<ProjectsFilterDto>): void {
     this.page = PAGINATION.DEFAULT_PAGE;
-    this.hasMore = false;
+    this.hasMore = true;
     this.projectsSubject.next([]);
+
     this.fetchProjects(filters);
   }
 
@@ -173,7 +178,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     this.projectService
       .getList({
         ...filters,
-        query: filters?.query ?? '',
+        query: filters?.query,
         page: this.page,
         limit: this.limit,
       })
@@ -215,7 +220,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   onNearEndScroll(): void {
     if (!this.isLoadingMore && this.hasMore) {
       this.setLoadingState(false, true);
-      this.fetchProjects(this.filterForm.getRawValue() as ProjectsFilterDto);
+      this.fetchProjects(this.buildFilter());
     }
   }
 
@@ -230,26 +235,43 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   private onFilterChanges() {
     this.filterForm.valueChanges
       .pipe(debounceTime(1000), distinctUntilChanged())
-      .subscribe(({ ...formValues }) => {
+      .subscribe(() => {
         this.isFilterActivated = this.formUtils.isAnyFilterActivated(
           this.filterForm,
         );
-
-        const filters = {} as ProjectsFilterDto;
-        filters.query = formValues.query;
-        filters.status = formValues.status?.code as ProjectStatus;
-        filters.taskType = formValues.taskType?.code as TaskType;
-        filters.clientCode = formValues?.client?.code;
-
-        this.resetAndFetchProjects(filters);
+        this.resetAndFetchProjects(this.buildFilter());
       });
   }
+
+  private buildFilter() {
+    const formValues = this.filterForm.getRawValue();
+    const filters = {} as ProjectsFilterDto;
+    filters.query = formValues.query;
+    filters.status = formValues.status?.code as ProjectStatus;
+    filters.taskType = formValues.taskType?.code as TaskType;
+    filters.clientCode = formValues?.client?.code;
+    const [start, end] = formValues.period ?? [];
+    filters.from = start
+      ? (DayjsHelper.new(start)
+          .add(1, 'hour')
+          .format('YYYY-MM-DD') as unknown as Date)
+      : null;
+    filters.to = end
+      ? (DayjsHelper.new(end)
+          .add(1, 'hour')
+          .format('YYYY-MM-DD') as unknown as Date)
+      : null;
+
+    return filters;
+  }
+
   private initFiltersForm() {
     this.filterForm = new FormGroup({
       query: new FormControl<string | null>(null),
       status: new FormControl<{ code: string; name: string } | null>(null),
       taskType: new FormControl<{ code: string; name: string } | null>(null),
       client: this.formUtils.createMinimalClientForm(null),
+      period: new FormControl<Date[] | null | undefined>(null),
     });
   }
 }
