@@ -44,11 +44,21 @@ export enum LoadUnit {
 export enum ProjectStatus {
   NOT_STARTED = 'Not Started',
   COMPLETED = 'Completed',
-  IN_PROGRESS = 'In progress',
+  IN_PROGRESS = 'In Progress',
   CANCELLED = 'Cancelled',
   ON_HOLD = 'On Hold',
   DELIVERED_WAITING_QA = 'Delivered & waiting QA',
   DELIVERED_CLOSED = 'Delivered & closed',
+}
+
+export enum ProjectStatusCode {
+  NOT_STARTED = 'NOT_STARTED',
+  COMPLETED = 'COMPLETED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  CANCELLED = 'CANCELLED',
+  ON_HOLD = 'ON_HOLD',
+  DELIVERED_WAITING_QA = 'DELIVERED_WAITING_QA',
+  DELIVERED_CLOSED = 'DELIVERED_CLOSED',
 }
 
 export enum TaskStatus {
@@ -56,6 +66,13 @@ export enum TaskStatus {
   IN_PROGRESS = 'In Progress',
   COMPLETED = 'Completed',
   CANCELLED = 'Cancelled',
+}
+
+export enum TaskStatusCode {
+  NOT_STARTED = 'NOT_STARTED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
 }
 
 export enum Language {

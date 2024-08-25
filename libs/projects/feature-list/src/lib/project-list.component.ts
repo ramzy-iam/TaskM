@@ -36,6 +36,7 @@ import { FormUtilsService, ScrollNearEndDirective } from '@TaskM/shared/misc';
 import {
   PAGINATION,
   ProjectStatus,
+  ProjectStatusCode,
   ProjectTagSeverity,
   TASK_TYPES_WITH_LABEL,
   TaskType,
@@ -87,11 +88,11 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   filterForm!: FormGroup<{
     query: FormControl<string | null>;
     status: FormControl<{
-      code: string;
+      code: ProjectStatusCode;
       name: string;
     } | null>;
     taskType: FormControl<{
-      code: string;
+      code: TaskType;
       name: string;
     } | null>;
     client: FormGroup<{
@@ -109,8 +110,9 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   projectTagSeverity = ProjectTagSeverity;
   projectStatus = Object.keys(ProjectStatus).map((key) => ({
     code: key,
-    name: ProjectStatus[key as keyof typeof ProjectStatus],
+    name: ProjectStatus[key as keyof typeof ProjectStatusCode],
   }));
+
   taskTypes = TASK_TYPES_WITH_LABEL.map(({ value, name }) => ({
     code: value,
     name,
@@ -247,8 +249,8 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     const formValues = this.filterForm.getRawValue();
     const filters = {} as ProjectsFilterDto;
     filters.query = formValues.query;
-    filters.status = formValues.status?.code as ProjectStatus;
-    filters.taskType = formValues.taskType?.code as TaskType;
+    filters.status = formValues.status?.code;
+    filters.taskType = formValues.taskType?.code;
     filters.clientCode = formValues?.client?.code;
     const [start, end] = formValues.period ?? [];
     filters.from = start
@@ -268,8 +270,10 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   private initFiltersForm() {
     this.filterForm = new FormGroup({
       query: new FormControl<string | null>(null),
-      status: new FormControl<{ code: string; name: string } | null>(null),
-      taskType: new FormControl<{ code: string; name: string } | null>(null),
+      status: new FormControl<{ code: ProjectStatusCode; name: string } | null>(
+        null,
+      ),
+      taskType: new FormControl<{ code: TaskType; name: string } | null>(null),
       client: this.formUtils.createMinimalClientForm(null),
       period: new FormControl<Date[] | null | undefined>(null),
     });

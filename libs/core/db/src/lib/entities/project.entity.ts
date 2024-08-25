@@ -3,7 +3,7 @@ import { AppBaseEntity } from './base.entity';
 import {
   Language,
   LoadUnit,
-  ProjectStatus,
+  ProjectStatusCode,
   TaskType,
 } from '@TaskM/core/constants';
 import { Client } from './client.entity';
@@ -23,10 +23,10 @@ export class Project extends AppBaseEntity {
 
   @Column({
     type: 'enum',
-    enum: ProjectStatus,
-    default: ProjectStatus.NOT_STARTED,
+    enum: ProjectStatusCode,
+    default: ProjectStatusCode.NOT_STARTED,
   })
-  status: ProjectStatus;
+  status: ProjectStatusCode;
 
   @Column({
     type: 'enum',

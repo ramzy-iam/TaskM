@@ -13,21 +13,15 @@ import {
   IsUUID,
   ValidateNested,
 } from 'class-validator';
+import { BaseClientDto, BaseDto, ClientOwnedFilterDto } from './base.dto';
 import {
-  BaseClientDto,
-  BaseDto,
-  BaseFilterDto,
-  ClientOwnedFilterDto,
-} from './base.dto';
-import {
-  LANGUAGES_WITH_LABEL,
   LANGUAGE_LABELS,
   Language,
   LoadUnit,
   ProjectDateFilterField,
   ProjectStatus,
+  ProjectStatusCode,
   TASK_LABELS,
-  TASK_TYPES_WITH_LABEL,
   TaskType,
 } from '@TaskM/core/constants';
 import { CastHelper } from '@TaskM/core/helpers';
@@ -48,8 +42,8 @@ export class CreateProjectDto {
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
-  @IsEnum(ProjectStatus)
-  status: ProjectStatus;
+  @IsEnum(ProjectStatusCode)
+  status: ProjectStatusCode;
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsEnum(TaskType)
@@ -176,21 +170,11 @@ export class ProjectsFilterDto extends ClientOwnedFilterDto {
   @IsEnum(ProjectDateFilterField)
   dateField?: ProjectDateFilterField | null;
 
-  @Transform(({ value }) =>
-    value
-      ? (ProjectStatus[CastHelper.trim(value) as keyof typeof ProjectStatus] ??
-        value)
-      : null,
-  )
   @IsOptional()
-  @IsEnum(ProjectStatus)
-  status?: ProjectStatus | null;
+  @IsEnum(ProjectStatusCode)
+  status?: ProjectStatusCode | null;
 
-  @Transform(({ value }) =>
-    value
-      ? (TaskType[CastHelper.trim(value) as keyof typeof TaskType] ?? value)
-      : null,
-  )
+  @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
   @IsEnum(TaskType)
   taskType?: TaskType | null;
@@ -205,7 +189,14 @@ export class ProjectPreviewDto extends BaseDto {
   name: string;
 
   @Expose()
-  status: ProjectStatus;
+  status: ProjectStatusCode;
+
+  @Expose()
+  @Transform(
+    ({ obj }: { obj: { status: ProjectStatusCode } }) =>
+      ProjectStatus[obj.status],
+  )
+  statusLabel?: string;
 
   @Expose()
   taskType: TaskType;

@@ -3,7 +3,7 @@ import { Project } from '../entities';
 import { OrderType } from '@TaskM/core/types';
 import {
   ProjectDateFilterField,
-  ProjectStatus,
+  ProjectStatusCode,
   TaskType,
 } from '@TaskM/core/constants';
 
@@ -75,7 +75,7 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
     return this.addOrderBy(`Projects.${field}`, order);
   }
 
-  filterByStatus(status: ProjectStatus) {
+  filterByStatus(status: ProjectStatusCode) {
     return this.andWhere('Projects.status = :status', {
       status,
     });
