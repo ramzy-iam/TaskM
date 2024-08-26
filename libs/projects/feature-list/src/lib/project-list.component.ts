@@ -39,7 +39,7 @@ import {
   ProjectStatus,
   ProjectStatusCode,
   ProjectTagSeverity,
-  TASK_TYPES_WITH_LABEL,
+  TASK_LABELS,
   TaskType,
 } from '@TaskM/core/constants';
 import { Nullable } from '@TaskM/core/types';
@@ -119,9 +119,9 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     name: ProjectStatus[key as keyof typeof ProjectStatusCode],
   }));
 
-  taskTypes = TASK_TYPES_WITH_LABEL.map(({ value, name }) => ({
-    code: value,
-    name,
+  taskTypes = Object.entries(TASK_LABELS).map(([key, value]) => ({
+    code: key,
+    name: value,
   }));
 
   private isFormInitialized = false;
@@ -256,7 +256,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
         name: string | null;
       } | null>({
         code: params?.task ?? null,
-        name: TaskType[params?.task as keyof typeof TaskType] ?? null,
+        name: TASK_LABELS[params.task!] ?? null,
       }),
       client: this.formUtils.createMinimalClientForm(null),
       period: new FormControl<(Date | null)[] | null | undefined>(
@@ -302,6 +302,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
         this.isFilterActivated = this.formUtils.isAnyFilterActivated(
           this.filterForm,
         );
+        console.log(this.filterForm.value.query);
         this.updateUrlParams(this.buildFilter());
       });
   }
@@ -346,12 +347,12 @@ export class ProjectListComponent implements OnInit, OnDestroy {
 
   private updateUrlParams(filters: Nullable<ProjectsFilterDto>): void {
     const queryParams: Params = {
-      query: filters?.query ?? null,
-      status: filters?.status ?? null,
-      task: filters?.task ?? null,
-      client: filters?.clientCode ?? null,
-      from: filters?.from ?? null,
-      to: filters?.to ?? null,
+      query: filters?.query || null,
+      status: filters?.status || null,
+      task: filters?.task || null,
+      client: filters?.clientCode || null,
+      from: filters?.from || null,
+      to: filters?.to || null,
     };
 
     this.router.navigate([], {
@@ -390,5 +391,13 @@ export class ProjectListComponent implements OnInit, OnDestroy {
           });
         },
       });
+  }
+
+  clearFilters(): void {
+    this.filterForm.reset();
+    this.router.navigate([], {
+      queryParams: {},
+      queryParamsHandling: 'merge',
+    });
   }
 }

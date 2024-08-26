@@ -202,14 +202,18 @@ export class ProjectPreviewDto extends BaseDto {
   taskType: TaskType;
 
   @Expose()
-  @Transform(({ obj }) => TASK_LABELS[obj.taskType]?.name)
+  @Transform(
+    ({ obj }: { obj: { taskType: TaskType } }) => TASK_LABELS[obj.taskType],
+  )
   taskLabel?: string;
 
   @Expose()
   lang: Language;
 
   @Expose()
-  @Transform(({ obj }) => LANGUAGE_LABELS[obj.lang]?.name)
+  @Transform(
+    ({ obj }: { obj: { lang: Language } }) => LANGUAGE_LABELS[obj.lang],
+  )
   langLabel?: string;
 
   @Expose()

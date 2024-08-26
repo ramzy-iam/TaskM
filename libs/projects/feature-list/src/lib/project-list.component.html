@@ -51,6 +51,16 @@
                   [iconDisplay]="'input'"
                   showButtonBar="true"
                 />
+                @if (isFilterActivated) {
+                  <p-button
+                    label="Clear"
+                    title="Clear filters"
+                    severity="secondary"
+                    class="col-span-2"
+                    icon="pi pi-filter-slash"
+                    (click)="clearFilters()"
+                  />
+                }
               </div>
             </form>
           </div>

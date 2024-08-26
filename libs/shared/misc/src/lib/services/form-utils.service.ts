@@ -1,27 +1,27 @@
 import { BaseClientDto } from '@TaskM/core/dto';
 import { Injectable } from '@angular/core';
-import {
-  FormGroup,
-  AbstractControl,
-  FormControl,
-  Validators,
-} from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { isArray, isObject } from 'radash';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FormUtilsService {
   isAnyFilterActivated(form: FormGroup): boolean {
-    return Object.values(form.controls).some((control: AbstractControl) => {
-      if (control instanceof FormGroup) {
-        return this.isAnyFilterActivated(control);
+    const isValueDefined = (value: any): boolean => {
+      if (value === null || value === undefined || value === '') {
+        return false;
       }
-      return (
-        control.value != null &&
-        control.value !== '' &&
-        control.value !== undefined
-      );
-    });
+      if (isArray(value)) {
+        return value.some(isValueDefined);
+      }
+      if (isObject(value)) {
+        return Object.values(value).some(isValueDefined);
+      }
+      return true;
+    };
+
+    return Object.values(form.value).some(isValueDefined);
   }
 
   handleErrors(form: FormGroup, errors: { [key: string]: string }) {
