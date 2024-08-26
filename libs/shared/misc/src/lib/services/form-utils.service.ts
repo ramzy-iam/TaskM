@@ -42,7 +42,7 @@ export class FormUtilsService {
       code: new FormControl<string | undefined | null>(client?.code, [
         ...validators,
       ]),
-      name: new FormControl<string | undefined | null>(client?.name ?? '', [
+      name: new FormControl<string | undefined | null>(client?.name, [
         ...validators,
       ]),
     });

@@ -177,7 +177,7 @@ export class ProjectsFilterDto extends ClientOwnedFilterDto {
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
   @IsEnum(TaskType)
-  taskType?: TaskType | null;
+  task?: TaskType | null;
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()

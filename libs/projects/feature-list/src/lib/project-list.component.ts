@@ -19,9 +19,10 @@ import {
   BehaviorSubject,
   debounceTime,
   distinctUntilChanged,
+  filter,
   finalize,
 } from 'rxjs';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import {
   FormControl,
   FormGroup,
@@ -47,6 +48,12 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ClientAutocompleteComponent } from '@TaskM/clients/form';
 import { CalendarModule } from 'primeng/calendar';
 import { DayjsHelper } from '@TaskM/core/helpers';
+import { ClientService } from '@TaskM/clients/data-access';
+
+type UrlParams = ProjectsFilterDto & {
+  selectedProject: string | null;
+  client?: string;
+};
 
 @Component({
   selector: 'app-project-list',
@@ -64,7 +71,6 @@ import { DayjsHelper } from '@TaskM/core/helpers';
     ListItemComponent,
     ProjectDetailsComponent,
     DialogModule,
-    // ProjectFormComponent,
     SkeletonModule,
     SpinnerComponent,
     ScrollNearEndDirective,
@@ -88,19 +94,19 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   filterForm!: FormGroup<{
     query: FormControl<string | null>;
     status: FormControl<{
-      code: ProjectStatusCode;
-      name: string;
+      code: ProjectStatusCode | null;
+      name: string | null;
     } | null>;
-    taskType: FormControl<{
-      code: TaskType;
-      name: string;
+    task: FormControl<{
+      code: TaskType | null;
+      name: string | null;
     } | null>;
     client: FormGroup<{
       id: FormControl<string | null | undefined>;
       code: FormControl<string | null | undefined>;
       name: FormControl<string | null | undefined>;
     }>;
-    period: FormControl<Date[] | null | undefined>;
+    period: FormControl<(Date | null)[] | null | undefined>;
   }>;
   private projectsSubject = new BehaviorSubject<Project[]>([]);
   projects$ = this.projectsSubject.asObservable();
@@ -118,26 +124,22 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     name,
   }));
 
+  private isFormInitialized = false;
+
   constructor(
     private projectService: ProjectService,
     private route: ActivatedRoute,
     private router: Router,
     private dialogService: DialogService,
     private formUtils: FormUtilsService,
+    private clientService: ClientService,
   ) {}
 
   ngOnInit(): void {
-    this.initFiltersForm();
-    this.onFilterChanges();
-    this.loadInitialProjects();
-
-    this.projectService.getChanges().subscribe((project) => {
-      if (project) this.handleProjectUpdate(project);
-    });
-
-    this.route.queryParams.subscribe((params) => {
-      this.selectedProjectCode = params['selectedProject'] ?? null;
-    });
+    this.initializeFilterForm();
+    this.subscribeToFilterChanges();
+    this.subscribeToRouteParams();
+    this.subscribeToProjectChanges();
   }
 
   showCreateDialog(): void {
@@ -155,8 +157,15 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     this.page = PAGINATION.DEFAULT_PAGE;
     this.hasMore = true;
     this.projectsSubject.next([]);
-
     this.fetchProjects(filters);
+  }
+
+  private subscribeToProjectChanges(): void {
+    this.projectService.getChanges().subscribe((project) => {
+      if (project) {
+        this.handleProjectUpdate(project);
+      }
+    });
   }
 
   private handleProjectUpdate(project: ProjectPreviewDto): void {
@@ -216,7 +225,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.dialogRef) this.dialogRef.close();
+    this.dialogRef?.close();
   }
 
   onNearEndScroll(): void {
@@ -230,29 +239,97 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     return this.page === PAGINATION.DEFAULT_PAGE;
   }
 
-  private loadInitialProjects(): void {
-    this.fetchProjects();
+  private initializeFilterForm(): void {
+    const params = this.route.snapshot.queryParams as UrlParams;
+
+    this.filterForm = new FormGroup({
+      query: new FormControl<string | null>(params?.query ?? null),
+      status: new FormControl<{
+        code: ProjectStatusCode | null;
+        name: string | null;
+      } | null>({
+        code: params?.status ?? null,
+        name: ProjectStatus[params?.status!] ?? null,
+      }),
+      task: new FormControl<{
+        code: TaskType | null;
+        name: string | null;
+      } | null>({
+        code: params?.task ?? null,
+        name: TaskType[params?.task as keyof typeof TaskType] ?? null,
+      }),
+      client: this.formUtils.createMinimalClientForm(null),
+      period: new FormControl<(Date | null)[] | null | undefined>(
+        this.getPeriodFromParams(params),
+      ),
+    });
+
+    if (params?.client) {
+      this.loadClientByCode(params?.client);
+    } else {
+      this.isFormInitialized = true;
+      this.resetAndFetchProjects(this.buildFilter());
+      this.router.navigate([], {
+        queryParams: { client: null },
+        queryParamsHandling: 'merge',
+      });
+    }
   }
 
-  private onFilterChanges() {
+  private getPeriodFromParams(params: Params): (Date | null)[] | null {
+    if (params['from'] && params['to']) {
+      return [
+        DayjsHelper.new(params['from']).toDate(),
+        DayjsHelper.new(params['to']).toDate(),
+      ];
+    }
+
+    if (params['from']) {
+      return [DayjsHelper.new(params['from']).toDate(), null];
+    }
+
+    return null;
+  }
+
+  private subscribeToFilterChanges(): void {
     this.filterForm.valueChanges
-      .pipe(debounceTime(1000), distinctUntilChanged())
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        filter(() => this.isFormInitialized),
+      )
       .subscribe(() => {
         this.isFilterActivated = this.formUtils.isAnyFilterActivated(
           this.filterForm,
         );
+        this.updateUrlParams(this.buildFilter());
+      });
+  }
+
+  private subscribeToRouteParams(): void {
+    this.route.queryParams
+      .pipe(
+        filter(() => this.isFormInitialized),
+        distinctUntilChanged(),
+      )
+      .subscribe((params) => {
+        this.selectedProjectCode = params['selectedProject'] ?? null;
+
+        if (!params['client']) {
+          this.filterForm.get('client')?.reset();
+        }
         this.resetAndFetchProjects(this.buildFilter());
       });
   }
 
   private buildFilter() {
-    const formValues = this.filterForm.getRawValue();
-    const filters = {} as ProjectsFilterDto;
-    filters.query = formValues.query;
-    filters.status = formValues.status?.code;
-    filters.taskType = formValues.taskType?.code;
-    filters.clientCode = formValues?.client?.code;
-    const [start, end] = formValues.period ?? [];
+    const { query, status, task, client, period } = this.filterForm.value;
+    const filters = { query } as ProjectsFilterDto;
+    filters.query = query;
+    filters.status = status?.code;
+    filters.task = task?.code;
+    filters.clientCode = client?.code;
+    const [start, end] = period ?? [];
     filters.from = start
       ? (DayjsHelper.new(start)
           .add(1, 'hour')
@@ -267,15 +344,51 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     return filters;
   }
 
-  private initFiltersForm() {
-    this.filterForm = new FormGroup({
-      query: new FormControl<string | null>(null),
-      status: new FormControl<{ code: ProjectStatusCode; name: string } | null>(
-        null,
-      ),
-      taskType: new FormControl<{ code: TaskType; name: string } | null>(null),
-      client: this.formUtils.createMinimalClientForm(null),
-      period: new FormControl<Date[] | null | undefined>(null),
+  private updateUrlParams(filters: Nullable<ProjectsFilterDto>): void {
+    const queryParams: Params = {
+      query: filters?.query ?? null,
+      status: filters?.status ?? null,
+      task: filters?.task ?? null,
+      client: filters?.clientCode ?? null,
+      from: filters?.from ?? null,
+      to: filters?.to ?? null,
+    };
+
+    this.router.navigate([], {
+      queryParams,
+      queryParamsHandling: 'merge',
     });
+  }
+
+  private loadClientByCode(code?: string): void {
+    this.clientService
+      .findOne({ code }, { error: { onError: false } })
+      .pipe(
+        finalize(() => (this.isFormInitialized = true)),
+        finalize(() => this.resetAndFetchProjects(this.buildFilter())),
+      )
+      .subscribe({
+        next: (client) => {
+          if (!client) {
+            this.router.navigate([], {
+              queryParams: { client: null },
+              queryParamsHandling: 'merge',
+            });
+            return;
+          }
+          this.filterForm.patchValue({
+            client: { id: client.id, code: client.code, name: client.name },
+          });
+        },
+        error: () => {
+          this.filterForm.patchValue({
+            client: { id: null, code: null, name: null },
+          });
+          this.router.navigate([], {
+            queryParams: { client: null },
+            queryParamsHandling: 'merge',
+          });
+        },
+      });
   }
 }

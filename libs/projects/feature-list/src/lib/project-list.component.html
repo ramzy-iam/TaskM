@@ -7,7 +7,7 @@
             <div class="flex">
               <h1 class="text-[24px] text-black-2 font-semibold">Projects</h1>
             </div>
-            <p-button label="Add Project" (onClick)="showCreateDialog()" />
+            <p-button label="New Project" (onClick)="showCreateDialog()" />
           </div>
           <div>
             <form [formGroup]="filterForm">
@@ -36,7 +36,7 @@
 
                 <p-dropdown
                   [options]="taskTypes"
-                  formControlName="taskType"
+                  formControlName="task"
                   placeholder="Task"
                   showClear="true"
                   optionLabel="name"

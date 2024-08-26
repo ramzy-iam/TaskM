@@ -83,7 +83,7 @@ export class ProjectsService {
     if (filters?.withDeleted) query.withDeleted();
     if (filters?.clientId) query.filterByClientId(filters?.clientId);
     if (filters?.clientCode) query.filterByClientCode(filters?.clientCode);
-    if (filters?.taskType) query.filterByTaskType(filters?.taskType);
+    if (filters?.task) query.filterByTaskType(filters?.task);
     if (filters?.status) query.filterByStatus(filters?.status);
     if (filters?.poId) query.filterByPoId(filters?.poId);
 
