@@ -110,7 +110,7 @@ export class ClientFormComponent
     });
 
     // Store initial form values
-    this.initialFormValues = this.form.getRawValue();
+    this.initialFormValues = this.form.value;
   }
 
   get client(): ClientDto {
@@ -125,14 +125,14 @@ export class ClientFormComponent
     this.loading = true;
 
     const operation = this.client?.id
-      ? this.clientService.update(this.client.id, this.form.getRawValue())
-      : this.clientService.create(this.form.getRawValue());
+      ? this.clientService.update(this.client.id, this.form.value)
+      : this.clientService.create(this.form.value);
 
     operation.pipe(finalize(() => (this.loading = false))).subscribe({
       next: (client: ClientDto) => {
         if (this.dialogRef && !this.client?.id) this.dialogRef.close();
         // Store form values
-        this.initialFormValues = this.form.getRawValue();
+        this.initialFormValues = this.form.value;
         this.clientService.triggerChanges(client);
       },
       error: (error) => {

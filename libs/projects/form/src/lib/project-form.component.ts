@@ -13,8 +13,6 @@ import {
   distinctUntilChanged,
   filter,
   finalize,
-  map,
-  max,
   Subscription,
 } from 'rxjs';
 import { BaseClientDto, ProjectDto } from '@TaskM/core/dto';
@@ -26,7 +24,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FormInputErrorComponent } from '@TaskM/shared/ui';
-import {} from '@TaskM/clients/data-access';
 import { CurrencyToIntlNumberFormat } from '@TaskM/core/constants';
 
 import { CalendarModule } from 'primeng/calendar';
@@ -36,6 +33,23 @@ import {
 } from '@TaskM/shared/misc';
 import { DayjsHelper } from '@TaskM/core/helpers';
 import { ClientAutocompleteComponent } from '@TaskM/clients/form';
+
+type DisabledFields = {
+  name?: boolean;
+  client?: boolean;
+  clientPoId?: boolean;
+  poId?: boolean;
+  taskType?: boolean;
+  status?: boolean;
+  lang?: boolean;
+  count?: boolean;
+  rate?: boolean;
+  unit?: boolean;
+  clientPM?: boolean;
+  receivedAt?: boolean;
+  deadline?: boolean;
+  internalDeadline?: boolean;
+};
 
 @Component({
   selector: 'app-project-form',
@@ -72,9 +86,9 @@ export class ProjectFormComponent
   maxInternalDeadlineDate!: Date;
 
   constructor(
-    private projectService: ProjectService,
-    @Optional() public dialogRef: DynamicDialogRef,
-    private formUtils: FormUtilsService,
+    protected projectService: ProjectService,
+    @Optional() protected dialogRef: DynamicDialogRef,
+    protected formUtils: FormUtilsService,
   ) {
     super();
   }
@@ -100,10 +114,16 @@ export class ProjectFormComponent
     }
   }
 
-  private initializeForm(project: ProjectDto | null) {
+  protected initializeForm(
+    project: ProjectDto | null,
+    disabledFields: DisabledFields = {},
+  ) {
     this.form = new FormGroup(
       {
-        client: this.formUtils.createMinimalClientForm(null),
+        client: this.formUtils.createMinimalClientForm(
+          project?.client ?? null,
+          { disabled: disabledFields.client },
+        ),
         name: new FormControl<string>(project?.name ?? '', [
           Validators.required,
         ]),
@@ -127,23 +147,23 @@ export class ProjectFormComponent
           Validators.required,
           Validators.min(0.00001),
         ]),
-        unit: new FormControl<string>(project?.lang ?? '', [
+        unit: new FormControl<string>(project?.unit ?? '', [
           Validators.required,
         ]),
-        clientPM: new FormControl<string>(project?.lang ?? '', [
+        clientPM: new FormControl<string>(project?.clientPM ?? '', [
           Validators.required,
         ]),
         receivedAt: new FormControl<Date>(
-          project?.receivedAt ?? DayjsHelper.new().toDate(),
+          DayjsHelper.new(project?.receivedAt).toDate(),
           [Validators.required],
         ),
         deadline: new FormControl<Date>(
-          project?.deadline ?? DayjsHelper.new().add(2, 'day').toDate(),
+          DayjsHelper.new(project?.deadline).toDate(),
           [Validators.required],
         ),
 
         internalDeadline: new FormControl<Date>(
-          project?.internalDeadline ?? DayjsHelper.new().add(1, 'day').toDate(),
+          DayjsHelper.new(project?.internalDeadline).toDate(),
           [Validators.required],
         ),
       },
@@ -171,8 +191,12 @@ export class ProjectFormComponent
       ],
     );
 
+    if (project?.client) {
+      this.clientCurrency = project.client.currency;
+    }
+
     // Store initial form values
-    this.initialFormValues = this.form.getRawValue();
+    this.initialFormValues = this.form.value;
   }
 
   private setupDeadlineListeners() {

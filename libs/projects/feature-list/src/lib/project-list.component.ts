@@ -258,7 +258,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
         code: params?.task ?? null,
         name: TASK_LABELS[params.task!] ?? null,
       }),
-      client: this.formUtils.createMinimalClientForm(null),
+      client: this.formUtils.createMinimalClientForm(null, {}),
       period: new FormControl<(Date | null)[] | null | undefined>(
         this.getPeriodFromParams(params),
       ),
@@ -302,23 +302,35 @@ export class ProjectListComponent implements OnInit, OnDestroy {
         this.isFilterActivated = this.formUtils.isAnyFilterActivated(
           this.filterForm,
         );
-        console.log(this.filterForm.value.query);
         this.updateUrlParams(this.buildFilter());
       });
   }
 
   private subscribeToRouteParams(): void {
+    // Subscriber for selectedProjectCode
     this.route.queryParams
       .pipe(
-        filter(() => this.isFormInitialized),
-        distinctUntilChanged(),
+        distinctUntilChanged(
+          (prev, curr) => prev['selectedProject'] === curr['selectedProject'],
+        ),
       )
       .subscribe((params) => {
         this.selectedProjectCode = params['selectedProject'] ?? null;
+      });
 
-        if (!params['client']) {
-          this.filterForm.get('client')?.reset();
-        }
+    // Subscriber for other route params
+    this.route.queryParams
+      .pipe(
+        filter(() => this.isFormInitialized),
+        distinctUntilChanged((prev, curr) => {
+          // Exclude selectedProjectCode
+          const { selectedProject: prevProject, ...prevRest } = prev;
+          const { selectedProject: currProject, ...currRest } = curr;
+          return JSON.stringify(prevRest) === JSON.stringify(currRest);
+        }),
+      )
+      .subscribe((params) => {
+        if (!params['client']) this.filterForm.get('client')?.reset();
         this.resetAndFetchProjects(this.buildFilter());
       });
   }
