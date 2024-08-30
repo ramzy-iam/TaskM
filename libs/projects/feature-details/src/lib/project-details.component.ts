@@ -2,6 +2,7 @@ import {
   Component,
   Input,
   OnChanges,
+  OnInit,
   Optional,
   SimpleChanges,
 } from '@angular/core';
@@ -50,7 +51,7 @@ import { ClientAutocompleteComponent } from '@TaskM/clients/form';
 })
 export class ProjectDetailsComponent
   extends ProjectFormComponent
-  implements OnChanges
+  implements OnInit, OnChanges
 {
   @Input() code!: string;
   project$ = new BehaviorSubject<ProjectDto | null>(null);
@@ -63,6 +64,10 @@ export class ProjectDetailsComponent
     private router: Router,
   ) {
     super(projectService, dialogRef, formUtils);
+  }
+
+  override ngOnInit(): void {
+    // this.triggerAutoSave(true);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -81,7 +86,9 @@ export class ProjectDetailsComponent
           if (!project) this.close();
 
           this.project$.next(project);
+          this.project = project;
           this.initializeForm(project, { client: true });
+          this.triggerAutoSave(true);
         },
         error: () => {
           this.close();

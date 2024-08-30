@@ -1,5 +1,6 @@
 import { OrderType } from '@TaskM/core/types';
 import { BOOLEAN_ENUM } from '@TaskM/core/constants';
+import { DayjsHelper } from './dayjs.helper';
 
 interface ToNumberOptions {
   default?: number;
@@ -17,9 +18,10 @@ const trim = (value?: string): string | undefined => {
   return value?.trim();
 };
 
-const toDate = (value?: string): Date | undefined => {
+const toDate = (value?: string, excludeSeconds = true): Date | undefined => {
   if (!value) return;
-  return new Date(value);
+  let dateInstance = DayjsHelper.new(value, { excludeSeconds });
+  return dateInstance.toDate();
 };
 
 const toBoolean = (value?: BOOLEAN_ENUM): boolean | undefined => {

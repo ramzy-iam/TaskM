@@ -123,10 +123,10 @@ export class ClientFormComponent
       return;
     }
     this.loading = true;
-
+    const values = this.form.value;
     const operation = this.client?.id
-      ? this.clientService.update(this.client.id, this.form.value)
-      : this.clientService.create(this.form.value);
+      ? this.clientService.update(this.client.id, values)
+      : this.clientService.create(values);
 
     operation.pipe(finalize(() => (this.loading = false))).subscribe({
       next: (client: ClientDto) => {

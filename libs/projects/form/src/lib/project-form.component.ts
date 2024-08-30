@@ -93,7 +93,7 @@ export class ProjectFormComponent
     super();
   }
 
-  @Input() autoSave?: boolean = false;
+  @Input() autoSave: boolean = false;
   @Input()
   set project(project: ProjectDto | null) {
     if (project) {
@@ -105,7 +105,6 @@ export class ProjectFormComponent
   ngOnInit() {
     this.initializeForm(this._project);
     this.triggerAutoSave();
-    this.setupDeadlineListeners();
   }
 
   ngOnDestroy() {
@@ -124,19 +123,23 @@ export class ProjectFormComponent
           project?.client ?? null,
           { disabled: disabledFields.client },
         ),
-        name: new FormControl<string>(project?.name ?? '', [
+        name: new FormControl<string | undefined>(project?.name, [
           Validators.required,
         ]),
-        clientPoId: new FormControl<string>(project?.clientPoId ?? ''),
+        clientPoId: new FormControl<string | undefined>(project?.clientPoId),
         poId: new FormControl<string | undefined>({
           value: project?.poId,
           disabled: true,
         }),
-        taskType: new FormControl<string>(project?.taskType ?? '', [
-          Validators.required,
-        ]),
+        taskType: new FormControl<string | undefined>(
+          {
+            value: project?.taskType,
+            disabled: !!project?.taskType,
+          },
+          [Validators.required],
+        ),
         status: new FormControl<string | undefined>(project?.status),
-        lang: new FormControl<string>(project?.lang ?? '', [
+        lang: new FormControl<string | undefined>(project?.lang, [
           Validators.required,
         ]),
         count: new FormControl<number>(project?.count ?? 0, [
@@ -197,6 +200,7 @@ export class ProjectFormComponent
 
     // Store initial form values
     this.initialFormValues = this.form.value;
+    this.setupDeadlineListeners();
   }
 
   private setupDeadlineListeners() {
@@ -209,14 +213,10 @@ export class ProjectFormComponent
       const deadline = deadlineControl?.value;
       this.maxReceivedAtDate = DayjsHelper.new().toDate();
 
-      if (receivedAt) {
-        this.minDeadlineDate = receivedAt;
-        this.minInternalDeadlineDate = receivedAt;
-      }
+      if (receivedAt)
+        this.minDeadlineDate = this.minInternalDeadlineDate = receivedAt;
 
-      if (deadline) {
-        this.maxInternalDeadlineDate = deadline;
-      }
+      if (deadline) this.maxInternalDeadlineDate = deadline;
     };
 
     // Initialize limits
@@ -251,10 +251,11 @@ export class ProjectFormComponent
       return;
     }
     this.loading = true;
+    const values = this.form.getRawValue();
 
     const operation = this.project?.id
-      ? this.projectService.update(this.project.id, this.form.getRawValue())
-      : this.projectService.create(this.form.getRawValue());
+      ? this.projectService.update(this.project.id, values)
+      : this.projectService.create(values);
 
     operation.pipe(finalize(() => (this.loading = false))).subscribe({
       next: (project: ProjectDto) => {
@@ -279,10 +280,10 @@ export class ProjectFormComponent
     });
   }
 
-  private triggerAutoSave() {
-    this.formValueChangesSubscription = this.form.valueChanges
+  protected triggerAutoSave(force = false) {
+    this.formValueChangesSubscription = this.form?.valueChanges
       .pipe(
-        filter(() => !!this.autoSave),
+        filter(() => !!this.autoSave || !!force),
         debounceTime(3000),
         distinctUntilChanged(
           (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr),
