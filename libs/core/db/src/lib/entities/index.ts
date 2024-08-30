@@ -7,3 +7,5 @@ export * from './role-permission.entity';
 export * from './casl-subject.entity';
 export * from './client.entity';
 export * from './project.entity';
+export * from './competence.entity';
+export * from './linguist.entity';

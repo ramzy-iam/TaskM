@@ -34,6 +34,15 @@ export enum PaymentMethod {
   CASH = 'Cash',
 }
 
+export enum PaymentMethodCode {
+  PAYONNEER = 'PAYONNEER',
+  PAYPAL = 'PAYPAL',
+  BANK = 'BANK',
+  OM = 'OM',
+  MOMO = 'MOMO',
+  CASH = 'CASH',
+}
+
 export enum LoadUnit {
   WORD = 'word',
   PAGE = 'page',

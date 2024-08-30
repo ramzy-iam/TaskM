@@ -99,13 +99,11 @@ export class UpdateProjectDto {
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
   @IsString()
-  @IsOptional()
   clientPM?: string;
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
   @IsEnum(ProjectStatusCode)
-  @IsOptional()
   status?: ProjectStatusCode;
 
   @Transform(({ value }) => CastHelper.trim(value))

@@ -1,0 +1,9 @@
+{
+  "name": "linguists-api",
+  "$schema": "../../../node_modules/nx/schemas/linguist-schema.json",
+  "sourceRoot": "libs/linguists/api/src",
+  "linguistType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show linguist linguists-api --web",
+  "targets": {}
+}

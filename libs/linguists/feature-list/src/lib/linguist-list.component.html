@@ -1,0 +1,116 @@
+<div class="h-full gap-0 grid grid-rows-4 mt-4">
+  <app-section-header>
+    <div>
+      <div class="py-8 bg-white border-b border-gray">
+        <div class="flex flex-col gap-8">
+          <div class="flex justify-between items-center">
+            <div class="flex">
+              <h1 class="text-[24px] text-black-2 font-semibold">Linguists</h1>
+            </div>
+            <p-button label="New Linguist" (onClick)="showCreateDialog()" />
+          </div>
+          <div>
+            <form [formGroup]="filterForm">
+              <ui-input-search
+                [control]="filterForm.controls.query"
+                [attributes]="{ placeholder: 'Search' }"
+              />
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </app-section-header>
+  <div
+    class="grid grid-cols-3 h-auto max-w-full max-h-full row-span-3 overflow-hidden"
+  >
+    <div
+      appScrollNearEnd
+      (nearEnd)="onNearEndScroll()"
+      class="relative w-full h-full- max-h-full pr-8 overflow-auto bg-white mb-2"
+      [ngClass]="{
+        'col-span-2': selectedLinguist,
+        'col-span-full': !selectedLinguist,
+      }"
+    >
+      @if (loading) {
+        <div class="grid grid-cols-3 gap-10">
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+        </div>
+        <div class="grid grid-cols-3 gap-10 mt-10">
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+        </div>
+        <div class="grid grid-cols-3 gap-10 mt-8">
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+        </div>
+        <div class="grid grid-cols-3 gap-10 mt-8">
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+        </div>
+      } @else {
+        @if (linguists$ | async; as linguists) {
+          <ui-list-item class="sticky top-0 z-1 bg-white">
+            <div
+              class="grid grid-cols-2 xl:grid-cols-4 text-black/95 font-semibold"
+            >
+              <div class="grid-cols-1">First Name</div>
+              <div class="grid-cols-1">Last Name</div>
+              <div class="grid-cols-1 hidden xl:block">Email Address</div>
+              <div class="grid-cols-1 hidden xl:block">Phone</div>
+            </div>
+          </ui-list-item>
+          <div class="h-full w-full">
+            @for (linguist of linguists; track i; let i = $index) {
+              <a
+                routerLink="."
+                [queryParams]="{ selectedLinguist: linguist.id }"
+                [queryParamsHandling]="'merge'"
+                #rla="routerLinkActive"
+                routerLinkActive
+                [routerLinkActiveOptions]="{ exact: true }"
+                class="block relative bg-white hover:bg-primary/5"
+              >
+                <ui-list-item [isSelected]="rla.isActive">
+                  <div class="grid grid-cols-2 xl:grid-cols-4 items-center">
+                    <div class="grid-cols-1">{{ linguist.firstName }}</div>
+                    <div class="grid-cols-1">{{ linguist.lastName }}</div>
+                    <div class="grid-cols-1 hidden xl:block">
+                      {{ linguist.email }}
+                    </div>
+                    <div class="grid-cols-1 hidden xl:block">
+                      {{ linguist.phone }}
+                    </div>
+                  </div>
+                </ui-list-item>
+              </a>
+            } @empty {
+              <div>
+                <ui-no-data [isNotFound]="isFilterActivated" />
+              </div>
+            }
+            @if (isLoadingMore) {
+              <ui-spinner [bar]="true" />
+            }
+          </div>
+        }
+      }
+    </div>
+    @if (selectedLinguist) {
+      <div
+        class="relative h-full- max-h-full pb-3 px-8 m-1 mb-2 bg-white overflow-x-auto overflow-y-scroll"
+      >
+        <app-linguist-details
+          (close)="onCloseChild()"
+          [linguistId]="selectedLinguist"
+        ></app-linguist-details>
+      </div>
+    }
+  </div>
+</div>

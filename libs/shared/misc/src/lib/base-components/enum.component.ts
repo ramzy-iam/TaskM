@@ -53,7 +53,7 @@ export class BaseEnumComponent {
 
   private getPaymentMethodArray(): { value: string; name: string }[] {
     return this.paymentMethodKeys.map((key) => ({
-      value: PaymentMethod[key as keyof typeof PaymentMethod],
+      value: key,
       name: PaymentMethod[key as keyof typeof PaymentMethod],
     }));
   }

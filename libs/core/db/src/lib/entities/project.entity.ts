@@ -7,7 +7,7 @@ import {
   TaskType,
 } from '@TaskM/core/constants';
 import { Client } from './client.entity';
-import { DateTzColumn } from './db.decorator';
+import { AmountColumn, DateTzColumn } from './db.decorator';
 
 @Entity({ name: 'Projects' })
 @Unique(['poId'])
@@ -56,11 +56,7 @@ export class Project extends AppBaseEntity {
   })
   count: number;
 
-  @Column({
-    type: 'decimal',
-    precision: 20,
-    scale: 6,
-  })
+  @AmountColumn()
   rate: number;
 
   @Column({
