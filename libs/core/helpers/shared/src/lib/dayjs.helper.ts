@@ -4,10 +4,22 @@ import duration from 'dayjs/plugin/duration';
 
 dayjs.extend(utc);
 dayjs.extend(duration);
-
+type DateConfig = {
+  utc?: boolean;
+  excludeSeconds?: boolean;
+};
 export class DayjsHelper {
-  static new(date?: dayjs.ConfigType, utc = true) {
-    return utc ? dayjs(date, { utc: true }).utc() : dayjs(date, { utc: true });
+  static new(
+    date?: dayjs.ConfigType,
+    config: DateConfig = { utc: true, excludeSeconds: true },
+  ) {
+    let dateInstance: dayjs.Dayjs = dayjs(date, { utc: true });
+
+    if (config?.utc) dateInstance = dateInstance.utc();
+    if (config?.excludeSeconds)
+      dateInstance = dateInstance.set('second', 0).set('millisecond', 0);
+
+    return dateInstance;
   }
 
   static isBefore(

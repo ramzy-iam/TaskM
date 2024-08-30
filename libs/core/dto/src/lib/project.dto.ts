@@ -104,9 +104,9 @@ export class UpdateProjectDto {
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
-  @IsEnum(ProjectStatus)
+  @IsEnum(ProjectStatusCode)
   @IsOptional()
-  status?: ProjectStatus;
+  status?: ProjectStatusCode;
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsEnum(TaskType)
@@ -140,6 +140,7 @@ export class UpdateProjectDto {
   unit?: LoadUnit;
 
   @Transform(({ value }) => CastHelper.toDate(value))
+  @IsOptional()
   @IsDate()
   deadline?: Date;
 

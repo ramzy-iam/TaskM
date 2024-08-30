@@ -1,33 +1,74 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  Optional,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProjectService } from '@TaskM/projects/data-access';
 import { BehaviorSubject, finalize } from 'rxjs';
 import { ProjectDto } from '@TaskM/core/dto';
 import { ProjectFormComponent } from '@TaskM/projects/form';
 import { SkeletonModule } from 'primeng/skeleton';
-import { CloseButtonComponent } from '@TaskM/shared/ui';
+import {
+  CloseButtonComponent,
+  FormInputErrorComponent,
+} from '@TaskM/shared/ui';
 import { Router } from '@angular/router';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ClipboardDirective, FormUtilsService } from '@TaskM/shared/misc';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { CalendarModule } from 'primeng/calendar';
+import { ClientAutocompleteComponent } from '@TaskM/clients/form';
 
 @Component({
   selector: 'app-project-details',
   standalone: true,
   imports: [
     CommonModule,
-    ProjectFormComponent,
     SkeletonModule,
     CloseButtonComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    InputTextModule,
+    FloatLabelModule,
+    DropdownModule,
+    InputNumberModule,
+    FormInputErrorComponent,
+    CalendarModule,
+    ClientAutocompleteComponent,
+    ClipboardDirective,
   ],
   templateUrl: './project-details.component.html',
 })
-export class ProjectDetailsComponent implements OnChanges {
+export class ProjectDetailsComponent
+  extends ProjectFormComponent
+  implements OnInit, OnChanges
+{
   @Input() code!: string;
   project$ = new BehaviorSubject<ProjectDto | null>(null);
-  loading = false;
+  override loading = false;
 
   constructor(
-    private projectService: ProjectService,
+    protected override projectService: ProjectService,
+    @Optional() protected override dialogRef: DynamicDialogRef,
+    protected override formUtils: FormUtilsService,
     private router: Router,
-  ) {}
+  ) {
+    super(projectService, dialogRef, formUtils);
+  }
+
+  override ngOnInit(): void {
+    // this.triggerAutoSave(true);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['code'] && this.code) {
@@ -45,6 +86,9 @@ export class ProjectDetailsComponent implements OnChanges {
           if (!project) this.close();
 
           this.project$.next(project);
+          this.project = project;
+          this.initializeForm(project, { client: true });
+          this.triggerAutoSave(true);
         },
         error: () => {
           this.close();

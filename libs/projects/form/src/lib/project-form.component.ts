@@ -13,8 +13,6 @@ import {
   distinctUntilChanged,
   filter,
   finalize,
-  map,
-  max,
   Subscription,
 } from 'rxjs';
 import { BaseClientDto, ProjectDto } from '@TaskM/core/dto';
@@ -26,7 +24,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FormInputErrorComponent } from '@TaskM/shared/ui';
-import {} from '@TaskM/clients/data-access';
 import { CurrencyToIntlNumberFormat } from '@TaskM/core/constants';
 
 import { CalendarModule } from 'primeng/calendar';
@@ -36,6 +33,23 @@ import {
 } from '@TaskM/shared/misc';
 import { DayjsHelper } from '@TaskM/core/helpers';
 import { ClientAutocompleteComponent } from '@TaskM/clients/form';
+
+type DisabledFields = {
+  name?: boolean;
+  client?: boolean;
+  clientPoId?: boolean;
+  poId?: boolean;
+  taskType?: boolean;
+  status?: boolean;
+  lang?: boolean;
+  count?: boolean;
+  rate?: boolean;
+  unit?: boolean;
+  clientPM?: boolean;
+  receivedAt?: boolean;
+  deadline?: boolean;
+  internalDeadline?: boolean;
+};
 
 @Component({
   selector: 'app-project-form',
@@ -72,14 +86,14 @@ export class ProjectFormComponent
   maxInternalDeadlineDate!: Date;
 
   constructor(
-    private projectService: ProjectService,
-    @Optional() public dialogRef: DynamicDialogRef,
-    private formUtils: FormUtilsService,
+    protected projectService: ProjectService,
+    @Optional() protected dialogRef: DynamicDialogRef,
+    protected formUtils: FormUtilsService,
   ) {
     super();
   }
 
-  @Input() autoSave?: boolean = false;
+  @Input() autoSave: boolean = false;
   @Input()
   set project(project: ProjectDto | null) {
     if (project) {
@@ -91,7 +105,6 @@ export class ProjectFormComponent
   ngOnInit() {
     this.initializeForm(this._project);
     this.triggerAutoSave();
-    this.setupDeadlineListeners();
   }
 
   ngOnDestroy() {
@@ -100,23 +113,33 @@ export class ProjectFormComponent
     }
   }
 
-  private initializeForm(project: ProjectDto | null) {
+  protected initializeForm(
+    project: ProjectDto | null,
+    disabledFields: DisabledFields = {},
+  ) {
     this.form = new FormGroup(
       {
-        client: this.formUtils.createMinimalClientForm(null),
-        name: new FormControl<string>(project?.name ?? '', [
+        client: this.formUtils.createMinimalClientForm(
+          project?.client ?? null,
+          { disabled: disabledFields.client },
+        ),
+        name: new FormControl<string | undefined>(project?.name, [
           Validators.required,
         ]),
-        clientPoId: new FormControl<string>(project?.clientPoId ?? ''),
+        clientPoId: new FormControl<string | undefined>(project?.clientPoId),
         poId: new FormControl<string | undefined>({
           value: project?.poId,
           disabled: true,
         }),
-        taskType: new FormControl<string>(project?.taskType ?? '', [
-          Validators.required,
-        ]),
+        taskType: new FormControl<string | undefined>(
+          {
+            value: project?.taskType,
+            disabled: !!project?.taskType,
+          },
+          [Validators.required],
+        ),
         status: new FormControl<string | undefined>(project?.status),
-        lang: new FormControl<string>(project?.lang ?? '', [
+        lang: new FormControl<string | undefined>(project?.lang, [
           Validators.required,
         ]),
         count: new FormControl<number>(project?.count ?? 0, [
@@ -127,23 +150,23 @@ export class ProjectFormComponent
           Validators.required,
           Validators.min(0.00001),
         ]),
-        unit: new FormControl<string>(project?.lang ?? '', [
+        unit: new FormControl<string>(project?.unit ?? '', [
           Validators.required,
         ]),
-        clientPM: new FormControl<string>(project?.lang ?? '', [
+        clientPM: new FormControl<string>(project?.clientPM ?? '', [
           Validators.required,
         ]),
         receivedAt: new FormControl<Date>(
-          project?.receivedAt ?? DayjsHelper.new().toDate(),
+          DayjsHelper.new(project?.receivedAt).toDate(),
           [Validators.required],
         ),
         deadline: new FormControl<Date>(
-          project?.deadline ?? DayjsHelper.new().add(2, 'day').toDate(),
+          DayjsHelper.new(project?.deadline).toDate(),
           [Validators.required],
         ),
 
         internalDeadline: new FormControl<Date>(
-          project?.internalDeadline ?? DayjsHelper.new().add(1, 'day').toDate(),
+          DayjsHelper.new(project?.internalDeadline).toDate(),
           [Validators.required],
         ),
       },
@@ -171,8 +194,13 @@ export class ProjectFormComponent
       ],
     );
 
+    if (project?.client) {
+      this.clientCurrency = project.client.currency;
+    }
+
     // Store initial form values
-    this.initialFormValues = this.form.getRawValue();
+    this.initialFormValues = this.form.value;
+    this.setupDeadlineListeners();
   }
 
   private setupDeadlineListeners() {
@@ -185,14 +213,10 @@ export class ProjectFormComponent
       const deadline = deadlineControl?.value;
       this.maxReceivedAtDate = DayjsHelper.new().toDate();
 
-      if (receivedAt) {
-        this.minDeadlineDate = receivedAt;
-        this.minInternalDeadlineDate = receivedAt;
-      }
+      if (receivedAt)
+        this.minDeadlineDate = this.minInternalDeadlineDate = receivedAt;
 
-      if (deadline) {
-        this.maxInternalDeadlineDate = deadline;
-      }
+      if (deadline) this.maxInternalDeadlineDate = deadline;
     };
 
     // Initialize limits
@@ -227,10 +251,11 @@ export class ProjectFormComponent
       return;
     }
     this.loading = true;
+    const values = this.form.getRawValue();
 
     const operation = this.project?.id
-      ? this.projectService.update(this.project.id, this.form.getRawValue())
-      : this.projectService.create(this.form.getRawValue());
+      ? this.projectService.update(this.project.id, values)
+      : this.projectService.create(values);
 
     operation.pipe(finalize(() => (this.loading = false))).subscribe({
       next: (project: ProjectDto) => {
@@ -255,10 +280,10 @@ export class ProjectFormComponent
     });
   }
 
-  private triggerAutoSave() {
-    this.formValueChangesSubscription = this.form.valueChanges
+  protected triggerAutoSave(force = false) {
+    this.formValueChangesSubscription = this.form?.valueChanges
       .pipe(
-        filter(() => !!this.autoSave),
+        filter(() => !!this.autoSave || !!force),
         debounceTime(3000),
         distinctUntilChanged(
           (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr),
