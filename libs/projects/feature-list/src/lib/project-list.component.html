@@ -123,6 +123,7 @@
               <a
                 routerLink="."
                 [queryParams]="{ selectedProject: project.poId }"
+                [queryParamsHandling]="'merge'"
                 #rla="routerLinkActive"
                 routerLinkActive
                 [routerLinkActiveOptions]="{ exact: true }"
