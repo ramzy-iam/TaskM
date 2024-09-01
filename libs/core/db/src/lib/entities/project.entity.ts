@@ -1,10 +1,10 @@
 import { Column, Entity, ManyToOne, Unique } from 'typeorm';
 import { AppBaseEntity } from './base.entity';
 import {
-  Language,
+  LanguageCode,
   LoadUnit,
   ProjectStatusCode,
-  TaskType,
+  TaskTypeCode,
 } from '@TaskM/core/constants';
 import { Client } from './client.entity';
 import { AmountColumn, DateTzColumn } from './db.decorator';
@@ -30,15 +30,15 @@ export class Project extends AppBaseEntity {
 
   @Column({
     type: 'enum',
-    enum: TaskType,
+    enum: TaskTypeCode,
   })
-  taskType: TaskType;
+  taskType: TaskTypeCode;
 
   @Column({
     type: 'enum',
-    enum: Language,
+    enum: LanguageCode,
   })
-  lang: Language;
+  lang: LanguageCode;
 
   @Column()
   clientPoId: string;

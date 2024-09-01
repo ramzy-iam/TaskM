@@ -1,19 +1,25 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, Unique } from 'typeorm';
 import { AppBaseEntity } from './base.entity';
-import { Currency, LoadUnit, TaskType } from '@TaskM/core/constants';
+import { Currency, LoadUnit, TaskTypeCode } from '@TaskM/core/constants';
 import { AmountColumn } from './db.decorator';
 import { Linguist } from './linguist.entity';
 
 @Entity({ name: 'Competences' })
+@Unique(['linguist', 'code', 'unit', 'currency', 'rate'])
 export class Competence extends AppBaseEntity {
   @Column({
     type: 'enum',
-    enum: TaskType,
+    enum: TaskTypeCode,
   })
-  code: TaskType;
+  code: TaskTypeCode;
 
   @AmountColumn()
   rate: number;
+
+  @Column({
+    default: true,
+  })
+  active: boolean;
 
   @Column({
     type: 'enum',

@@ -33,11 +33,13 @@ import { LinguistDetailsComponent } from '@TaskM/linguists/feature-details';
 import { LinguistFormComponent } from '@TaskM/linguists/form';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FormUtilsService, ScrollNearEndDirective } from '@TaskM/shared/misc';
-import { PAGINATION } from '@TaskM/core/constants';
+import { PAGINATION, TaskType, TaskTypeCode } from '@TaskM/core/constants';
 import { Nullable } from '@TaskM/core/types';
+import { DropdownModule } from 'primeng/dropdown';
 
 type UrlParams = LinguistsFilterDto & {
   selectedLinguist: string | null;
+  competence: TaskTypeCode | null;
 };
 @Component({
   selector: 'app-linguist-list',
@@ -60,6 +62,7 @@ type UrlParams = LinguistsFilterDto & {
     SpinnerComponent,
     ScrollNearEndDirective,
     NoDataComponent,
+    DropdownModule,
   ],
   providers: [DialogService, provideIcons({ radixCross2 })],
   templateUrl: './linguist-list.component.html',
@@ -73,6 +76,10 @@ export class LinguistListComponent implements OnInit, OnDestroy {
   private hasMore = true;
   filterForm: FormGroup<{
     query: FormControl<string | null>;
+    code: FormControl<{
+      code: TaskTypeCode | null;
+      name: string | null;
+    } | null>;
   }>;
   private linguistsSubject = new BehaviorSubject<Linguist[]>([]);
   linguists$ = this.linguistsSubject.asObservable();
@@ -80,6 +87,10 @@ export class LinguistListComponent implements OnInit, OnDestroy {
   dialogRef?: DynamicDialogRef;
   isFilterActivated = false;
   private isFormInitialized = false;
+  taskTypes = Object.entries(TaskType).map(([key, value]) => ({
+    code: key,
+    name: value,
+  }));
 
   constructor(
     private linguistService: LinguistService,
@@ -228,14 +239,18 @@ export class LinguistListComponent implements OnInit, OnDestroy {
         }),
       )
       .subscribe(() => {
+        this.isFilterActivated = this.formUtils.isAnyFilterActivated(
+          this.filterForm,
+        );
         this.resetAndFetchLinguists(this.buildFilter());
       });
   }
 
   private buildFilter() {
     const { query } = this.filterForm.value;
-    const filters = { query } as LinguistsFilterDto;
+    const filters = { query } as Nullable<LinguistsFilterDto>;
     filters.query = query;
+    filters.competence = this.filterForm.get('code')?.value?.code;
 
     return filters;
   }
@@ -243,6 +258,7 @@ export class LinguistListComponent implements OnInit, OnDestroy {
   private updateUrlParams(filters: Nullable<LinguistsFilterDto>): void {
     const queryParams: Params = {
       query: filters?.query || null,
+      competence: filters?.competence || null,
     };
 
     this.router.navigate([], {
@@ -256,12 +272,27 @@ export class LinguistListComponent implements OnInit, OnDestroy {
 
     this.filterForm = new FormGroup({
       query: new FormControl<string | null>(params?.query ?? null),
+      code: new FormControl<{
+        code: TaskTypeCode | null;
+        name: string | null;
+      } | null>({
+        code: params?.competence ?? null,
+        name: TaskType[params.competence!] ?? null,
+      }),
     });
 
     this.isFormInitialized = true;
     this.resetAndFetchLinguists(this.buildFilter());
     this.router.navigate([], {
       queryParams: { client: null },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  clearFilters(): void {
+    this.filterForm.reset();
+    this.router.navigate([], {
+      queryParams: {},
       queryParamsHandling: 'merge',
     });
   }

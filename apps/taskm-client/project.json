@@ -34,7 +34,8 @@
         "allowedCommonJsDependencies": [
           "dayjs",
           "dayjs/plugin/duration",
-          "dayjs/plugin/utc"
+          "dayjs/plugin/utc",
+          "validator"
         ]
       },
       "configurations": {

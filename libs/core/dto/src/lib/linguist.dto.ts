@@ -1,4 +1,4 @@
-import { Expose, Transform } from 'class-transformer';
+import { Expose, Transform, Type } from 'class-transformer';
 import {
   IsString,
   IsNotEmpty,
@@ -8,8 +8,13 @@ import {
   IsPhoneNumber,
 } from 'class-validator';
 import { BaseDto, BaseFilterDto } from './base.dto';
-import { PaymentMethod, PaymentMethodCode } from '@TaskM/core/constants';
+import {
+  PaymentMethod,
+  PaymentMethodCode,
+  TaskTypeCode,
+} from '@TaskM/core/constants';
 import { CastHelper } from '@TaskM/core/helpers';
+import { CompetenceDto } from './competence.dto';
 
 export class CreateLinguistDto {
   @Transform(({ value }) => CastHelper.trim(value))
@@ -95,6 +100,11 @@ export class LinguistsFilterDto extends BaseFilterDto {
   @IsOptional()
   @IsEmail()
   email?: string;
+
+  @Transform(({ value }) => CastHelper.trim(value))
+  @IsOptional()
+  @IsEnum(TaskTypeCode)
+  competence?: TaskTypeCode;
 }
 
 export class LinguistPreviewDto extends BaseDto {
@@ -130,4 +140,8 @@ export class LinguistDto extends LinguistPreviewDto {
 
   @Expose()
   accountNumber: string;
+
+  @Type(() => CompetenceDto)
+  @Expose()
+  competences: CompetenceDto[];
 }

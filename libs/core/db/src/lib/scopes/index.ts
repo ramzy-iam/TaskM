@@ -5,3 +5,4 @@ export * from './permission.scope';
 export * from './client.scope';
 export * from './project.scope';
 export * from './linguist.scope';
+export * from './competence.scope';

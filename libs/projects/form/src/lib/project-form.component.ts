@@ -24,7 +24,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FormInputErrorComponent } from '@TaskM/shared/ui';
-import { CurrencyToIntlNumberFormat } from '@TaskM/core/constants';
+import { CurrencyToIntlNumberFormat, LoadUnit } from '@TaskM/core/constants';
 
 import { CalendarModule } from 'primeng/calendar';
 import {
@@ -146,11 +146,11 @@ export class ProjectFormComponent
           Validators.required,
           Validators.min(1),
         ]),
-        rate: new FormControl<number>(project?.rate ?? 0, [
+        rate: new FormControl<number>(project?.rate ?? 0.00001, [
           Validators.required,
           Validators.min(0.00001),
         ]),
-        unit: new FormControl<string>(project?.unit ?? '', [
+        unit: new FormControl<LoadUnit | undefined>(project?.unit, [
           Validators.required,
         ]),
         clientPM: new FormControl<string>(project?.clientPM ?? '', [

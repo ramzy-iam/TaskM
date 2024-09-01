@@ -56,6 +56,7 @@ export class LinguistsService {
     if (filters?.query) query.filterByName(filters.query);
     if (filters?.withDeleted) query.withDeleted();
     if (filters?.email) query.filterByEmail(filters.email);
+    if (filters?.competence) query.filterByCompetenceCode(filters.competence);
 
     query.joinCompetences()._orderBy();
 

@@ -4,7 +4,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { ClientsService } from '@TaskM/clients/api';
-import { ProjectDateFilterField, TaskType } from '@TaskM/core/constants';
+import { ProjectDateFilterField, TaskTypeCode } from '@TaskM/core/constants';
 import { Project, ProjectsRepository } from '@TaskM/core/db';
 import {
   ProjectsFilterDto,
@@ -99,7 +99,10 @@ export class ProjectsService {
     ) as Promise<P>;
   }
 
-  private async generateSpecialFields(taskType: TaskType, clientId: string) {
+  private async generateSpecialFields(
+    taskType: TaskTypeCode,
+    clientId: string,
+  ) {
     const client = await this.clientsService.getOne(clientId);
     const today = DayjsHelper.new();
     const from = today.startOf('M').toDate();

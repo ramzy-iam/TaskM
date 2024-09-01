@@ -21,6 +21,9 @@ export class BaseDto {
 
   @Expose()
   updatedAt?: string;
+
+  @Expose()
+  deletedAt?: string;
 }
 
 export class BaseFilterDto {

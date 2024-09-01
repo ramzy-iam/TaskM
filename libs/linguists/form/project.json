@@ -3,7 +3,7 @@
   "$schema": "../../../node_modules/nx/schemas/linguist-schema.json",
   "sourceRoot": "libs/linguists/form/src",
   "prefix": "app",
-  "linguistType": "library",
+  "projectType": "library",
   "tags": [],
   "targets": {
     "test": {

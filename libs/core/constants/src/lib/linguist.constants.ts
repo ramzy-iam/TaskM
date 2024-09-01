@@ -12,7 +12,7 @@ export const CurrencyToIntlNumberFormat: { [key: string]: string } = {
   XAF: 'XAF',
 };
 
-export enum TaskType {
+export enum TaskTypeCode {
   TRA = 'TRA',
   EDIT = 'EDIT',
   PROOF = 'PROOF',
@@ -84,7 +84,7 @@ export enum TaskStatusCode {
   CANCELLED = 'CANCELLED',
 }
 
-export enum Language {
+export enum LanguageCode {
   'Fr' = 'Fr',
   'En' = 'En',
 
@@ -110,41 +110,41 @@ export enum Language {
   'Ger- FrCA' = 'Ger- FrCA',
 }
 
-export const TASK_LABELS: { [key in keyof typeof TaskType]: string } = {
-  [TaskType.TRA]: 'Translation',
-  [TaskType.EDIT]: 'Editing',
-  [TaskType.PROOF]: 'Proofreading',
-  [TaskType.TEP]: 'Translation, Editing & Proofreading',
-  [TaskType.TCREA]: 'Transcreation',
-  [TaskType.TRANS]: 'Transcription',
-  [TaskType.MPTE]: 'Machine Post Editing',
-  [TaskType.SUBT]: 'Subtitling',
-  [TaskType.DTP]: 'Desktop Publishing',
-  [TaskType.VO]: 'Voice Over',
+export const TaskType: { [key in keyof typeof TaskTypeCode]: string } = {
+  [TaskTypeCode.TRA]: 'Translation',
+  [TaskTypeCode.EDIT]: 'Editing',
+  [TaskTypeCode.PROOF]: 'Proofreading',
+  [TaskTypeCode.TEP]: 'Translation, Editing & Proofreading',
+  [TaskTypeCode.TCREA]: 'Transcreation',
+  [TaskTypeCode.TRANS]: 'Transcription',
+  [TaskTypeCode.MPTE]: 'Machine Post Editing',
+  [TaskTypeCode.SUBT]: 'Subtitling',
+  [TaskTypeCode.DTP]: 'Desktop Publishing',
+  [TaskTypeCode.VO]: 'Voice Over',
 };
 
-export const LANGUAGE_LABELS: { [key in keyof typeof Language]: string } = {
-  [Language.Fr]: 'French',
-  [Language.En]: 'English',
+export const Language: { [key in keyof typeof LanguageCode]: string } = {
+  [LanguageCode.Fr]: 'French',
+  [LanguageCode.En]: 'English',
 
-  [Language['En-Fr']]: 'English - French',
-  [Language['EnUK-FrFR']]: 'English (United Kingdom) - French (France)',
-  [Language['EnUK-FrCA']]: 'English (United Kingdom) - French (Canada)',
-  [Language['EnUS-FrFR']]: 'English (United States) - French (France)',
-  [Language['EnUS-FrCA']]: 'English (United States) - French (Canada)',
+  [LanguageCode['En-Fr']]: 'English - French',
+  [LanguageCode['EnUK-FrFR']]: 'English (United Kingdom) - French (France)',
+  [LanguageCode['EnUK-FrCA']]: 'English (United Kingdom) - French (Canada)',
+  [LanguageCode['EnUS-FrFR']]: 'English (United States) - French (France)',
+  [LanguageCode['EnUS-FrCA']]: 'English (United States) - French (Canada)',
 
-  [Language['Fr-En']]: 'French - English ',
-  [Language['FrFR-EnUK']]: 'French (France) - English (United Kingdom)',
-  [Language['FrFR-EnUS']]: 'French (France) - English (United States)',
-  [Language['FrCA-EnUK']]: 'French (Canada) - English (United Kingdom)',
-  [Language['FrCA-EnUS']]: 'French (Canada) - English (United States)',
-  [Language['FrCA-EnCA']]: 'French (Canada) - English (Canada)',
+  [LanguageCode['Fr-En']]: 'French - English ',
+  [LanguageCode['FrFR-EnUK']]: 'French (France) - English (United Kingdom)',
+  [LanguageCode['FrFR-EnUS']]: 'French (France) - English (United States)',
+  [LanguageCode['FrCA-EnUK']]: 'French (Canada) - English (United Kingdom)',
+  [LanguageCode['FrCA-EnUS']]: 'French (Canada) - English (United States)',
+  [LanguageCode['FrCA-EnCA']]: 'French (Canada) - English (Canada)',
 
-  [Language['Spa-Fr']]: 'Spanish - French',
-  [Language['Spa-FrFR']]: 'Spanish - French (France)',
-  [Language['Spa-FrCA']]: 'Spanish - French (Canada)',
+  [LanguageCode['Spa-Fr']]: 'Spanish - French',
+  [LanguageCode['Spa-FrFR']]: 'Spanish - French (France)',
+  [LanguageCode['Spa-FrCA']]: 'Spanish - French (Canada)',
 
-  [Language['Ger-Fr']]: 'German - French',
-  [Language['Ger-FrFR']]: 'German - French (France)',
-  [Language['Ger- FrCA']]: 'German - French (Canada)',
+  [LanguageCode['Ger-Fr']]: 'German - French',
+  [LanguageCode['Ger-FrFR']]: 'German - French (France)',
+  [LanguageCode['Ger- FrCA']]: 'German - French (Canada)',
 };

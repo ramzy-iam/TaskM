@@ -1,6 +1,7 @@
 import { SelectQueryBuilder } from 'typeorm';
 import { Linguist } from '../entities';
 import { OrderType } from '@TaskM/core/types';
+import { TaskTypeCode } from '@TaskM/core/constants';
 
 export class LinguistsScope extends SelectQueryBuilder<Linguist> {
   filterById(id: string) {
@@ -32,6 +33,20 @@ export class LinguistsScope extends SelectQueryBuilder<Linguist> {
   }
 
   joinCompetences() {
-    return this.leftJoinAndSelect('Linguists.competences', 'competences');
+    return this.leftJoinAndSelect(
+      'Linguists.competences',
+      'competences',
+      'competences.active = :active',
+      { active: true },
+    );
+  }
+
+  filterByCompetenceCode(code: TaskTypeCode) {
+    return this.andWhere(
+      '(competences.code = :code AND competences.active = true)',
+      {
+        code,
+      },
+    );
   }
 }

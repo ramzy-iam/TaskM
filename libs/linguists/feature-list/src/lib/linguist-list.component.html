@@ -11,10 +11,32 @@
           </div>
           <div>
             <form [formGroup]="filterForm">
-              <ui-input-search
-                [control]="filterForm.controls.query"
-                [attributes]="{ placeholder: 'Search' }"
-              />
+              <div
+                class="grid grid-cols-[270px_repeat(11,minmax(0,1fr))] gap-4"
+              >
+                <ui-input-search
+                  [control]="filterForm.controls.query"
+                  [attributes]="{ placeholder: 'Search' }"
+                />
+                <p-dropdown
+                  [options]="taskTypes"
+                  formControlName="code"
+                  placeholder="Competence"
+                  showClear="true"
+                  optionLabel="name"
+                  class="col-span-2 input-like-text"
+                />
+                @if (isFilterActivated) {
+                  <p-button
+                    label="Clear"
+                    title="Clear filters"
+                    severity="secondary"
+                    class="col-span-2"
+                    icon="pi pi-filter-slash"
+                    (click)="clearFilters()"
+                  />
+                }
+              </div>
             </form>
           </div>
         </div>
