@@ -15,14 +15,14 @@ import {
 } from 'class-validator';
 import { BaseClientDto, BaseDto, ClientOwnedFilterDto } from './base.dto';
 import {
-  LANGUAGE_LABELS,
   Language,
+  LanguageCode,
   LoadUnit,
   ProjectDateFilterField,
   ProjectStatus,
   ProjectStatusCode,
-  TASK_LABELS,
   TaskType,
+  TaskTypeCode,
 } from '@TaskM/core/constants';
 import { CastHelper } from '@TaskM/core/helpers';
 import { ClientBaseDto } from './client.dto';
@@ -46,12 +46,12 @@ export class CreateProjectDto {
   status: ProjectStatusCode;
 
   @Transform(({ value }) => CastHelper.trim(value))
-  @IsEnum(TaskType)
-  taskType: TaskType;
+  @IsEnum(TaskTypeCode)
+  taskType: TaskTypeCode;
 
   @Transform(({ value }) => CastHelper.trim(value))
-  @IsEnum(Language)
-  lang: Language;
+  @IsEnum(LanguageCode)
+  lang: LanguageCode;
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsString()
@@ -99,24 +99,22 @@ export class UpdateProjectDto {
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
   @IsString()
-  @IsOptional()
   clientPM?: string;
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
   @IsEnum(ProjectStatusCode)
-  @IsOptional()
   status?: ProjectStatusCode;
 
   @Transform(({ value }) => CastHelper.trim(value))
-  @IsEnum(TaskType)
+  @IsEnum(TaskTypeCode)
   @IsOptional()
-  taskType?: TaskType;
+  taskType?: TaskTypeCode;
 
   @Transform(({ value }) => CastHelper.trim(value))
-  @IsEnum(Language)
+  @IsEnum(LanguageCode)
   @IsOptional()
-  lang?: Language;
+  lang?: LanguageCode;
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsString()
@@ -177,8 +175,8 @@ export class ProjectsFilterDto extends ClientOwnedFilterDto {
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
-  @IsEnum(TaskType)
-  task?: TaskType | null;
+  @IsEnum(TaskTypeCode)
+  task?: TaskTypeCode | null;
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
@@ -200,21 +198,19 @@ export class ProjectPreviewDto extends BaseDto {
   statusLabel?: string;
 
   @Expose()
-  taskType: TaskType;
+  taskType: TaskTypeCode;
 
   @Expose()
   @Transform(
-    ({ obj }: { obj: { taskType: TaskType } }) => TASK_LABELS[obj.taskType],
+    ({ obj }: { obj: { taskType: TaskTypeCode } }) => TaskType[obj.taskType],
   )
   taskLabel?: string;
 
   @Expose()
-  lang: Language;
+  lang: LanguageCode;
 
   @Expose()
-  @Transform(
-    ({ obj }: { obj: { lang: Language } }) => LANGUAGE_LABELS[obj.lang],
-  )
+  @Transform(({ obj }: { obj: { lang: LanguageCode } }) => Language[obj.lang])
   langLabel?: string;
 
   @Expose()

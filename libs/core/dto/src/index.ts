@@ -4,3 +4,5 @@ export * from './lib/workspace.dto';
 export * from './lib/client.dto';
 export * from './lib/pagination.dto';
 export * from './lib/project.dto';
+export * from './lib/linguist.dto';
+export * from './lib/competence.dto';

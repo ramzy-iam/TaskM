@@ -16,7 +16,6 @@ import {
 import { BaseDto, BaseFilterDto } from './base.dto';
 import { Currency, PaymentMethod } from '@TaskM/core/constants';
 import { CastHelper } from '@TaskM/core/helpers';
-import { TrackProperty } from '@TaskM/core/decorators';
 
 export class ClientBaseDto {
   @IsString()
@@ -31,7 +30,6 @@ export class ClientBaseDto {
 }
 
 export class CreateClientDto {
-  @TrackProperty
   @Transform(({ value }) => CastHelper.trim(value))
   @MaxLength(20)
   @MinLength(4)
@@ -39,7 +37,6 @@ export class CreateClientDto {
   @IsNotEmpty()
   name: string;
 
-  @TrackProperty
   @Transform(({ value }) => CastHelper.trim(value))
   @IsUppercase()
   @MaxLength(10)
@@ -52,29 +49,24 @@ export class CreateClientDto {
   @IsString()
   code: string;
 
-  @TrackProperty
   @Transform(({ value }) => CastHelper.toNumber(value))
   @IsPositive()
   paymentDueDays: number;
 
-  @TrackProperty
   @Transform(({ value }) => CastHelper.trim(value))
   @IsEmail()
   @IsNotEmpty()
   billingEmailAddress: string;
 
-  @TrackProperty
   @Transform(({ value }) => CastHelper.trim(value))
   @IsNotEmpty()
   @IsString()
   billingPeriod: string;
 
-  @TrackProperty
   @Transform(({ value }) => CastHelper.trim(value))
   @IsEnum(Currency)
   currency: Currency;
 
-  @TrackProperty
   @Transform(({ value }) => CastHelper.trim(value))
   @IsEnum(PaymentMethod)
   paymentMethod: PaymentMethod;

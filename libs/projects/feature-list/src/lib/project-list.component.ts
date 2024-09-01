@@ -39,8 +39,8 @@ import {
   ProjectStatus,
   ProjectStatusCode,
   ProjectTagSeverity,
-  TASK_LABELS,
   TaskType,
+  TaskTypeCode,
 } from '@TaskM/core/constants';
 import { Nullable } from '@TaskM/core/types';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -98,7 +98,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
       name: string | null;
     } | null>;
     task: FormControl<{
-      code: TaskType | null;
+      code: TaskTypeCode | null;
       name: string | null;
     } | null>;
     client: FormGroup<{
@@ -119,7 +119,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     name: ProjectStatus[key as keyof typeof ProjectStatusCode],
   }));
 
-  taskTypes = Object.entries(TASK_LABELS).map(([key, value]) => ({
+  taskTypes = Object.entries(TaskType).map(([key, value]) => ({
     code: key,
     name: value,
   }));
@@ -252,11 +252,11 @@ export class ProjectListComponent implements OnInit, OnDestroy {
         name: ProjectStatus[params?.status!] ?? null,
       }),
       task: new FormControl<{
-        code: TaskType | null;
+        code: TaskTypeCode | null;
         name: string | null;
       } | null>({
         code: params?.task ?? null,
-        name: TASK_LABELS[params.task!] ?? null,
+        name: TaskType[params.task!] ?? null,
       }),
       client: this.formUtils.createMinimalClientForm(null, {}),
       period: new FormControl<(Date | null)[] | null | undefined>(

@@ -3,7 +3,7 @@ import {
   Language,
   LoadUnit,
   PaymentMethod,
-  TASK_LABELS,
+  TaskType,
 } from '@TaskM/core/constants';
 import { capitalize } from 'radash';
 
@@ -38,7 +38,7 @@ export class BaseEnumComponent {
   }
 
   private getTaskTypeArray(): { value: string; name: string }[] {
-    return Object.entries(TASK_LABELS).map(([key, value]) => ({
+    return Object.entries(TaskType).map(([key, value]) => ({
       value: key,
       name: value,
     }));
@@ -53,7 +53,7 @@ export class BaseEnumComponent {
 
   private getPaymentMethodArray(): { value: string; name: string }[] {
     return this.paymentMethodKeys.map((key) => ({
-      value: PaymentMethod[key as keyof typeof PaymentMethod],
+      value: key,
       name: PaymentMethod[key as keyof typeof PaymentMethod],
     }));
   }

@@ -27,6 +27,7 @@
       ],
       "@TaskM/clients/feature-list": ["libs/clients/feature-list/src/index.ts"],
       "@TaskM/clients/form": ["libs/clients/form/src/index.ts"],
+      "@TaskM/competences/api": ["libs/competences/api/src/index.ts"],
       "@TaskM/core/constants": ["libs/core/constants/src/index.ts"],
       "@TaskM/core/db": ["libs/core/db/src/index.ts"],
       "@TaskM/core/decorators": ["libs/core/decorators/src/index.ts"],
@@ -36,6 +37,17 @@
       "@TaskM/core/http": ["libs/core/http/src/index.ts"],
       "@TaskM/core/interceptors": ["libs/core/interceptors/src/index.ts"],
       "@TaskM/core/types": ["libs/core/types/src/index.ts"],
+      "@TaskM/linguists/api": ["libs/linguists/api/src/index.ts"],
+      "@TaskM/linguists/data-access": [
+        "libs/linguists/data-access/src/index.ts"
+      ],
+      "@TaskM/linguists/feature-details": [
+        "libs/linguists/feature-details/src/index.ts"
+      ],
+      "@TaskM/linguists/feature-list": [
+        "libs/linguists/feature-list/src/index.ts"
+      ],
+      "@TaskM/linguists/form": ["libs/linguists/form/src/index.ts"],
       "@TaskM/projects/api": ["libs/projects/api/src/index.ts"],
       "@TaskM/projects/data-access": ["libs/projects/data-access/src/index.ts"],
       "@TaskM/projects/feature-details": [

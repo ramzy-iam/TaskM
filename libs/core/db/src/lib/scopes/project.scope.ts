@@ -4,7 +4,7 @@ import { OrderType } from '@TaskM/core/types';
 import {
   ProjectDateFilterField,
   ProjectStatusCode,
-  TaskType,
+  TaskTypeCode,
 } from '@TaskM/core/constants';
 
 export class ProjectsScope extends SelectQueryBuilder<Project> {
@@ -81,7 +81,7 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
     });
   }
 
-  filterByTaskType(taskType: TaskType) {
+  filterByTaskType(taskType: TaskTypeCode) {
     return this.andWhere('Projects.taskType = :taskType', {
       taskType,
     });

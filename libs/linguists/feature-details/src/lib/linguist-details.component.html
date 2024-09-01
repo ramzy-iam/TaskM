@@ -1,0 +1,52 @@
+@if (loading) {
+  <p-skeleton height="2rem" width="50%" borderRadius="5px" />
+  <p-skeleton height="2.25rem" styleClass="mt-10" borderRadius="5px" />
+  <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
+  <div class="grid grid-cols-2 gap-2">
+    <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
+    <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
+  </div>
+  <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
+  <div class="grid grid-cols-2 gap-2">
+    <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
+    <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
+  </div>
+} @else {
+  @if (linguist$ | async; as linguist) {
+    <ng-container>
+      <div
+        class="flex sticky z-9 top-0 right-0 justify-end items-center bg-white"
+      >
+        <ui-close-button (click)="close()"></ui-close-button>
+      </div>
+      <div class="flex flex-col bg-white pb-2">
+        <div class="bg-inherit flex flex-col gap-y-4">
+          <app-linguist-form
+            [linguist]="linguist"
+            [autoSave]="true"
+          ></app-linguist-form>
+          <div class="my-4 flex flex-col gap-y-4">
+            <div class="flex gap-2 items-center">
+              <h1 class="text-[24px] text-black-2 font-semibold">
+                Competences
+              </h1>
+            </div>
+            <div class="grid grid-cols-4">
+              <p-button
+                class="col-span-1"
+                icon="pi pi-plus"
+                title="New"
+                (click)="showCompetenceDialog()"
+              />
+            </div>
+            <div>
+              @for (competence of linguist.competences; track $index) {
+                <app-linguist-competence [competence]="competence" />
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  }
+}

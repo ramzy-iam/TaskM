@@ -1,0 +1,134 @@
+@if (form) {
+  <form
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    autocomplete="off"
+    class="bg-white"
+  >
+    <div class="flex flex-col gap-x-4">
+      <div class="grid grid-cols-2 gap-2">
+        <div class="col-span-1 pt-8">
+          <p-floatLabel>
+            <input
+              id="firstName"
+              type="text"
+              pInputText
+              class="w-full"
+              formControlName="firstName"
+            />
+            <label for="firstName">First Name</label>
+          </p-floatLabel>
+          <input-error [control]="form.get('firstName')!" [formGroup]="form" />
+        </div>
+        <div class="col-span-1 pt-8">
+          <p-floatLabel>
+            <input
+              id="lastName"
+              type="text"
+              pInputText
+              class="w-full"
+              formControlName="lastName"
+            />
+            <label for="lastName">Last Name</label>
+          </p-floatLabel>
+          <input-error [control]="form.get('lastName')!" [formGroup]="form" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="col-span-1 pt-8">
+          <p-floatLabel>
+            <input
+              id="email"
+              type="text"
+              pInputText
+              class="w-full"
+              formControlName="email"
+            />
+            <label for="email">Email</label>
+          </p-floatLabel>
+          <input-error [control]="form.get('email')!" [formGroup]="form" />
+        </div>
+        <div class="col-span-1 pt-8">
+          <p-floatLabel>
+            <input
+              id="phone"
+              type="text"
+              pInputText
+              class="w-full"
+              formControlName="phone"
+            />
+            <label for="phone">Phone</label>
+          </p-floatLabel>
+          <input-error [control]="form.get('phone')!" [formGroup]="form" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="col-span-full pt-8">
+          <p-floatLabel>
+            <p-dropdown
+              formControlName="accountType"
+              [options]="paymentMethods"
+              optionLabel="name"
+              optionValue="value"
+              inputId="accountType"
+              [editable]="true"
+              [checkmark]="true"
+              [showClear]="true"
+            />
+            <label for="accountType">Payment Method</label>
+          </p-floatLabel>
+          <input-error
+            [control]="form.get('accountType')!"
+            [formGroup]="form"
+            [fieldName]="'Payment Method'"
+          />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="col-span-1 pt-8">
+          <p-floatLabel>
+            <input
+              id="accountName"
+              type="text"
+              pInputText
+              class="w-full"
+              formControlName="accountName"
+            />
+            <label for="accountName">Account Name</label>
+          </p-floatLabel>
+          <input-error
+            [control]="form.get('accountName')!"
+            [formGroup]="form"
+          />
+        </div>
+        <div class="col-span-1 pt-8">
+          <p-floatLabel>
+            <input
+              id="accountNumber"
+              type="text"
+              pInputText
+              class="w-full"
+              formControlName="accountNumber"
+            />
+            <label for="accountNumber">Account Number</label>
+          </p-floatLabel>
+          <input-error
+            [control]="form.get('accountNumber')!"
+            [formGroup]="form"
+          />
+        </div>
+      </div>
+    </div>
+    @if (!autoSave) {
+      <div class="mt-8 flex justify-center">
+        <p-button
+          icon="pi pi-check"
+          type="submit"
+          [label]="!linguist ? 'Submit' : 'Update'"
+          [loading]="loading"
+          [disabled]="form.invalid"
+        />
+      </div>
+    }
+  </form>
+}

@@ -1,0 +1,23 @@
+<ui-list-item>
+  <div class="grid grid-cols-4 items-center">
+    <div class="col-span-1" [title]="TaskLabel[competence.code]">
+      {{ competence.code }}
+    </div>
+    <div class="col-span-2">
+      {{ competence.rate }} {{ competence.currency }} /
+      {{ competence.unit }}
+    </div>
+    <div class="col-span-1">
+      <p-splitButton
+        title="Edit"
+        size="small"
+        icon="pi pi-pencil"
+        [model]="items"
+        severity="secondary"
+        appendTo="body"
+        (onClick)="showCompetenceDialog()"
+      />
+    </div>
+  </div>
+  <p-confirmDialog />
+</ui-list-item>

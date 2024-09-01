@@ -72,6 +72,7 @@
               <a
                 routerLink="."
                 [queryParams]="{ selectedClient: client.code }"
+                [queryParamsHandling]="'merge'"
                 #rla="routerLinkActive"
                 routerLinkActive
                 [routerLinkActiveOptions]="{ exact: true }"
