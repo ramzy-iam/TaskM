@@ -117,6 +117,13 @@ export class ProjectFormComponent
     project: ProjectDto | null,
     disabledFields: DisabledFields = {},
   ) {
+    const internalDeadline = project?.internalDeadline
+      ? DayjsHelper.new(project.internalDeadline).toDate()
+      : DayjsHelper.new().add(1, 'day').toDate();
+    const deadline = project?.deadline
+      ? DayjsHelper.new(project.deadline).toDate()
+      : DayjsHelper.new().add(2, 'day').toDate();
+
     this.form = new FormGroup(
       {
         client: this.formUtils.createMinimalClientForm(
@@ -153,22 +160,18 @@ export class ProjectFormComponent
         unit: new FormControl<LoadUnit | undefined>(project?.unit, [
           Validators.required,
         ]),
-        clientPM: new FormControl<string>(project?.clientPM ?? '', [
+        clientPM: new FormControl<string | undefined>(project?.clientPM, [
           Validators.required,
         ]),
         receivedAt: new FormControl<Date>(
           DayjsHelper.new(project?.receivedAt).toDate(),
           [Validators.required],
         ),
-        deadline: new FormControl<Date>(
-          DayjsHelper.new(project?.deadline).toDate(),
-          [Validators.required],
-        ),
+        deadline: new FormControl<Date>(deadline, [Validators.required]),
 
-        internalDeadline: new FormControl<Date>(
-          DayjsHelper.new(project?.internalDeadline).toDate(),
-          [Validators.required],
-        ),
+        internalDeadline: new FormControl<Date>(internalDeadline, [
+          Validators.required,
+        ]),
       },
       [
         dateComparisonWithTodayValidator('receivedAt', 'greaterOrEqual', {
