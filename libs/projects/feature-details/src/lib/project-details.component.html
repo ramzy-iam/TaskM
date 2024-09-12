@@ -15,13 +15,13 @@
   @if (project$ | async; as project) {
     <ng-container>
       <div
-        class="flex sticky z-9 pt-2 top-0 right-0 justify-end items-center bg-white"
+        class="flex sticky z-9 py-2 top-0 right-0 justify-end items-center bg-white"
       >
         <ui-close-button (click)="close()"></ui-close-button>
       </div>
       <div class="flex flex-col bg-white pb-2">
         <div
-          class="flex justify-between items-center pt-5 bg-white sticky z-9 top-7 border-b border-gray pb-2"
+          class="flex justify-between items-center pt-5 bg-white sticky z-9 top-10 border-b border-gray pb-2"
         >
           <h1 class="text-[18px] text-black-2 font-semibold">
             [{{ project.poId }}]
