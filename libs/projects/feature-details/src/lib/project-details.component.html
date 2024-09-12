@@ -39,9 +39,15 @@
             ></span>
           </div>
         </div>
-
-        <p-accordion [activeIndex]="0">
-          <p-accordionTab header="Details" class="custom-header-padding">
+        <div class="flex flex-col mt-2 gap-y-4">
+          <p-panel
+            header="Details"
+            [toggleable]="true"
+            toggler="header"
+            [expandIcon]="'pi pi-chevron-up'"
+            [collapseIcon]="'pi pi-chevron-down'"
+            [collapsed]="false"
+          >
             <div class="bg-inherit flex flex-col gap-y-4">
               <form [formGroup]="form" autocomplete="off" class="bg-white">
                 <div class="flex flex-col gap-x-4">
@@ -332,14 +338,21 @@
                 </div>
               </form>
             </div>
-          </p-accordionTab>
-          <p-accordionTab header="Status" class="custom-header-padding">
+          </p-panel>
+          <p-panel
+            header="Status"
+            toggler="header"
+            [toggleable]="true"
+            [expandIcon]="'pi pi-chevron-up'"
+            [collapseIcon]="'pi pi-chevron-down'"
+            [collapsed]="true"
+          >
             <p>
               Change the status of the project. The status will be updated
               immediately.
-            </p>
-          </p-accordionTab>
-        </p-accordion>
+            </p></p-panel
+          >
+        </div>
       </div>
     </ng-container>
   }

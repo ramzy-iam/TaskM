@@ -74,6 +74,14 @@
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
+
+  .p-panel-header {
+    cursor: pointer;
+  }
+
+  .p-panel:not(.p-panel-expanded) .p-panel-header:hover {
+    background-color: #3b82f60f !important;
+  }
 }
 
 @layer tailwind-components {
