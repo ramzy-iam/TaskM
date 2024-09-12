@@ -70,6 +70,10 @@
       border: none !important;
     }
   }
+  .custom-header-padding .p-accordion-header-link {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
 }
 
 @layer tailwind-components {

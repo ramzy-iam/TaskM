@@ -27,6 +27,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CalendarModule } from 'primeng/calendar';
 import { ClientAutocompleteComponent } from '@TaskM/clients/form';
+import { AccordionModule } from 'primeng/accordion';
 
 @Component({
   selector: 'app-project-details',
@@ -46,6 +47,7 @@ import { ClientAutocompleteComponent } from '@TaskM/clients/form';
     CalendarModule,
     ClientAutocompleteComponent,
     ClipboardDirective,
+    AccordionModule,
   ],
   templateUrl: './project-details.component.html',
 })
@@ -67,7 +69,7 @@ export class ProjectDetailsComponent
   }
 
   override ngOnInit(): void {
-    // this.triggerAutoSave(true);
+    this.triggerAutoSave(true);
   }
 
   ngOnChanges(changes: SimpleChanges): void {

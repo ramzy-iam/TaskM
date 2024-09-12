@@ -14,7 +14,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 export class ClipboardDirective {
   @Input() tempMessage: string | HTMLElement = 'Copied!';
   @Input() duration = 1000;
-  @Input() value: string = ''; // Text to be copied to clipboard
+  @Input() value = ''; // Text to be copied to clipboard
 
   private originalContent!: string;
 
