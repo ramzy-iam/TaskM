@@ -27,7 +27,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CalendarModule } from 'primeng/calendar';
 import { ClientAutocompleteComponent } from '@TaskM/clients/form';
-import { AccordionModule } from 'primeng/accordion';
+import { PanelModule } from 'primeng/panel';
 
 @Component({
   selector: 'app-project-details',
@@ -47,7 +47,7 @@ import { AccordionModule } from 'primeng/accordion';
     CalendarModule,
     ClientAutocompleteComponent,
     ClipboardDirective,
-    AccordionModule,
+    PanelModule,
   ],
   templateUrl: './project-details.component.html',
 })
