@@ -78,18 +78,8 @@ export class ProjectsService {
   }
 
   findAll<P = Project[]>(filters?: ProjectsFilterDto) {
-    const query = this.projectsRepository.scoped;
-    if (filters?.query) query.filterByName(filters?.query);
-    if (filters?.withDeleted) query.withDeleted();
-    if (filters?.clientId) query.filterByClientId(filters?.clientId);
-    if (filters?.clientCode) query.filterByClientCode(filters?.clientCode);
-    if (filters?.task) query.filterByTaskType(filters?.task);
-    if (filters?.status) query.filterByStatus(filters?.status);
-    if (filters?.poId) query.filterByPoId(filters?.poId);
-
-    query
+    const query = this.buildQuery(filters)
       .joinClient()
-      .filterByDate(filters?.from, filters?.to, filters?.dateField)
       ._orderBy(filters?.orderField, filters?.order);
 
     return (
@@ -120,11 +110,25 @@ export class ProjectsService {
 
     return { poId };
   }
+
   findOne(filters?: ProjectsFilterDto) {
+    return this.buildQuery(filters).joinClient().getOne();
+  }
+
+  private buildQuery(filters?: ProjectsFilterDto) {
     const query = this.projectsRepository.scoped;
+
     if (filters?.id) query.filterById(filters?.id);
     if (filters?.poId) query.filterByPoId(filters?.poId);
+    if (filters?.query) query.filterByName(filters?.query);
+    if (filters?.withDeleted) query.withDeleted();
+    if (filters?.clientId) query.filterByClientId(filters?.clientId);
+    if (filters?.clientCode) query.filterByClientCode(filters?.clientCode);
+    if (filters?.task) query.filterByTaskType(filters?.task);
+    if (filters?.status) query.filterByStatus(filters?.status);
 
-    return query.joinClient().getOne();
+    query.filterByDate(filters?.from, filters?.to, filters?.dateField);
+
+    return query;
   }
 }

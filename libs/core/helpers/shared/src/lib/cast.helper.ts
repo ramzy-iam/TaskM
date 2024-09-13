@@ -20,8 +20,7 @@ const trim = (value?: string): string | undefined => {
 
 const toDate = (value?: string, excludeSeconds = true): Date | undefined => {
   if (!value) return;
-  let dateInstance = DayjsHelper.new(value, { excludeSeconds });
-  return dateInstance.toDate();
+  return DayjsHelper.new(value, { excludeSeconds }).toDate();
 };
 
 const toBoolean = (value?: BOOLEAN_ENUM): boolean | undefined => {
