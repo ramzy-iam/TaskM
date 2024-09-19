@@ -445,6 +445,8 @@ export class TaskFormComponent
         this.maxLoad =
           count + (this._task?.type === taskType ? this.taskInitialLoad : 0);
         this.remainingLoad = count ?? 0;
+        if (this.maxLoad === this.remainingLoad)
+          this.form.patchValue({ count: this.maxLoad });
       });
   }
 
