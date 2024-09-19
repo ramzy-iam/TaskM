@@ -34,7 +34,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { FormInputErrorComponent } from '@TaskM/shared/ui';
+import { FormInputErrorComponent, SpinnerComponent } from '@TaskM/shared/ui';
 import {
   CurrencyToIntlNumberFormat,
   LoadUnit,
@@ -52,6 +52,7 @@ import { LinguistAutocompleteComponent } from '@TaskM/linguists/form';
 import { ProjectAutocompleteComponent } from '@TaskM/projects/form';
 import { CompetenceService } from '@TaskM/linguists/data-access';
 import { ProjectService } from '@TaskM/projects/data-access';
+import { RouterModule } from '@angular/router';
 
 type DisabledFields = {
   project?: boolean;
@@ -70,6 +71,7 @@ type DisabledFields = {
   imports: [
     CommonModule,
     FormsModule,
+    RouterModule,
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
@@ -80,6 +82,7 @@ type DisabledFields = {
     CalendarModule,
     LinguistAutocompleteComponent,
     ProjectAutocompleteComponent,
+    SpinnerComponent,
   ],
   templateUrl: './task-form.component.html',
 })
@@ -104,7 +107,7 @@ export class TaskFormComponent
   minDeadlineDate!: Date;
   minInternalDeadlineDate!: Date;
   maxInternalDeadlineDate!: Date;
-  loadUnit: LoadUnit | null = null;
+  loadUnit?: LoadUnit;
   rate: CompetenceDto | null = null;
   maxLoad = 0;
   remainingLoad = 0;
@@ -363,6 +366,7 @@ export class TaskFormComponent
     competences: CompetenceDto[],
     loadUnit?: LoadUnit,
   ) {
+    loadUnit = loadUnit ?? this.loadUnit;
     this.rate =
       competences?.find(
         (competence) =>
@@ -381,8 +385,9 @@ export class TaskFormComponent
         filter(() => !!projectId),
       )
       .subscribe((project) => {
-        this.loadUnit = project?.unit ?? null;
+        this.loadUnit = project?.unit;
         this.project$.next(project);
+        this.getMaxLoad();
       });
   }
 
