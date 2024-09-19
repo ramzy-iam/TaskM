@@ -9,3 +9,4 @@ export * from './client.entity';
 export * from './project.entity';
 export * from './competence.entity';
 export * from './linguist.entity';
+export * from './task.entity';

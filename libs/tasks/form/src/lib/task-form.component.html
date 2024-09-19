@@ -1,0 +1,277 @@
+@if (form) {
+  <form
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    autocomplete="off"
+    class="bg-white"
+  >
+    <div class="flex flex-col gap-x-4">
+      <div class="grid grid-cols-2">
+        <div class="col-span-full pt-8">
+          <app-project-autocomplete
+            [form]="form"
+            inputId="project"
+            [floatLabel]="true"
+            label="Project"
+            (selectProject)="onProjectSelect($event)"
+            [showClear]="true"
+          />
+          <input-error
+            [fieldName]="'Project'"
+            [control]="form.get('project.name')!"
+            [formGroup]="getNestedFormGroup('project')"
+          />
+        </div>
+      </div>
+      <div class="grid grid-cols-2">
+        <div class="col-span-full pt-8">
+          <p-floatLabel>
+            <input
+              id="name"
+              type="text"
+              pInputText
+              class="w-full"
+              formControlName="name"
+            />
+            <label for="name">Name</label>
+          </p-floatLabel>
+          <input-error [control]="form.get('name')!" [formGroup]="form" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        @if (task?.id) {
+          <div class="col-span-1 pt-8">
+            <p-floatLabel>
+              <input
+                id="poId"
+                type="text"
+                pInputText
+                class="w-full"
+                formControlName="poId"
+              />
+              <label for="poId">PO ID</label>
+            </p-floatLabel>
+            <input-error [control]="form.get('poId')!" [formGroup]="form" />
+          </div>
+        }
+        <div
+          class="pt-8"
+          [ngClass]="{
+            'col-span-full': !task?.id,
+            'col-span-1': task?.id,
+          }"
+        >
+          <p-floatLabel>
+            <input
+              id="clientPoId"
+              type="text"
+              pInputText
+              class="w-full"
+              formControlName="clientPoId"
+            />
+            <label for="clientPoId">Client PO ID</label>
+          </p-floatLabel>
+          <input-error [control]="form.get('clientPoId')!" [formGroup]="form" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2">
+        <div class="col-span-full pt-8">
+          <p-floatLabel>
+            <input
+              id="clientPM"
+              type="text"
+              pInputText
+              class="w-full"
+              formControlName="clientPM"
+            />
+            <label for="clientPM">Client Task Manager</label>
+          </p-floatLabel>
+          <input-error [control]="form.get('clientPM')!" [formGroup]="form" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="col-span-1 pt-8">
+          <p-floatLabel>
+            <p-dropdown
+              formControlName="taskType"
+              [options]="taskTypes"
+              optionLabel="name"
+              optionValue="value"
+              inputId="taskType"
+              [editable]="true"
+              [checkmark]="true"
+              [showClear]="true"
+            />
+            <label for="taskType">Task</label>
+          </p-floatLabel>
+          <input-error [control]="form.get('taskType')!" [formGroup]="form" />
+        </div>
+        <div class="col-span-1 pt-8">
+          <p-floatLabel>
+            <p-dropdown
+              formControlName="lang"
+              [options]="languages"
+              optionLabel="name"
+              optionValue="value"
+              inputId="lang"
+              [editable]="true"
+              [checkmark]="true"
+              [showClear]="true"
+            />
+            <label for="lang">Language</label>
+          </p-floatLabel>
+          <input-error [control]="form.get('lang')!" [formGroup]="form" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="col-span-1 pt-8">
+          <p-floatLabel>
+            <p-inputNumber
+              inputId="count"
+              formControlName="count"
+              class="w-2"
+              placeholder="Ex: 257"
+            />
+            <label for="count">Load</label>
+          </p-floatLabel>
+          <input-error
+            fieldName="Load"
+            [control]="form.get('count')!"
+            [formGroup]="form"
+          />
+        </div>
+        <div class="col-span-1 pt-8">
+          <p-floatLabel>
+            <p-dropdown
+              formControlName="unit"
+              [options]="loadUnits"
+              optionLabel="name"
+              optionValue="value"
+              inputId="unit"
+              [editable]="true"
+              [checkmark]="true"
+              [showClear]="true"
+            />
+            <label for="lang">Load Unit</label>
+          </p-floatLabel>
+          <input-error
+            fieldName="Load Unit"
+            [control]="form.get('unit')!"
+            [formGroup]="form"
+          />
+        </div>
+      </div>
+      <div class="grid grid-cols-2">
+        <div class="col-span-full pt-8">
+          <p-floatLabel>
+            @if (clientCurrency) {
+              <p-inputNumber
+                inputId="rate"
+                formControlName="rate"
+                class="w-2"
+                mode="currency"
+                [currency]="CurrencyToIntlNumberFormat[clientCurrency]"
+                [locale]="
+                  CurrencyToIntlNumberFormat[clientCurrency] === 'XAF'
+                    ? 'en-US'
+                    : 'fr-CM'
+                "
+                [maxFractionDigits]="5"
+              />
+            } @else {
+              <p-inputNumber
+                inputId="rate"
+                formControlName="rate"
+                mode="decimal"
+                [minFractionDigits]="0"
+                [maxFractionDigits]="6"
+                class="w-2"
+                [suffix]="' ' + clientCurrency"
+              />
+            }
+            <label for="rate">Rate</label>
+          </p-floatLabel>
+          <input-error [control]="form.get('rate')!" [formGroup]="form" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="col-span-1 pt-8">
+          <p-floatLabel>
+            <p-calendar
+              formControlName="receivedAt"
+              [showIcon]="true"
+              [showOnFocus]="false"
+              [showTime]="true"
+              hourFormat="24"
+              dateFormat="dd/mm/yy"
+              inputId="receivedAt"
+              [maxDate]="maxReceivedAtDate"
+              [showButtonBar]="true"
+              [iconDisplay]="'input'"
+            />
+            <label for="receivedAt">Received At</label>
+          </p-floatLabel>
+          <input-error
+            fieldName="Received At"
+            [control]="form.get('receivedAt')!"
+            [formGroup]="form"
+          />
+        </div>
+        <div class="col-span-1 pt-8">
+          <p-floatLabel>
+            <p-calendar
+              formControlName="deadline"
+              [showIcon]="true"
+              [showOnFocus]="false"
+              [showTime]="true"
+              hourFormat="24"
+              dateFormat="dd/mm/yy"
+              inputId="deadline"
+              [minDate]="minDeadlineDate"
+              [showButtonBar]="true"
+              [iconDisplay]="'input'"
+            />
+            <label for="deadline">Deadline</label>
+          </p-floatLabel>
+          <input-error [control]="form.get('deadline')!" [formGroup]="form" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="col-span-full pt-8">
+          <p-floatLabel>
+            <p-calendar
+              formControlName="internalDeadline"
+              [showIcon]="true"
+              [showOnFocus]="false"
+              [showTime]="true"
+              hourFormat="24"
+              dateFormat="dd/mm/yy"
+              inputId="internalDeadline"
+              [minDate]="minInternalDeadlineDate"
+              [maxDate]="maxInternalDeadlineDate"
+              [showButtonBar]="true"
+              [iconDisplay]="'input'"
+            />
+            <label for="internalDeadline">Internal Deadline</label>
+          </p-floatLabel>
+          <input-error
+            fieldName="Internal Deadline"
+            [control]="form.get('internalDeadline')!"
+            [formGroup]="form"
+          />
+        </div>
+      </div>
+    </div>
+    @if (!autoSave) {
+      <div class="mt-8 flex justify-center">
+        <p-button
+          icon="pi pi-check"
+          type="submit"
+          [label]="!task ? 'Submit' : 'Update'"
+          [loading]="loading"
+          [disabled]="form.invalid"
+        />
+      </div>
+    }
+  </form>
+}

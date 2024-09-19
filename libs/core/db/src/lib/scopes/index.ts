@@ -6,3 +6,4 @@ export * from './client.scope';
 export * from './project.scope';
 export * from './linguist.scope';
 export * from './competence.scope';
+export * from './task.scope';

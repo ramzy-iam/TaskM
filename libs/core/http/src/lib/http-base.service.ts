@@ -56,7 +56,13 @@ export class HttpBaseService {
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
         if (value !== undefined && value !== null && value !== '') {
-          params = params.set(key, String(value));
+          if (Array.isArray(value)) {
+            const truthyValues = value.filter((v) => v);
+            if (truthyValues.length)
+              params = params.set(key, truthyValues.join(','));
+          } else {
+            params = params.set(key, String(value));
+          }
         }
       });
     }

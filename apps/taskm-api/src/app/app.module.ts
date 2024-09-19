@@ -7,6 +7,7 @@ import { ClientsApiModule } from '@TaskM/clients/api';
 import { ProjectsApiModule } from '@TaskM/projects/api';
 import { LinguistsApiModule } from '@TaskM/linguists/api';
 import { CompetencesApiModule } from '@TaskM/competences/api';
+import { TasksApiModule } from '@TaskM/tasks/api';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { CompetencesApiModule } from '@TaskM/competences/api';
     ProjectsApiModule,
     LinguistsApiModule,
     CompetencesApiModule,
+    TasksApiModule,
   ],
   controllers: [AppController],
   providers: [AppService],

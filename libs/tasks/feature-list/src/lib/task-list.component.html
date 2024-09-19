@@ -1,0 +1,194 @@
+<div class="h-full gap-0 grid grid-rows-4 mt-4">
+  <app-section-header>
+    <div>
+      <div class="py-8 bg-white border-b border-gray">
+        <div class="flex flex-col gap-8">
+          <div class="flex justify-between items-center">
+            <div class="flex">
+              <h1 class="text-[24px] text-black-2 font-semibold">Tasks</h1>
+            </div>
+            <p-button label="New Task" (onClick)="showCreateDialog()" />
+          </div>
+          <div>
+            <form [formGroup]="filterForm">
+              <div
+                class="grid grid-cols-[200px_repeat(11,minmax(0,1fr))] gap-4"
+              >
+                <ui-input-search
+                  [control]="filterForm.controls.query"
+                  [attributes]="{ placeholder: 'Search' }"
+                />
+                <app-project-autocomplete
+                  [form]="filterForm"
+                  inputId="projectName"
+                  class="col-span-2 input-like-text"
+                  [showClear]="true"
+                />
+                <app-linguist-autocomplete
+                  [form]="filterForm"
+                  inputId="linguistName"
+                  class="col-span-2 input-like-text"
+                  [showClear]="true"
+                />
+                <p-dropdown
+                  [options]="taskStatus"
+                  formControlName="status"
+                  placeholder="Status"
+                  showClear="true"
+                  optionLabel="name"
+                  class="col-span-2 input-like-text"
+                />
+
+                <p-dropdown
+                  [options]="taskTypes"
+                  formControlName="task"
+                  placeholder="Task"
+                  showClear="true"
+                  optionLabel="name"
+                  class="col-span-2 input-like-text"
+                />
+                <p-calendar
+                  placeholder="Period"
+                  formControlName="period"
+                  selectionMode="range"
+                  class="col-span-2 input-like-text"
+                  showIcon="true"
+                  [iconDisplay]="'input'"
+                  showButtonBar="true"
+                />
+                @if (isFilterActivated) {
+                  <p-button
+                    label="Clear"
+                    title="Clear filters"
+                    severity="secondary"
+                    class="col-span-1"
+                    icon="pi pi-filter-slash"
+                    (click)="clearFilters()"
+                  />
+                }
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </app-section-header>
+  <div
+    class="grid grid-cols-3 h-auto max-w-full max-h-full row-span-3 overflow-hidden"
+  >
+    <div
+      appScrollNearEnd
+      (nearEnd)="onNearEndScroll()"
+      class="relative w-full h-full- max-h-full pr-8 overflow-auto bg-white mb-2"
+      [ngClass]="{
+        'col-span-2': selectedTaskCode,
+        'col-span-full': !selectedTaskCode,
+      }"
+    >
+      @if (loading) {
+        <div class="grid grid-cols-4 gap-10">
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+        </div>
+        <div class="grid grid-cols-4 gap-10 mt-10">
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+        </div>
+        <div class="grid grid-cols-4 gap-10 mt-8">
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+        </div>
+        <div class="grid grid-cols-4 gap-10 mt-8">
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+        </div>
+      } @else {
+        @if (tasks$ | async; as tasks) {
+          <ui-list-item class="sticky top-0 z-1 bg-white">
+            <div
+              class="grid grid-cols-2 xl:grid-cols-5 text-black/95 font-semibold"
+            >
+              <div class="grid-cols-1">N°</div>
+              <div class="grid-cols-1">Project</div>
+              <div class="grid-cols-1 pl-4">Task</div>
+              <div class="grid-cols-1 pl-4">Status</div>
+              <div class="grid-cols-1 hidden xl:block">Linguist</div>
+            </div>
+          </ui-list-item>
+          <div class="h-full w-full">
+            @for (task of tasks; track i; let i = $index) {
+              <a
+                routerLink="."
+                [queryParams]="{ selectedTask: task.code }"
+                [queryParamsHandling]="'merge'"
+                #rla="routerLinkActive"
+                routerLinkActive
+                [routerLinkActiveOptions]="{ exact: true }"
+                class="block relative bg-white hover:bg-primary/5"
+              >
+                <ui-list-item [isSelected]="rla.isActive">
+                  <div class="grid grid-cols-2 xl:grid-cols-5 items-center">
+                    <div class="grid-cols-1 truncate" [title]="task.code">
+                      #{{ task.code }}
+                    </div>
+
+                    <div
+                      class="grid-cols-1 truncate pl-1"
+                      [title]="task.project.poId"
+                    >
+                      {{ task.project.poId }}
+                    </div>
+
+                    <div class="grid-cols-1 truncate pl-1" [title]="task">
+                      {{ task.typeLabel }}
+                    </div>
+                    <div
+                      class="grid-cols-1 truncate pl-4"
+                      [title]="task.statusLabel"
+                    >
+                      <ui-tag
+                        [value]="task.statusLabel"
+                        [severity]="taskTagSeverity[task.status]"
+                      ></ui-tag>
+                    </div>
+                    <div
+                      class="grid-cols-1 truncate pl-1"
+                      [title]="task.linguist.fullName"
+                    >
+                      {{ task.linguist.fullName }}
+                    </div>
+                  </div>
+                </ui-list-item>
+              </a>
+            } @empty {
+              <div>
+                <ui-no-data [isNotFound]="isFilterActivated" />
+              </div>
+            }
+            @if (isLoadingMore) {
+              <ui-spinner [bar]="true" />
+            }
+          </div>
+        }
+      }
+    </div>
+    @if (selectedTaskCode) {
+      <div
+        class="relative h-full- max-h-full pb-3 px-8 m-1 mb-2 bg-white overflow-x-auto overflow-y-scroll"
+      >
+        <app-task-details
+          (close)="onCloseChild()"
+          [code]="selectedTaskCode"
+        ></app-task-details>
+      </div>
+    }
+  </div>
+</div>

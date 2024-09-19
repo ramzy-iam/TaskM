@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
-import { CompetenceDto } from '@TaskM/core/dto';
-import { ToastOptions } from '@TaskM/core/types';
+import {
+  CompetenceDto,
+  CompetencesFilterDto,
+  PaginationDto,
+} from '@TaskM/core/dto';
+import { Nullable, ToastOptions } from '@TaskM/core/types';
 import { HttpBaseService } from '@TaskM/core/http';
-import { TOAST_COMMON_MESSAGES } from '@TaskM/core/constants';
+import { PAGINATION, TOAST_COMMON_MESSAGES } from '@TaskM/core/constants';
 import { Competence } from './linguist';
 
 @Injectable({
@@ -63,6 +67,25 @@ export class CompetenceService extends HttpBaseService {
     };
 
     return this.http.get<CompetenceDto>(`${this.url}/${id}`, {
+      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+    });
+  }
+
+  getList(
+    filters?: Nullable<CompetencesFilterDto>,
+    toastOptions: ToastOptions = {},
+  ): Observable<PaginationDto<CompetenceDto>> {
+    const defaultToastOptions: ToastOptions = {
+      success: { onSuccess: false },
+      error: { message: TOAST_COMMON_MESSAGES.FAILED_TO_LOAD_RESOURCE },
+    };
+
+    return this.http.get<PaginationDto<CompetenceDto>>(this.url, {
+      params: this.createHttpParams({
+        page: PAGINATION.DEFAULT_PAGE,
+        limit: PAGINATION.DEFAULT_LIMIT,
+        ...filters,
+      }),
       headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
     });
   }

@@ -25,6 +25,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { DialogModule } from 'primeng/dialog';
 import { LinguistCompetenceComponent } from './competence/linguist-competence.component';
+import { PanelModule } from 'primeng/panel';
 
 @Component({
   selector: 'app-linguist-details',
@@ -37,6 +38,7 @@ import { LinguistCompetenceComponent } from './competence/linguist-competence.co
     ButtonModule,
     DialogModule,
     LinguistCompetenceComponent,
+    PanelModule,
   ],
   templateUrl: './linguist-details.component.html',
 })
@@ -66,13 +68,20 @@ export class LinguistDetailsComponent implements OnInit, OnChanges {
   }
 
   showCompetenceDialog(competence?: CompetenceDto): void {
+    const linguistCompetences = this.linguistsSubject?.value?.competences ?? [];
     this.dialogService.open(CompetenceFormComponent, {
       header: 'New Competence',
       breakpoints: { '1199px': '75vw', '575px': '90vw' },
       style: { width: '50vw' },
       modal: true,
       closeOnEscape: true,
-      data: { competence: { ...competence, linguistId: this.linguistId } },
+      data: {
+        competence: {
+          ...competence,
+          linguistId: this.linguistId,
+        },
+        linguistCompetences,
+      },
     });
   }
 

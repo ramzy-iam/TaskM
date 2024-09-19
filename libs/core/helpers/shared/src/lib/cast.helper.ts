@@ -61,6 +61,11 @@ const toOrder = (value?: string): OrderType | undefined => {
   return ['ASC', 'DESC'].includes(value) ? (value as OrderType) : undefined;
 };
 
+const toArray = (value?: string, sep = ','): string[] | undefined => {
+  if (!value) return;
+  return value.split(sep);
+};
+
 export default {
   toLowerCase,
   trim,
@@ -68,4 +73,5 @@ export default {
   toBoolean,
   toNumber,
   toOrder,
+  toArray,
 };

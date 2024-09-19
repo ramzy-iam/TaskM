@@ -9,11 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { DialogModule } from 'primeng/dialog';
 import { SplitButtonModule } from 'primeng/splitbutton';
-import {
-  ConfirmationService,
-  MenuItem,
-  MenuItemCommandEvent,
-} from 'primeng/api';
+import { ConfirmationService, MenuItem } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CompetenceService } from '@TaskM/linguists/data-access';
 
@@ -80,9 +76,7 @@ export class LinguistCompetenceComponent {
       accept: () => {
         this.deleteCompetence();
       },
-      reject: () => {
-        console.log();
-      },
+      reject: () => {},
     });
   }
 

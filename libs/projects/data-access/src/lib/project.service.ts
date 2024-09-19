@@ -9,7 +9,7 @@ import {
 } from '@TaskM/core/dto';
 import { Nullable, ToastOptions } from '@TaskM/core/types';
 import { HttpBaseService } from '@TaskM/core/http';
-import { TOAST_COMMON_MESSAGES } from '@TaskM/core/constants';
+import { PAGINATION, TOAST_COMMON_MESSAGES } from '@TaskM/core/constants';
 import { Project } from './project';
 
 @Injectable({
@@ -69,7 +69,11 @@ export class ProjectService extends HttpBaseService {
     };
 
     return this.http.get<PaginationDto<ProjectPreviewDto>>(this.url, {
-      params: this.createHttpParams(filters),
+      params: this.createHttpParams({
+        page: PAGINATION.DEFAULT_PAGE,
+        limit: PAGINATION.DEFAULT_LIMIT,
+        ...filters,
+      }),
       headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
     });
   }

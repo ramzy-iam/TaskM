@@ -21,6 +21,11 @@ export const appRoutes: Route[] = [
           ),
       },
       {
+        path: 'tasks',
+        loadComponent: () =>
+          import('@TaskM/tasks/feature-list').then((c) => c.TaskListComponent),
+      },
+      {
         path: 'linguists',
         loadComponent: () =>
           import('@TaskM/linguists/feature-list').then(

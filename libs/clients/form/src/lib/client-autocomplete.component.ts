@@ -16,7 +16,6 @@ import {
   AutoCompleteModule,
   AutoCompleteSelectEvent,
 } from 'primeng/autocomplete';
-import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-client-autocomplete',
@@ -32,7 +31,6 @@ import { CalendarModule } from 'primeng/calendar';
     InputNumberModule,
     FormInputErrorComponent,
     AutoCompleteModule,
-    CalendarModule,
   ],
   template: `
     <ng-container [formGroup]="form()">
