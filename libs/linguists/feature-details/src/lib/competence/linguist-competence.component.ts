@@ -8,10 +8,10 @@ import { CloseButtonComponent, ListItemComponent } from '@TaskM/shared/ui';
 import { ButtonModule } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { DialogModule } from 'primeng/dialog';
-import { SplitButtonModule } from 'primeng/splitbutton';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CompetenceService } from '@TaskM/linguists/data-access';
+import { MenuModule } from 'primeng/menu';
 
 @Component({
   selector: 'app-linguist-competence',
@@ -22,8 +22,8 @@ import { CompetenceService } from '@TaskM/linguists/data-access';
     ButtonModule,
     DialogModule,
     ListItemComponent,
-    SplitButtonModule,
     ConfirmDialogModule,
+    MenuModule,
   ],
   templateUrl: './linguist-competence.component.html',
   providers: [ConfirmationService],
@@ -43,16 +43,23 @@ export class LinguistCompetenceComponent {
   ) {
     this.items = [
       {
+        label: 'Edit',
+        icon: 'pi pi-pencil',
+        command: () => {
+          this.edit();
+        },
+      },
+      {
         label: 'Delete',
         icon: 'pi pi-trash',
         command: (event) => {
-          this.confirmDelete(event.originalEvent!);
+          this.delete(event.originalEvent as Event);
         },
       },
     ];
   }
 
-  showCompetenceDialog(): void {
+  private edit(): void {
     this.dialogService.open(CompetenceFormComponent, {
       header: 'Edit Competence',
       breakpoints: { '1199px': '75vw', '575px': '90vw' },
@@ -63,7 +70,7 @@ export class LinguistCompetenceComponent {
     });
   }
 
-  private confirmDelete(event: Event) {
+  private delete(event: Event) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
       message: 'Are you sure that you want to delete?',
@@ -76,7 +83,9 @@ export class LinguistCompetenceComponent {
       accept: () => {
         this.deleteCompetence();
       },
-      reject: () => {},
+      reject: () => {
+        //
+      },
     });
   }
 
