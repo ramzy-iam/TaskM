@@ -32,7 +32,7 @@ export class BaseEnumComponent {
 
   private getLanguageArray(): { value: string; name: string }[] {
     return this.languageKeys.map((key) => ({
-      value: Language[key as keyof typeof Language],
+      value: key,
       name: Language[key as keyof typeof Language],
     }));
   }
