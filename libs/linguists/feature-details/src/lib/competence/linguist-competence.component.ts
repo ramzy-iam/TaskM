@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { CompetenceDto, LinguistDto } from '@TaskM/core/dto';
 import { TaskType } from '@TaskM/core/constants';
 import { CompetenceFormComponent } from '@TaskM/linguists/form';
-import { CloseButtonComponent, ListItemComponent } from '@TaskM/shared/ui';
+import { CloseButtonComponent } from '@TaskM/shared/ui';
 import { ButtonModule } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { DialogModule } from 'primeng/dialog';
@@ -21,7 +21,6 @@ import { MenuModule } from 'primeng/menu';
     CloseButtonComponent,
     ButtonModule,
     DialogModule,
-    ListItemComponent,
     ConfirmDialogModule,
     MenuModule,
   ],
