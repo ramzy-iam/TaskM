@@ -1,2 +1,2 @@
 export * from './form-utils.service';
-export * from './local-storage.service';
+export * from './storage.service';
