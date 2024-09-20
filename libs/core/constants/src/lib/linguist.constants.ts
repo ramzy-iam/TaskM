@@ -1,13 +1,13 @@
 export enum Currency {
   USD = 'USD',
-  EURO = 'EURO',
+  EUR = 'EUR',
   CAD = 'CAD',
   XAF = 'XAF',
 }
 
 export const CurrencyToIntlNumberFormat: { [key: string]: string } = {
   USD: 'USD',
-  EURO: 'EUR',
+  EUR: 'EUR',
   CAD: 'CAD',
   XAF: 'XAF',
 };
