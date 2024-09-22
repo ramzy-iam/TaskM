@@ -1,32 +1,50 @@
 <aside
   [ngClass]="{
-    'translate-x-0': opened,
-    '-translate-x-full': !opened,
+    'w-64': opened,
+    'w-12': !opened,
   }"
-  class="fixed top-0 left-0 z-40 pt-16 flex h-screen w-64 flex-col overflow-y-hidden bg-black transition-transform duration-300 ease-linear dark:bg-boxdark"
+  class="fixed top-0 left-0 z-40 pt-16 flex h-screen flex-col overflow-y-hidden bg-black transition-all duration-300 ease-linear"
 >
   <div
     class="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear"
   >
-    <nav class="mt-5 py-10 pr-6 pl-3 lg:mt-9">
-      <div class="mb-6 flex flex-col gap-5">
+    <nav
+      class="mt-5 py-10 lg:mt-9"
+      [ngClass]="{
+        'pr-6 pl-3': opened,
+      }"
+    >
+      <div
+        class="flex flex-col gap-5"
+        [ngClass]="{
+          'items-center': !opened,
+        }"
+      >
         @for (link of links; track $index) {
           <a
             [routerLink]="[link.link]"
-            class="group relative flex items-center gap-2.5 rounded-sm p-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4"
+            class="group relative flex items-center gap-2.5 rounded-sm p-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark"
             routerLinkActive="group is-active"
             [routerLinkActiveOptions]="{ exact: false }"
             #rla="routerLinkActive"
             [ngClass]="{
-              'bg-graydark dark:bg-meta-4': rla.isActive,
+              'bg-graydark': rla.isActive,
+              'bg-primary/85': rla.isActive && !opened,
             }"
+            [title]="!opened ? link.label : null"
           >
             <div
               class="rounded-full flex justify-center items-center group-[.is-active]:text-white group-[.is-active]:bg-primary-color text-accent-base group-hover:bg-primary-color group-hover:text-white transition-all duration-300 ease-in-out"
             >
               <ng-icon [name]="link.icon" size="20"></ng-icon>
             </div>
-            <span>{{ link.label }}</span>
+            <span
+              [ngClass]="{
+                hidden: !opened,
+                inline: opened,
+              }"
+              >{{ link.label }}</span
+            >
           </a>
         }
       </div>
