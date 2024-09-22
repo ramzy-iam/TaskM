@@ -45,10 +45,6 @@ import {
 } from '@TaskM/core/constants';
 
 import { CalendarModule } from 'primeng/calendar';
-import {
-  dateComparisonValidator,
-  dateComparisonWithTodayValidator,
-} from '@TaskM/shared/misc';
 import { DayjsHelper } from '@TaskM/core/helpers';
 import { LinguistAutocompleteComponent } from '@TaskM/linguists/form';
 import { ProjectAutocompleteComponent } from '@TaskM/projects/form';
@@ -171,118 +167,52 @@ export class TaskFormComponent
       this.statusLabel = TaskStatus[this.statusCode];
     }
 
-    this.form = new FormGroup(
-      {
-        project: this.formUtils.createMinimalProjectForm(
-          task?.project ?? null,
-          {
-            disabled: disabledFields.project,
-          },
-        ),
-        linguist: this.formUtils.createMinimalLinguistForm(
-          task?.linguist ?? null,
-          {
-            disabled: disabledFields.linguist,
-          },
-        ),
-        type: new FormControl<string | undefined>(
-          {
-            value: task?.type,
-            // disabled: disabledFields.type || !!task?.type,
-            disabled: !!disabledFields.type,
-          },
-          [Validators.required],
-        ),
-        status: new FormControl<TaskStatusCode | undefined>(task?.status),
-        lang: new FormControl<LanguageCode | undefined>(task?.lang, [
-          Validators.required,
-        ]),
-        count: new FormControl<number>(task?.count ?? 0, [
-          Validators.required,
-          Validators.min(1),
-        ]),
-        rate: new FormControl<number | undefined>(
-          {
-            value: task?.rate?.rate,
-            disabled: !!disabledFields?.rate,
-          },
-          [Validators.required, Validators.min(0.00001)],
-        ),
-        unit: new FormControl<LoadUnit | undefined>(task?.unit, [
-          Validators.required,
-        ]),
-        assignedAt: new FormControl<Date>(assignedAt, [Validators.required]),
-        deadline: new FormControl<Date>(deadline, [Validators.required]),
-      },
-      [
-        // dateComparisonWithTodayValidator('receivedAt', 'greaterOrEqual', {
-        //   dateFieldName: 'Received At',
-        // }),
-        // dateComparisonValidator('receivedAt', 'deadline', 'greater', {
-        //   startDateFieldName: 'Received At',
-        //   endDateFieldName: 'Deadline',
-        // }),
-        // dateComparisonValidator('receivedAt', 'internalDeadline', 'greater', {
-        //   startDateFieldName: 'Received At',
-        //   endDateFieldName: 'Internal Deadline',
-        // }),
-        // dateComparisonValidator(
-        //   'internalDeadline',
-        //   'deadline',
-        //   'greaterOrEqual',
-        //   {
-        //     startDateFieldName: 'Internal Deadline',
-        //     endDateFieldName: 'Deadline',
-        //   },
-        // ),
-      ],
-    );
+    this.form = new FormGroup({
+      project: this.formUtils.createMinimalProjectForm(task?.project ?? null, {
+        disabled: disabledFields.project,
+      }),
+      linguist: this.formUtils.createMinimalLinguistForm(
+        task?.linguist ?? null,
+        {
+          disabled: disabledFields.linguist,
+        },
+      ),
+      type: new FormControl<string | undefined>(
+        {
+          value: task?.type,
+          // disabled: disabledFields.type || !!task?.type,
+          disabled: !!disabledFields.type,
+        },
+        [Validators.required],
+      ),
+      status: new FormControl<TaskStatusCode | undefined>(task?.status),
+      lang: new FormControl<LanguageCode | undefined>(task?.lang, [
+        Validators.required,
+      ]),
+      count: new FormControl<number>(task?.count ?? 0, [
+        Validators.required,
+        Validators.min(1),
+      ]),
+      rate: new FormControl<number | undefined>(
+        {
+          value: task?.rate?.rate,
+          disabled: !!disabledFields?.rate,
+        },
+        [Validators.required, Validators.min(0.00001)],
+      ),
+      unit: new FormControl<LoadUnit | undefined>(task?.unit, [
+        Validators.required,
+      ]),
+      assignedAt: new FormControl<Date>(assignedAt, [Validators.required]),
+      deadline: new FormControl<Date>(deadline, [Validators.required]),
+    });
 
     // Store initial form values
     this.initialFormValues = this.form.value;
-    // this.setupDeadlineListeners();
     this.getMaxLoad();
     this.subscribeToLoadChanges();
     this.subscribeToStatusChange();
   }
-
-  // private setupDeadlineListeners() {
-  //   const receivedAtControl = this.form.get('receivedAt');
-  //   const deadlineControl = this.form.get('deadline');
-  //   const internalDeadlineControl = this.form.get('internalDeadline');
-
-  //   const updateDateLimits = () => {
-  //     const receivedAt = receivedAtControl?.value;
-  //     const deadline = deadlineControl?.value;
-  //     this.maxAssignedAtDate = DayjsHelper.new().toDate();
-
-  //     if (receivedAt)
-  //       this.minAssignedAtDate = this.minDeadlineDate = receivedAt;
-
-  //     if (deadline) this.maxDeadlineDate = deadline;
-  //   };
-
-  //   // Initialize limits
-  //   updateDateLimits();
-
-  //   // Update min and max dates on value changes
-  //   receivedAtControl?.valueChanges.subscribe(() => {
-  //     updateDateLimits();
-  //   });
-
-  //   deadlineControl?.valueChanges.subscribe((deadline: Date) => {
-  //     if (
-  //       internalDeadlineControl?.value &&
-  //       DayjsHelper.new(internalDeadlineControl.value).isAfter(deadline)
-  //     ) {
-  //       internalDeadlineControl.setValue(
-  //         DayjsHelper.new(deadline).subtract(1, 'day').toDate(),
-  //         { emitEvent: false },
-  //       );
-  //     }
-  //     updateDateLimits();
-  //   });
-  // }
 
   get task(): TaskDto | null {
     return this._task;
