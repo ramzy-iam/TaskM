@@ -114,11 +114,12 @@
         @if (tasks$ | async; as tasks) {
           <ui-list-item class="sticky top-0 z-1 bg-white">
             <div
-              class="grid grid-cols-2 xl:grid-cols-5 text-black/95 font-semibold"
+              class="grid grid-cols-2 xl:grid-cols-6 text-black/95 font-semibold"
             >
               <div class="grid-cols-1">N°</div>
               <div class="grid-cols-1">Project</div>
               <div class="grid-cols-1 pl-4">Task</div>
+              <div class="grid-cols-1 pl-4">Load</div>
               <div class="grid-cols-1 pl-4">Status</div>
               <div class="grid-cols-1 hidden xl:block">Linguist</div>
             </div>
@@ -135,7 +136,7 @@
                 class="block relative bg-white hover:bg-primary/5"
               >
                 <ui-list-item [isSelected]="rla.isActive">
-                  <div class="grid grid-cols-2 xl:grid-cols-5 items-center">
+                  <div class="grid grid-cols-2 xl:grid-cols-6 items-center">
                     <div class="grid-cols-1 truncate" [title]="task.code">
                       #{{ task.code }}
                     </div>
@@ -149,6 +150,9 @@
 
                     <div class="grid-cols-1 truncate pl-1" [title]="task">
                       {{ task.typeLabel }}
+                    </div>
+                    <div class="grid-cols-1 truncate pl-1" [title]="task">
+                      {{ task.count }} {{ task.unit | titlecase }}s
                     </div>
                     <div
                       class="grid-cols-1 truncate pl-4"

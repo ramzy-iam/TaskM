@@ -114,9 +114,10 @@ export class CompetenceFormComponent
         },
         [Validators.required],
       ),
-      currency: new FormControl<Currency | undefined>(competence?.currency, [
-        Validators.required,
-      ]),
+      currency: new FormControl<Currency | undefined>(
+        competence?.currency ?? Currency.XAF,
+        [Validators.required],
+      ),
       linguistId: new FormControl<string | undefined>(competence?.linguistId),
     });
 

@@ -178,10 +178,16 @@ export class TaskPreviewDto extends BaseDto {
   status: TaskStatusCode;
 
   @Expose()
+  count: number;
+
+  @Expose()
+  unit: LoadUnit;
+
+  @Expose()
   @Transform(
     ({ obj }: { obj: { status: TaskStatusCode } }) => TaskStatus[obj.status],
   )
-  statusLabel?: string;
+  statusLabel?: TaskStatus;
 
   @Expose()
   type: TaskTypeCode;
@@ -210,12 +216,6 @@ export class TaskDto extends TaskPreviewDto {
   @Type(() => CompetenceDto)
   @Expose()
   rate: CompetenceDto;
-
-  @Expose()
-  count: number;
-
-  @Expose()
-  unit: LoadUnit;
 
   @Expose()
   deadline: Date;

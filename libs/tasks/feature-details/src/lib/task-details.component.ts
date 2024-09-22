@@ -16,10 +16,15 @@ import {
   CloseButtonComponent,
   FormInputErrorComponent,
   SpinnerComponent,
+  TagComponent,
 } from '@TaskM/shared/ui';
 import { Router, RouterModule } from '@angular/router';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ClipboardDirective, FormUtilsService } from '@TaskM/shared/misc';
+import {
+  ClipboardDirective,
+  FormUtilsService,
+  StatusDropdownComponent,
+} from '@TaskM/shared/misc';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -55,6 +60,8 @@ import { CompetenceService } from '@TaskM/linguists/data-access';
     ClipboardDirective,
     PanelModule,
     SpinnerComponent,
+    StatusDropdownComponent,
+    TagComponent,
   ],
   templateUrl: './task-details.component.html',
 })
@@ -76,10 +83,6 @@ export class TaskDetailsComponent
   ) {
     super(taskService, dialogRef, formUtils, projectService, competenceService);
   }
-
-  // override ngOnInit(): void {
-  //   this.triggerAutoSave(false);
-  // }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['code'] && this.code) {
@@ -106,9 +109,8 @@ export class TaskDetailsComponent
           if (!task) this.close();
           this.task$.next(task);
           this.task = task;
-          this.initializeForm(task, { project: false, rate: false });
+          this.initializeForm(task, { project: !!task, rate: true });
           this.subscribeToTaskChanges();
-          // this.triggerAutoSave(true);
         },
         error: () => {
           this.close();

@@ -6,7 +6,6 @@ import { BaseClientDto } from '@TaskM/core/dto';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FormInputErrorComponent } from '@TaskM/shared/ui';
 import { ClientService } from '@TaskM/clients/data-access';
@@ -27,7 +26,6 @@ import {
     ButtonModule,
     InputTextModule,
     FloatLabelModule,
-    DropdownModule,
     InputNumberModule,
     FormInputErrorComponent,
     AutoCompleteModule,

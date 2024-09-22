@@ -1,15 +1,15 @@
 export enum Currency {
+  XAF = 'XAF',
   USD = 'USD',
   EUR = 'EUR',
   CAD = 'CAD',
-  XAF = 'XAF',
 }
 
 export const CurrencyToIntlNumberFormat: { [key: string]: string } = {
+  XAF: 'XAF',
   USD: 'USD',
   EUR: 'EUR',
   CAD: 'CAD',
-  XAF: 'XAF',
 };
 
 export enum TaskTypeCode {

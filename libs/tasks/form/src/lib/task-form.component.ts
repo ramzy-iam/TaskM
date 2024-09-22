@@ -18,11 +18,9 @@ import {
   Subscription,
 } from 'rxjs';
 import {
-  BaseClientDto,
   BaseLinguistDto,
   BaseProjectDto,
   CompetenceDto,
-  LinguistDto,
   ProjectDto,
   TaskDto,
   TaskPreviewDto,
@@ -37,9 +35,13 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FormInputErrorComponent, SpinnerComponent } from '@TaskM/shared/ui';
 import {
   CurrencyToIntlNumberFormat,
+  LanguageCode,
   LoadUnit,
   PAGINATION,
+  TaskStatus,
+  TaskStatusCode,
   TaskTypeCode,
+  TaskTagSeverity,
 } from '@TaskM/core/constants';
 
 import { CalendarModule } from 'primeng/calendar';
@@ -103,15 +105,20 @@ export class TaskFormComponent
   private formValueChangesSubscription!: Subscription;
   clientCurrency: string = '';
   CurrencyToIntlNumberFormat = CurrencyToIntlNumberFormat;
-  maxReceivedAtDate!: Date;
-  minDeadlineDate!: Date;
-  minInternalDeadlineDate!: Date;
-  maxInternalDeadlineDate!: Date;
+  maxAssignedAtDate: Date | null;
+  minAssignedAtDate: Date | null;
+  minDeadlineDate: Date | null;
+  maxDeadlineDate: Date | null;
+  projectReceivedAt: Date | null;
+  projectDeadline: Date | null;
   loadUnit?: LoadUnit;
   rate: CompetenceDto | null = null;
   maxLoad = 0;
   remainingLoad = 0;
   private taskInitialLoad = 0;
+  statusLabel: TaskStatus | null = null;
+  statusCode: TaskStatusCode | null = null;
+  taskTagSeverity = TaskTagSeverity;
 
   constructor(
     protected taskService: TaskService,
@@ -137,6 +144,7 @@ export class TaskFormComponent
     this.initializeForm(this._task);
     this.triggerAutoSave();
     this.subscribeToTaskChanges();
+    this.subscribeToStatusChange();
   }
 
   ngOnDestroy() {
@@ -158,6 +166,10 @@ export class TaskFormComponent
 
     if (task?.project) this.onProjectSelect(task.project);
     if (task?.linguist) this.onLinguistSelect(task.linguist);
+    if (task) {
+      this.statusCode = task.status;
+      this.statusLabel = TaskStatus[this.statusCode];
+    }
 
     this.form = new FormGroup(
       {
@@ -181,8 +193,8 @@ export class TaskFormComponent
           },
           [Validators.required],
         ),
-        status: new FormControl<string | undefined>(task?.status),
-        lang: new FormControl<string | undefined>(task?.lang, [
+        status: new FormControl<TaskStatusCode | undefined>(task?.status),
+        lang: new FormControl<LanguageCode | undefined>(task?.lang, [
           Validators.required,
         ]),
         count: new FormControl<number>(task?.count ?? 0, [
@@ -228,48 +240,49 @@ export class TaskFormComponent
 
     // Store initial form values
     this.initialFormValues = this.form.value;
-    this.setupDeadlineListeners();
+    // this.setupDeadlineListeners();
     this.getMaxLoad();
     this.subscribeToLoadChanges();
+    this.subscribeToStatusChange();
   }
 
-  private setupDeadlineListeners() {
-    const receivedAtControl = this.form.get('receivedAt');
-    const deadlineControl = this.form.get('deadline');
-    const internalDeadlineControl = this.form.get('internalDeadline');
+  // private setupDeadlineListeners() {
+  //   const receivedAtControl = this.form.get('receivedAt');
+  //   const deadlineControl = this.form.get('deadline');
+  //   const internalDeadlineControl = this.form.get('internalDeadline');
 
-    const updateDateLimits = () => {
-      const receivedAt = receivedAtControl?.value;
-      const deadline = deadlineControl?.value;
-      this.maxReceivedAtDate = DayjsHelper.new().toDate();
+  //   const updateDateLimits = () => {
+  //     const receivedAt = receivedAtControl?.value;
+  //     const deadline = deadlineControl?.value;
+  //     this.maxAssignedAtDate = DayjsHelper.new().toDate();
 
-      if (receivedAt)
-        this.minDeadlineDate = this.minInternalDeadlineDate = receivedAt;
+  //     if (receivedAt)
+  //       this.minAssignedAtDate = this.minDeadlineDate = receivedAt;
 
-      if (deadline) this.maxInternalDeadlineDate = deadline;
-    };
+  //     if (deadline) this.maxDeadlineDate = deadline;
+  //   };
 
-    // Initialize limits
-    updateDateLimits();
+  //   // Initialize limits
+  //   updateDateLimits();
 
-    // Update min and max dates on value changes
-    receivedAtControl?.valueChanges.subscribe(() => {
-      updateDateLimits();
-    });
+  //   // Update min and max dates on value changes
+  //   receivedAtControl?.valueChanges.subscribe(() => {
+  //     updateDateLimits();
+  //   });
 
-    deadlineControl?.valueChanges.subscribe((deadline: Date) => {
-      if (
-        internalDeadlineControl?.value &&
-        DayjsHelper.new(internalDeadlineControl.value).isAfter(deadline)
-      ) {
-        internalDeadlineControl.setValue(
-          DayjsHelper.new(deadline).subtract(1, 'day').toDate(),
-          { emitEvent: false },
-        );
-      }
-      updateDateLimits();
-    });
-  }
+  //   deadlineControl?.valueChanges.subscribe((deadline: Date) => {
+  //     if (
+  //       internalDeadlineControl?.value &&
+  //       DayjsHelper.new(internalDeadlineControl.value).isAfter(deadline)
+  //     ) {
+  //       internalDeadlineControl.setValue(
+  //         DayjsHelper.new(deadline).subtract(1, 'day').toDate(),
+  //         { emitEvent: false },
+  //       );
+  //     }
+  //     updateDateLimits();
+  //   });
+  // }
 
   get task(): TaskDto | null {
     return this._task;
@@ -281,11 +294,18 @@ export class TaskFormComponent
       return;
     }
     this.loading = true;
-    const values = this.form.getRawValue();
+    const { project, linguist, ...values } = this.form.getRawValue();
+
+    const formData = {
+      ...values,
+      rateId: this.rate?.id,
+      projectId: project?.id,
+      linguistId: linguist?.id,
+    };
 
     const operation = this.task?.id
-      ? this.taskService.update(this.task.id, values)
-      : this.taskService.create(values);
+      ? this.taskService.update(this.task.id, formData)
+      : this.taskService.create(formData);
 
     operation.pipe(finalize(() => (this.loading = false))).subscribe({
       next: (task: TaskDto) => {
@@ -320,7 +340,7 @@ export class TaskFormComponent
         ),
       )
       .subscribe(() => {
-        // this.onSubmit();
+        this.onSubmit();
       });
   }
 
@@ -387,7 +407,9 @@ export class TaskFormComponent
       .subscribe((project) => {
         this.loadUnit = project?.unit;
         this.project$.next(project);
+        this.form.patchValue({ lang: project?.lang, unit: project?.unit });
         this.getMaxLoad();
+        this.getDatesBoundaries(project);
       });
   }
 
@@ -457,6 +479,26 @@ export class TaskFormComponent
   private subscribeToLoadChanges(): void {
     this.form.get('count')?.valueChanges.subscribe((count) => {
       this.remainingLoad = this.maxLoad - count;
+    });
+  }
+
+  private getDatesBoundaries(project: ProjectDto | null) {
+    this.projectReceivedAt = !project
+      ? null
+      : DayjsHelper.new(project.receivedAt).toDate();
+    this.projectDeadline = !project
+      ? null
+      : DayjsHelper.new(project.internalDeadline).toDate();
+
+    this.minAssignedAtDate = this.minDeadlineDate = this.projectReceivedAt;
+    this.maxAssignedAtDate = this.maxDeadlineDate = this.projectDeadline;
+  }
+
+  private subscribeToStatusChange() {
+    this.form.get('status')?.valueChanges.subscribe((status) => {
+      const statusCode = status as TaskStatusCode;
+      this.statusLabel = TaskStatus[statusCode];
+      if (status) this.onSubmit();
     });
   }
 }

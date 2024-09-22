@@ -80,10 +80,11 @@
         @if (linguists$ | async; as linguists) {
           <ui-list-item class="sticky top-0 z-1 bg-white">
             <div
-              class="grid grid-cols-2 xl:grid-cols-4 text-black/95 font-semibold"
+              class="grid grid-cols-3 xl:grid-cols-5 text-black/95 font-semibold"
             >
               <div class="grid-cols-1">First Name</div>
               <div class="grid-cols-1">Last Name</div>
+              <div class="grid-cols-1">Skills</div>
               <div class="grid-cols-1 hidden xl:block">Email Address</div>
               <div class="grid-cols-1 hidden xl:block">Phone</div>
             </div>
@@ -100,9 +101,23 @@
                 class="block relative bg-white hover:bg-primary/5"
               >
                 <ui-list-item [isSelected]="rla.isActive">
-                  <div class="grid grid-cols-2 xl:grid-cols-4 items-center">
+                  <div class="grid grid-cols-3 xl:grid-cols-5 items-center">
                     <div class="grid-cols-1">{{ linguist.firstName }}</div>
                     <div class="grid-cols-1">{{ linguist.lastName }}</div>
+                    <div class="grid-cols-1">
+                      <p-avatarGroup>
+                        @for (
+                          competence of linguist.competences;
+                          track competence.id
+                        ) {
+                          <p-avatar shape="circle">
+                            <div class="!text-[8px] truncate">
+                              {{ competence.code }}
+                            </div>
+                          </p-avatar>
+                        }
+                      </p-avatarGroup>
+                    </div>
                     <div class="grid-cols-1 hidden xl:block">
                       {{ linguist.email }}
                     </div>

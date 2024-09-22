@@ -1,5 +1,10 @@
 @if (form) {
-  <form [formGroup]="form" autocomplete="off" class="bg-white">
+  <form
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    autocomplete="off"
+    class="bg-white"
+  >
     <div class="flex flex-col gap-x-4">
       <div class="grid grid-cols-2">
         <div class="col-span-full pt-8">
@@ -19,8 +24,10 @@
               @if (project$ | async; as project) {
                 <div class="text-xs">
                   Internal Deadline:
-                  {{ project.internalDeadline | date: 'short' }},
-                  {{ project.count }} {{ project.unit }}s,
+                  <span class="font-semibold"
+                    >{{ project.internalDeadline | date: 'short' }} ,
+                    {{ project.count }} {{ project.unit }}s</span
+                  >,
                   <a
                     routerLink="/projects"
                     [queryParams]="{
@@ -90,9 +97,9 @@
             <label for="count">Load </label>
           </p-floatLabel>
           @if (remainingLoad >= 0 && form.get('type')?.value) {
-            <div class="text-xs">
+            <div class="text-xs col-span-full px-3 pt-1">
               Remaining:
-              <span class="text-primary">{{ remainingLoad }}</span>
+              <span class="font-semibold">{{ remainingLoad }}</span>
             </div>
           }
           <input-error
@@ -164,12 +171,21 @@
               hourFormat="24"
               dateFormat="dd/mm/yy"
               inputId="assignedAt"
-              [maxDate]="maxReceivedAtDate"
+              [maxDate]="maxAssignedAtDate"
+              [minDate]="minAssignedAtDate"
               [showButtonBar]="true"
               [iconDisplay]="'input'"
             />
-            <label for="assignedAt">Received At</label>
+            <label for="assignedAt">Assigned At</label>
           </p-floatLabel>
+          @if (projectReceivedAt) {
+            <div class="text-xs col-span-full px-3 pt-1">
+              Project received at
+              <span class="font-semibold">{{
+                projectReceivedAt | date: 'short'
+              }}</span>
+            </div>
+          }
           <input-error
             fieldName="Assigned At"
             [control]="form.get('assignedAt')!"
@@ -189,19 +205,35 @@
               hourFormat="24"
               dateFormat="dd/mm/yy"
               inputId="deadline"
-              [minDate]="minInternalDeadlineDate"
-              [maxDate]="maxInternalDeadlineDate"
+              [maxDate]="maxDeadlineDate"
+              [minDate]="minDeadlineDate"
               [showButtonBar]="true"
               [iconDisplay]="'input'"
             />
             <label for="deadline">Deadline</label>
           </p-floatLabel>
+          @if (projectDeadline) {
+            <div class="text-xs col-span-full px-3 pt-1">
+              Project deadline
+              <span class="font-semibold">{{
+                projectDeadline | date: 'short'
+              }}</span>
+            </div>
+          }
           <input-error
             fieldName="deadline"
             [control]="form.get('deadline')!"
             [formGroup]="form"
           />
         </div>
+      </div>
+      <div class="mt-8 flex justify-center">
+        <p-button
+          type="submit"
+          [label]="'Create'"
+          [loading]="loading"
+          [disabled]="form.invalid"
+        />
       </div>
     </div>
   </form>

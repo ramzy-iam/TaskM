@@ -122,6 +122,10 @@ export class LinguistPreviewDto extends BaseDto {
 
   @Expose()
   phone: string;
+
+  @Type(() => CompetenceDto)
+  @Expose()
+  competences: CompetenceDto[];
 }
 
 export class LinguistDto extends LinguistPreviewDto {
@@ -140,8 +144,4 @@ export class LinguistDto extends LinguistPreviewDto {
 
   @Expose()
   accountNumber: string;
-
-  @Type(() => CompetenceDto)
-  @Expose()
-  competences: CompetenceDto[];
 }

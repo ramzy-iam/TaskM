@@ -82,6 +82,26 @@
   .p-panel:not(.p-panel-expanded) .p-panel-header:hover {
     background-color: #3b82f60f !important;
   }
+
+  .large .p-tag-value {
+    padding: 4px 8px;
+  }
+
+  .custom-trigger {
+    .p-dropdown-trigger {
+      display: none !important;
+    }
+    &:hover {
+      .p-dropdown-trigger {
+        display: flex !important;
+      }
+    }
+    .p-dropdown-open {
+      .p-dropdown-trigger {
+        display: flex !important;
+      }
+    }
+  }
 }
 
 @layer tailwind-components {

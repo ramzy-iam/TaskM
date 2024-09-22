@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, OnDestroy, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProjectService } from '@TaskM/projects/data-access';
+import { Project, ProjectService } from '@TaskM/projects/data-access';
 import {
   FormControl,
   FormGroup,
@@ -24,7 +24,13 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FormInputErrorComponent } from '@TaskM/shared/ui';
-import { CurrencyToIntlNumberFormat, LoadUnit } from '@TaskM/core/constants';
+import {
+  CurrencyToIntlNumberFormat,
+  LoadUnit,
+  ProjectStatus,
+  ProjectStatusCode,
+  ProjectTagSeverity,
+} from '@TaskM/core/constants';
 
 import { CalendarModule } from 'primeng/calendar';
 import {
@@ -84,6 +90,9 @@ export class ProjectFormComponent
   minDeadlineDate!: Date;
   minInternalDeadlineDate!: Date;
   maxInternalDeadlineDate!: Date;
+  statusLabel: ProjectStatus | null = null;
+  statusCode: ProjectStatusCode | null = null;
+  projectTagSeverity = ProjectTagSeverity;
 
   constructor(
     protected projectService: ProjectService,
@@ -105,6 +114,7 @@ export class ProjectFormComponent
   ngOnInit() {
     this.initializeForm(this._project);
     this.triggerAutoSave();
+    this.subscribeToStatusChange();
   }
 
   ngOnDestroy() {
@@ -123,6 +133,11 @@ export class ProjectFormComponent
     const deadline = project?.deadline
       ? DayjsHelper.new(project.deadline).toDate()
       : DayjsHelper.new().add(2, 'day').toDate();
+
+    if (project) {
+      this.statusCode = project.status;
+      this.statusLabel = ProjectStatus[this.statusCode];
+    }
 
     this.form = new FormGroup(
       {
@@ -204,6 +219,7 @@ export class ProjectFormComponent
     // Store initial form values
     this.initialFormValues = this.form.value;
     this.setupDeadlineListeners();
+    this.subscribeToStatusChange();
   }
 
   private setupDeadlineListeners() {
@@ -303,5 +319,13 @@ export class ProjectFormComponent
 
   onClientSelect(client: BaseClientDto | null) {
     this.clientCurrency = client?.currency ?? '';
+  }
+
+  private subscribeToStatusChange() {
+    this.form.get('status')?.valueChanges.subscribe((status) => {
+      const statusCode = status as ProjectStatusCode;
+      this.statusLabel = ProjectStatus[statusCode];
+      if (status) this.onSubmit();
+    });
   }
 }

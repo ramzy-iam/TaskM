@@ -21,14 +21,15 @@ export class TasksService {
 
     const { code, lang } = await this.generateSpecialFields(taskDto.projectId);
 
-    const task = this.tasksRepository.create({
+    let task = this.tasksRepository.create({
       ...taskDto,
       assignedAt: DayjsHelper.new(taskDto.assignedAt).toDate(),
       code,
       lang,
     });
 
-    return this.tasksRepository.save(task);
+    task = await this.tasksRepository.save(task);
+    return this.getOne(task.id);
   }
 
   getOne(id: string) {
@@ -59,17 +60,20 @@ export class TasksService {
       : null;
 
     const project = (await this.projectsService.findOne({
-      id: taskDto?.projectId,
+      id: taskDto?.projectId ?? existingTask?.projectId,
     }))!;
 
     if (taskDto?.rateId) {
       const rate = await this.competencesService.findOne({
         id: taskDto.rateId,
-        linguistId: existingTask?.linguistId,
+        linguistId: taskDto?.linguistId ?? existingTask?.linguistId,
       });
 
-      if (!rate) throw new BadRequestException(`Competence not found`);
-      if (existingTask && existingTask.linguistId !== rate.linguistId) {
+      if (!rate) throw new BadRequestException(`Rate not found`);
+      if (
+        existingTask &&
+        (taskDto?.linguistId ?? existingTask?.linguistId) !== rate.linguistId
+      ) {
         throw new BadRequestException(
           `Rate is not associated with the linguist`,
         );
@@ -104,9 +108,13 @@ export class TasksService {
 
     if (typeof taskDto.count === 'number') {
       const taskType = (taskDto?.type ?? existingTask?.type)!;
+      const excludedTaskIds: string[] = [];
+      if (existingTask) excludedTaskIds.push(existingTask.id);
+
       const remainingLoadForTaskType = await this.getRemainingLoad(
         project.id,
         taskType,
+        excludedTaskIds,
       );
 
       if (taskDto.count > remainingLoadForTaskType)

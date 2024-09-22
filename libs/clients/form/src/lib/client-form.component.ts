@@ -24,6 +24,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FormInputErrorComponent } from '@TaskM/shared/ui';
+import { Currency, PaymentMethod } from '@TaskM/core/constants';
 
 @Component({
   selector: 'app-client-form',
@@ -97,13 +98,14 @@ export class ClientFormComponent
       billingPeriod: new FormControl<string>(client?.billingPeriod ?? '', [
         Validators.required,
       ]),
-      currency: new FormControl<string | undefined>(client?.currency, [
-        Validators.required,
-      ]),
+      currency: new FormControl<Currency | undefined>(
+        client?.currency ?? Currency.XAF,
+        [Validators.required],
+      ),
       paymentDueDays: new FormControl<number>(client?.paymentDueDays ?? 1, [
         Validators.min(1),
       ]),
-      paymentMethod: new FormControl<string | undefined>(
+      paymentMethod: new FormControl<PaymentMethod | undefined>(
         client?.paymentMethod,
         [Validators.required],
       ),

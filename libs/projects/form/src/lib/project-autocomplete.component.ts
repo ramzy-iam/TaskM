@@ -6,11 +6,9 @@ import { BaseProjectDto } from '@TaskM/core/dto';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FormInputErrorComponent } from '@TaskM/shared/ui';
 import { ProjectService } from '@TaskM/projects/data-access';
-import { Currency } from '@TaskM/core/constants';
 import {
   AutoCompleteCompleteEvent,
   AutoCompleteModule,
@@ -27,7 +25,6 @@ import {
     ButtonModule,
     InputTextModule,
     FloatLabelModule,
-    DropdownModule,
     InputNumberModule,
     FormInputErrorComponent,
     AutoCompleteModule,
