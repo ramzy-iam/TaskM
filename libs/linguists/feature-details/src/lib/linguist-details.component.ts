@@ -70,7 +70,7 @@ export class LinguistDetailsComponent implements OnInit, OnChanges {
   showCompetenceDialog(competence?: CompetenceDto): void {
     const linguistCompetences = this.linguistsSubject?.value?.competences ?? [];
     this.dialogService.open(CompetenceFormComponent, {
-      header: 'New Competence',
+      header: 'New Skill',
       breakpoints: { '1199px': '75vw', '575px': '90vw' },
       style: { width: '50vw' },
       modal: true,
