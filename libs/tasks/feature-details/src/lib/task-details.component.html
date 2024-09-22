@@ -313,7 +313,7 @@
                       type="submit"
                       label="Save Changes"
                       [loading]="loading"
-                      [disabled]="form.invalid"
+                      [disabled]="form.invalid || !form.dirty"
                     />
                   </div>
                 </div>

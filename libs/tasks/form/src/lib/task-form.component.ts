@@ -243,6 +243,7 @@ export class TaskFormComponent
         // Store form values
         this.initialFormValues = this.form.getRawValue();
         this.taskService.triggerChanges(task);
+        this.form.markAsPristine(); //as dirty
       },
       error: (error) => {
         // Unsubscribe before resetting the form to avoid triggering the update
