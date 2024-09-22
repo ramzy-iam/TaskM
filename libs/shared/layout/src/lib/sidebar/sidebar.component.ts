@@ -12,11 +12,12 @@ import {
 } from '@ng-icons/heroicons/outline';
 import { StorageService } from '@TaskM/shared/misc';
 import { SIDEBAR_KEY } from '@TaskM/core/constants';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule, NgIconComponent],
+  imports: [CommonModule, RouterModule, NgIconComponent, TooltipModule],
   providers: [
     provideIcons({
       heroBuildingOffice,

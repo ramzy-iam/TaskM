@@ -31,7 +31,7 @@
               'bg-graydark': rla.isActive,
               'bg-primary/85': rla.isActive && !opened,
             }"
-            [title]="!opened ? link.label : null"
+            [pTooltip]="!opened ? link.label : ''"
           >
             <div
               class="rounded-full flex justify-center items-center group-[.is-active]:text-white group-[.is-active]:bg-primary-color text-accent-base group-hover:bg-primary-color group-hover:text-white transition-all duration-300 ease-in-out"
