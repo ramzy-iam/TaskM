@@ -60,6 +60,13 @@
       "@TaskM/shared/layout": ["libs/shared/layout/src/index.ts"],
       "@TaskM/shared/misc": ["libs/shared/misc/src/index.ts"],
       "@TaskM/shared/ui": ["libs/shared/ui/src/index.ts"],
+      "@TaskM/tasks/api": ["libs/tasks/api/src/index.ts"],
+      "@TaskM/tasks/data-access": ["libs/tasks/data-access/src/index.ts"],
+      "@TaskM/tasks/feature-details": [
+        "libs/tasks/feature-details/src/index.ts"
+      ],
+      "@TaskM/tasks/feature-list": ["libs/tasks/feature-list/src/index.ts"],
+      "@TaskM/tasks/form": ["libs/tasks/form/src/index.ts"],
       "@TaskM/users/api": ["libs/users/api/src/index.ts"],
       "@TaskM/users/types": ["libs/users/types/src/index.ts"],
       "@TaskM/workspace-users/api": ["libs/workspace-users/api/src/index.ts"],

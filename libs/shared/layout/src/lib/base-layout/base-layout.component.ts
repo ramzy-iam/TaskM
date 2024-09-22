@@ -4,7 +4,7 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 import { ToastModule } from 'primeng/toast';
-import { LocalStorageService } from '@TaskM/shared/misc';
+import { StorageService } from '@TaskM/shared/misc';
 import { SIDEBAR_KEY } from '@TaskM/core/constants';
 
 @Component({
@@ -20,8 +20,8 @@ import { SIDEBAR_KEY } from '@TaskM/core/constants';
   templateUrl: './base-layout.component.html',
 })
 export class BaseLayoutComponent {
-  constructor(private localStorageService: LocalStorageService) {}
-  isSidebarOpen = this.localStorageService.getItem(SIDEBAR_KEY, true)!;
+  constructor(private storageService: StorageService) {}
+  isSidebarOpen = !!this.storageService.getItem(SIDEBAR_KEY, true);
 
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;

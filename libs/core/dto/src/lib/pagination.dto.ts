@@ -27,9 +27,9 @@ export class PaginationDto<T> {
   meta: MetaDto;
 
   @Exclude()
-  private itemType: Function;
+  private itemType: new (...args: unknown[]) => T;
 
-  constructor(itemType: Function) {
+  constructor(itemType: new (...args: unknown[]) => T) {
     this.itemType = itemType;
   }
 }

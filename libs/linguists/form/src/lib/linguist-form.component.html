@@ -122,9 +122,8 @@
     @if (!autoSave) {
       <div class="mt-8 flex justify-center">
         <p-button
-          icon="pi pi-check"
           type="submit"
-          [label]="!linguist ? 'Submit' : 'Update'"
+          [label]="!linguist ? 'Create linguist' : 'Update linguist'"
           [loading]="loading"
           [disabled]="form.invalid"
         />

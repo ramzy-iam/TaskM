@@ -11,6 +11,18 @@ import { BaseDto, BaseFilterDto } from './base.dto';
 import { Currency, LoadUnit, TaskTypeCode } from '@TaskM/core/constants';
 import { CastHelper } from '@TaskM/core/helpers';
 
+export class CompetenceBaseDto {
+  @Transform(({ value }) => CastHelper.trim(value))
+  @IsUUID()
+  @IsNotEmpty()
+  id: string;
+
+  @Transform(({ value }) => CastHelper.trim(value))
+  @IsUUID()
+  @IsNotEmpty()
+  linguistId: string;
+}
+
 export class CreateCompetenceDto {
   @Transform(({ value }) => CastHelper.trim(value))
   @IsNotEmpty()

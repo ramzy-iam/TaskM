@@ -56,6 +56,8 @@ export class CompetenceFormComponent
   private initialFormValues: any;
   private formValueChangesSubscription!: Subscription;
   CurrencyToIntlNumberFormat = CurrencyToIntlNumberFormat;
+  availableTasks: { value: string; name: string }[] = [];
+  private existingCompetences: CompetenceDto[] = [];
 
   constructor(
     private competenceService: CompetenceService,
@@ -67,6 +69,9 @@ export class CompetenceFormComponent
     if (this.dialogConfig?.data?.competence) {
       this.competence = this.dialogConfig.data.competence;
     }
+    this.existingCompetences =
+      this.dialogConfig?.data?.linguistCompetences ?? [];
+    this.excludeTasks();
   }
 
   @Input() autoSave?: boolean = false;
@@ -109,9 +114,10 @@ export class CompetenceFormComponent
         },
         [Validators.required],
       ),
-      currency: new FormControl<Currency | undefined>(competence?.currency, [
-        Validators.required,
-      ]),
+      currency: new FormControl<Currency | undefined>(
+        competence?.currency ?? Currency.XAF,
+        [Validators.required],
+      ),
       linguistId: new FormControl<string | undefined>(competence?.linguistId),
     });
 
@@ -155,5 +161,11 @@ export class CompetenceFormComponent
         if (this.competence?.id) this.form.patchValue(this.initialFormValues); // Reset form with initial values on error
       },
     });
+  }
+
+  private excludeTasks() {
+    this.availableTasks = this.taskTypes.filter(
+      (t) => !this.existingCompetences.find((c) => c.code === t.value),
+    );
   }
 }

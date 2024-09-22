@@ -3,6 +3,8 @@ import {
   Language,
   LoadUnit,
   PaymentMethod,
+  ProjectStatus,
+  TaskStatus,
   TaskType,
 } from '@TaskM/core/constants';
 import { capitalize } from 'radash';
@@ -13,6 +15,8 @@ export class BaseEnumComponent {
   languages = this.getLanguageArray();
   taskTypes = this.getTaskTypeArray();
   loadUnits = this.getLoadUnitArray();
+  taskStatuses = this.getTaskStatusArray();
+  projectStatuses = this.getProjectStatusArray();
 
   get currencyKeys(): string[] {
     return Object.keys(Currency);
@@ -30,9 +34,17 @@ export class BaseEnumComponent {
     return Object.keys(LoadUnit);
   }
 
+  get taskStatusKeys(): string[] {
+    return Object.keys(TaskStatus);
+  }
+
+  get projectStatusKeys(): string[] {
+    return Object.keys(ProjectStatus);
+  }
+
   private getLanguageArray(): { value: string; name: string }[] {
     return this.languageKeys.map((key) => ({
-      value: Language[key as keyof typeof Language],
+      value: key,
       name: Language[key as keyof typeof Language],
     }));
   }
@@ -62,6 +74,20 @@ export class BaseEnumComponent {
     return this.loadUnitKeys.map((key) => ({
       value: LoadUnit[key as keyof typeof LoadUnit],
       name: capitalize(LoadUnit[key as keyof typeof LoadUnit]),
+    }));
+  }
+
+  private getTaskStatusArray(): { value: string; name: string }[] {
+    return this.taskStatusKeys.map((key) => ({
+      value: key,
+      name: TaskStatus[key as keyof typeof TaskStatus],
+    }));
+  }
+
+  private getProjectStatusArray(): { value: string; name: string }[] {
+    return this.projectStatusKeys.map((key) => ({
+      value: key,
+      name: ProjectStatus[key as keyof typeof ProjectStatus],
     }));
   }
 }

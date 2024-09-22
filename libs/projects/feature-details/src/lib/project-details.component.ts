@@ -15,6 +15,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import {
   CloseButtonComponent,
   FormInputErrorComponent,
+  TagComponent,
 } from '@TaskM/shared/ui';
 import { Router } from '@angular/router';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -48,6 +49,7 @@ import { PanelModule } from 'primeng/panel';
     ClientAutocompleteComponent,
     ClipboardDirective,
     PanelModule,
+    TagComponent,
   ],
   templateUrl: './project-details.component.html',
 })
@@ -57,7 +59,6 @@ export class ProjectDetailsComponent
 {
   @Input() code!: string;
   project$ = new BehaviorSubject<ProjectDto | null>(null);
-  override loading = false;
 
   constructor(
     protected override projectService: ProjectService,

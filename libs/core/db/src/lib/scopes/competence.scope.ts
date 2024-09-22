@@ -48,9 +48,6 @@ export class CompetencesScope extends SelectQueryBuilder<Competence> {
   }
 
   _orderBy(order: OrderType = 'DESC') {
-    return this.addOrderBy(`Competences.firstName`, order).addOrderBy(
-      `Competences.lastName`,
-      order,
-    );
+    return this.addOrderBy(`"Competences"."code"`, order);
   }
 }

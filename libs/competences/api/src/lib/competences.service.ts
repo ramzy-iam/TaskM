@@ -108,4 +108,15 @@ export class CompetencesService {
       .withDeleted()
       .getOne();
   }
+
+  findOne(filters?: CompetencesFilterDto) {
+    const query = this.competenceRepository.scoped;
+    if (filters?.id) query.filterById(filters?.id);
+    if (filters?.active) query.filterByActive(filters?.active);
+    if (filters?.withDeleted) query.withDeleted();
+    if (filters?.linguistId) query.filterByLinguistId(filters?.linguistId);
+    if (filters?.code) query.filterByCode(filters?.code);
+
+    return query.getOne();
+  }
 }

@@ -36,6 +36,8 @@ import { FormUtilsService, ScrollNearEndDirective } from '@TaskM/shared/misc';
 import { PAGINATION, TaskType, TaskTypeCode } from '@TaskM/core/constants';
 import { Nullable } from '@TaskM/core/types';
 import { DropdownModule } from 'primeng/dropdown';
+import { AvatarModule } from 'primeng/avatar';
+import { AvatarGroupModule } from 'primeng/avatargroup';
 
 type UrlParams = LinguistsFilterDto & {
   selectedLinguist: string | null;
@@ -63,6 +65,8 @@ type UrlParams = LinguistsFilterDto & {
     ScrollNearEndDirective,
     NoDataComponent,
     DropdownModule,
+    AvatarModule,
+    AvatarGroupModule,
   ],
   providers: [DialogService, provideIcons({ radixCross2 })],
   templateUrl: './linguist-list.component.html',

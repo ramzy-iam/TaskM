@@ -5,12 +5,9 @@ import {
   MinLength,
   MaxLength,
   IsOptional,
-  IsEmail,
   IsEnum,
   IsPositive,
-  IsUppercase,
   IsDate,
-  IsUUID,
   ValidateNested,
 } from 'class-validator';
 import { BaseClientDto, BaseDto, ClientOwnedFilterDto } from './base.dto';
@@ -225,6 +222,9 @@ export class ProjectPreviewDto extends BaseDto {
   @Expose()
   internalDeadline: Date;
 
+  @Expose()
+  receivedAt: Date;
+
   @Type(() => BaseClientDto)
   @Expose()
   client: BaseClientDto;
@@ -245,9 +245,6 @@ export class ProjectDto extends ProjectPreviewDto {
 
   @Expose()
   deadline: Date;
-
-  @Expose()
-  receivedAt: Date;
 
   @Expose()
   deliveredAt: Date;

@@ -38,9 +38,12 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
   }
 
   filterByName(name: string) {
-    return this.andWhere('Projects.name ILIKE :name', {
-      name: `%${name}%`,
-    });
+    return this.andWhere(
+      '(Projects.name ILIKE :name OR Projects.poId ILIKE :name)',
+      {
+        name: `%${name}%`,
+      },
+    );
   }
 
   filterByDate(

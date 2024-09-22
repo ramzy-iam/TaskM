@@ -11,7 +11,7 @@
           <p-floatLabel>
             <p-dropdown
               formControlName="code"
-              [options]="taskTypes"
+              [options]="availableTasks"
               optionLabel="name"
               optionValue="value"
               inputId="code"
@@ -101,9 +101,8 @@
     </div>
     <div class="mt-8 flex justify-center">
       <p-button
-        icon="pi pi-check"
         type="submit"
-        [label]="!competence.id ? 'Submit' : 'Update'"
+        [label]="!competence.id ? 'Create skill' : 'Update skill'"
         [loading]="loading"
         [disabled]="form.invalid"
       />

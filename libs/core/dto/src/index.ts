@@ -6,3 +6,4 @@ export * from './lib/pagination.dto';
 export * from './lib/project.dto';
 export * from './lib/linguist.dto';
 export * from './lib/competence.dto';
+export * from './lib/task.dto';

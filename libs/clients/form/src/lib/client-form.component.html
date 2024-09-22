@@ -130,9 +130,8 @@
     @if (!autoSave) {
       <div class="mt-8 flex justify-center">
         <p-button
-          icon="pi pi-check"
           type="submit"
-          [label]="!client ? 'Submit' : 'Update'"
+          [label]="!client ? 'Create client' : 'Update client'"
           [loading]="loading"
           [disabled]="form.invalid"
         />

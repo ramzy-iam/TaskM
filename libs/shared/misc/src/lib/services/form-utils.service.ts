@@ -1,4 +1,8 @@
-import { BaseClientDto } from '@TaskM/core/dto';
+import {
+  BaseClientDto,
+  BaseLinguistDto,
+  BaseProjectDto,
+} from '@TaskM/core/dto';
 import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { isArray, isObject } from 'radash';
@@ -63,6 +67,86 @@ export class FormUtilsService {
         },
         [...validators],
       ),
+    });
+  }
+
+  createMinimalProjectForm(
+    project: BaseProjectDto | null,
+    {
+      required = true,
+      disabled = false,
+    }: { required?: boolean; disabled?: boolean },
+  ) {
+    const validators = required ? [Validators.required] : [];
+    return new FormGroup({
+      id: new FormControl<string | undefined | null>(
+        {
+          value: project?.id,
+          disabled,
+        },
+        [...validators],
+      ),
+      code: new FormControl<string | undefined | null>(
+        {
+          value: project?.poId,
+          disabled,
+        },
+        [...validators],
+      ),
+      name: new FormControl<string | undefined | null>(
+        {
+          value: project?.name,
+          disabled,
+        },
+        [...validators],
+      ),
+    });
+  }
+
+  createMinimalLinguistForm(
+    linguist: BaseLinguistDto | null,
+    {
+      required = true,
+      disabled = false,
+    }: { required?: boolean; disabled?: boolean },
+  ) {
+    const validators = required ? [Validators.required] : [];
+    return new FormGroup({
+      id: new FormControl<string | undefined | null>(
+        {
+          value: linguist?.id,
+          disabled,
+        },
+        [...validators],
+      ),
+      name: new FormControl<string | undefined | null>(
+        {
+          value: linguist?.fullName,
+          disabled,
+        },
+        [...validators],
+      ),
+      //   email: new FormControl<string | undefined | null>(
+      //     {
+      //       value: linguist?.email,
+      //       disabled,
+      //     },
+      //     [...validators],
+      //   ),
+      //   firstName: new FormControl<string | undefined | null>(
+      //     {
+      //       value: linguist?.firstName,
+      //       disabled,
+      //     },
+      //     [...validators],
+      //   ),
+      //   lastName: new FormControl<string | undefined | null>(
+      //     {
+      //       value: linguist?.lastName,
+      //       disabled,
+      //     },
+      //     [...validators],
+      //   ),
     });
   }
 }

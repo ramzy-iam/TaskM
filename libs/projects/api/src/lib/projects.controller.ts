@@ -20,7 +20,6 @@ import {
 import { Serialize } from '@TaskM/core/interceptors';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { Project } from '@TaskM/core/db';
-import { PaginationMeta } from '@TaskM/core/types';
 
 @Controller('projects')
 export class ProjectsController {
