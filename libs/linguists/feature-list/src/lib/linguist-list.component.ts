@@ -108,7 +108,7 @@ export class LinguistListComponent implements OnInit, OnDestroy {
     this.initializeFilterForm();
     this.subscribeToFilterChanges();
     this.subscribeToRouteParams();
-    this.subscribeToProjectChanges();
+    this.subscribeToLinguistChanges();
   }
 
   showCreateDialog(): void {
@@ -215,7 +215,7 @@ export class LinguistListComponent implements OnInit, OnDestroy {
       });
   }
 
-  private subscribeToProjectChanges(): void {
+  private subscribeToLinguistChanges(): void {
     this.linguistService.getChanges().subscribe((linguist) => {
       if (linguist) this.handleLinguistUpdate(linguist);
     });

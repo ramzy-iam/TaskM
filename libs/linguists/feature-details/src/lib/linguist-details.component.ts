@@ -116,8 +116,8 @@ export class LinguistDetailsComponent implements OnInit, OnChanges {
   }
 
   private handleCompetenceUpdate(competence: Competence): void {
-    const linguist = this.linguistsSubject.value!;
-    let competences = linguist?.competences ?? [];
+    const linguist = this.linguistsSubject.value as LinguistDto;
+    const competences = linguist?.competences ?? [];
 
     const index = competences.findIndex((t) => t.id === competence.id);
     const fromIdIndex = competence.fromId
@@ -130,8 +130,9 @@ export class LinguistDetailsComponent implements OnInit, OnChanges {
       if (competence.deletedAt) competences.splice(index, 1);
       else competences[index] = competence;
     } else if (fromIdIndex !== -1) competences[fromIdIndex] = competence;
-    else competences.unshift(competence);
+    else competences.push(competence);
 
     this.linguistsSubject.next({ ...linguist, competences });
+    this.linguistService.triggerChanges({ ...linguist, competences });
   }
 }
