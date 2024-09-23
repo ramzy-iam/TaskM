@@ -1,7 +1,7 @@
 <aside
   [ngClass]="{
-    'w-64': opened,
-    'w-12': !opened,
+    'w-64': isOpen,
+    'w-12': !isOpen,
   }"
   class="fixed top-0 left-0 z-40 pt-16 flex h-screen flex-col overflow-y-hidden bg-black transition-all duration-300 ease-linear"
 >
@@ -11,13 +11,13 @@
     <nav
       class="mt-5 py-10 lg:mt-9"
       [ngClass]="{
-        'pr-6 pl-3': opened,
+        'pr-6 pl-3': isOpen,
       }"
     >
       <div
         class="flex flex-col gap-5"
         [ngClass]="{
-          'items-center': !opened,
+          'items-center': !isOpen,
         }"
       >
         @for (link of links; track $index) {
@@ -29,9 +29,9 @@
             #rla="routerLinkActive"
             [ngClass]="{
               'bg-graydark': rla.isActive,
-              'bg-primary/85': rla.isActive && !opened,
+              'bg-primary/85': rla.isActive && !isOpen,
             }"
-            [pTooltip]="!opened ? link.label : ''"
+            [pTooltip]="!isOpen ? link.label : ''"
           >
             <div
               class="rounded-full flex justify-center items-center group-[.is-active]:text-white group-[.is-active]:bg-primary-color text-accent-base group-hover:bg-primary-color group-hover:text-white transition-all duration-300 ease-in-out"
@@ -40,8 +40,8 @@
             </div>
             <span
               [ngClass]="{
-                hidden: !opened,
-                inline: opened,
+                hidden: !isOpen,
+                inline: isOpen,
               }"
               >{{ link.label }}</span
             >

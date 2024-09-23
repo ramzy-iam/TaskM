@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Link } from './link';
 import { RouterModule } from '@angular/router';
@@ -38,13 +38,16 @@ export class SidebarComponent implements OnInit {
     this.storageService.setItem(SIDEBAR_KEY, value);
   }
 
-  constructor(private storageService: StorageService) {}
+  get isOpen(): boolean {
+    return !!this._isOpen;
+  }
+
+  constructor(
+    @Inject(StorageService) private readonly storageService: StorageService,
+  ) {}
 
   ngOnInit() {
     this._isOpen = !!this.storageService.getItem(SIDEBAR_KEY, true);
-  }
-  get opened(): boolean {
-    return !!this._isOpen;
   }
 
   links: Link[] = [

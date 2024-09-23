@@ -249,7 +249,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
         name: string | null;
       } | null>({
         code: params?.status ?? null,
-        name: ProjectStatus[params?.status!] ?? null,
+        name: ProjectStatus[params?.status as ProjectStatusCode] ?? null,
       }),
       task: new FormControl<{
         code: TaskTypeCode | null;

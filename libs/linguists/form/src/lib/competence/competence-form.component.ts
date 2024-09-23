@@ -8,13 +8,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  filter,
-  finalize,
-  Subscription,
-} from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 import { CompetenceDto } from '@TaskM/core/dto';
 import { BaseEnumComponent, FormUtilsService } from '@TaskM/shared/misc';
 import { ButtonModule } from 'primeng/button';
@@ -83,6 +77,10 @@ export class CompetenceFormComponent
     this.initializeForm(competence);
   }
 
+  get competence(): CompetenceDto {
+    return this._competence;
+  }
+
   ngOnInit() {
     this.initializeForm(this._competence);
   }
@@ -123,10 +121,6 @@ export class CompetenceFormComponent
 
     // Store initial form values
     this.initialFormValues = this.form.value;
-  }
-
-  get competence(): CompetenceDto {
-    return this._competence;
   }
 
   onSubmit(): void {
