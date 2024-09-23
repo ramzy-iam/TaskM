@@ -20,11 +20,7 @@ import {
 } from '@TaskM/shared/ui';
 import { Router, RouterModule } from '@angular/router';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import {
-  ClipboardDirective,
-  FormUtilsService,
-  StatusDropdownComponent,
-} from '@TaskM/shared/misc';
+import { ClipboardDirective, FormUtilsService } from '@TaskM/shared/misc';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -60,7 +56,6 @@ import { CompetenceService } from '@TaskM/linguists/data-access';
     ClipboardDirective,
     PanelModule,
     SpinnerComponent,
-    StatusDropdownComponent,
     TagComponent,
   ],
   templateUrl: './task-details.component.html',

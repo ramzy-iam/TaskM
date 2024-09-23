@@ -59,13 +59,16 @@ export class LinguistFormComponent
     super();
   }
 
-  @Input() autoSave?: boolean = false;
+  @Input() autoSave? = false;
   @Input()
   set linguist(linguist: LinguistDto | null) {
     if (linguist) {
       this._linguist = linguist;
     }
     this.initializeForm(linguist);
+  }
+  get linguist(): LinguistDto {
+    return this._linguist;
   }
 
   ngOnInit() {
@@ -110,17 +113,13 @@ export class LinguistFormComponent
     this.initialFormValues = this.form.value;
   }
 
-  get linguist(): LinguistDto {
-    return this._linguist;
-  }
-
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
     this.loading = true;
-    const values = this.form.value;
+    const values = this.formUtils.getDirtyValues(this.form);
     const operation = this.linguist?.id
       ? this.linguistService.update(this.linguist.id, values)
       : this.linguistService.create(values);

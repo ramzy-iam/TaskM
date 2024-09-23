@@ -129,7 +129,7 @@ export class CompetenceFormComponent
       return;
     }
     this.loading = true;
-    const values = this.form.value;
+    const values = this.formUtils.getDirtyValues(this.form);
     const operation = this.competence?.id
       ? this.competenceService.update(this.competence.id, values)
       : this.competenceService.create(values);

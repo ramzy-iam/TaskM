@@ -4,7 +4,7 @@ import {
   BaseProjectDto,
 } from '@TaskM/core/dto';
 import { Injectable } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { isArray, isObject } from 'radash';
 
 @Injectable({
@@ -26,6 +26,34 @@ export class FormUtilsService {
     };
 
     return Object.values(form.value).some(isValueDefined);
+  }
+
+  getDirtyValues(form: FormGroup | FormArray): any {
+    const dirtyValues: any = {};
+
+    Object.keys(form.controls).forEach((key) => {
+      const control = form.get(key);
+
+      if (control instanceof FormGroup) {
+        const groupDirtyValues = this.getDirtyValues(control);
+        if (Object.keys(groupDirtyValues).length > 0) {
+          // Use groupDirtyValues here
+          dirtyValues[key] = groupDirtyValues;
+        }
+      } else if (control instanceof FormArray) {
+        const arrayDirtyValues = control.controls
+          .map((c) => this.getDirtyValues(c as FormGroup))
+          .filter((val) => Object.keys(val).length > 0);
+
+        if (arrayDirtyValues.length > 0) {
+          dirtyValues[key] = arrayDirtyValues;
+        }
+      } else if (control instanceof FormControl && control.dirty) {
+        dirtyValues[key] = control.value;
+      }
+    });
+
+    return dirtyValues;
   }
 
   handleErrors(form: FormGroup, errors: { [key: string]: string }) {

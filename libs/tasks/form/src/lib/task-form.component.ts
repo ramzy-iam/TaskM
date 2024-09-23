@@ -99,7 +99,7 @@ export class TaskFormComponent
   tasks$ = new BehaviorSubject<TaskPreviewDto[] | null>(null);
   private initialFormValues: any;
   private formValueChangesSubscription!: Subscription;
-  clientCurrency: string = '';
+  clientCurrency = '';
   CurrencyToIntlNumberFormat = CurrencyToIntlNumberFormat;
   maxAssignedAtDate: Date | null;
   minAssignedAtDate: Date | null;
@@ -126,7 +126,7 @@ export class TaskFormComponent
     super();
   }
 
-  @Input() autoSave: boolean = false;
+  @Input() autoSave = false;
   @Input()
   set task(task: TaskDto | null) {
     if (task) {
@@ -134,6 +134,10 @@ export class TaskFormComponent
       this.taskInitialLoad = task.count ?? 0;
     }
     this.initializeForm(task);
+  }
+
+  get task(): TaskDto | null {
+    return this._task;
   }
 
   ngOnInit() {
@@ -212,10 +216,6 @@ export class TaskFormComponent
     this.getMaxLoad();
     this.subscribeToLoadChanges();
     this.subscribeToStatusChange();
-  }
-
-  get task(): TaskDto | null {
-    return this._task;
   }
 
   onSubmit(): void {

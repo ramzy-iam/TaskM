@@ -69,6 +69,10 @@ export class ClientFormComponent
     this.initializeForm(client);
   }
 
+  get client(): ClientDto {
+    return this._client;
+  }
+
   ngOnInit() {
     this.initializeForm(this._client);
     this.triggerAutoSave();
@@ -115,17 +119,13 @@ export class ClientFormComponent
     this.initialFormValues = this.form.value;
   }
 
-  get client(): ClientDto {
-    return this._client;
-  }
-
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
     this.loading = true;
-    const values = this.form.value;
+    const values = this.formUtils.getDirtyValues(this.form);
     const operation = this.client?.id
       ? this.clientService.update(this.client.id, values)
       : this.clientService.create(values);
