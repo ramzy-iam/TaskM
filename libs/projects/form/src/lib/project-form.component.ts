@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, OnDestroy, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Project, ProjectService } from '@TaskM/projects/data-access';
+import { ProjectService } from '@TaskM/projects/data-access';
 import {
   FormControl,
   FormGroup,
@@ -84,7 +84,7 @@ export class ProjectFormComponent
   loading = false;
   private initialFormValues: any;
   private formValueChangesSubscription!: Subscription;
-  clientCurrency: string = '';
+  clientCurrency = '';
   CurrencyToIntlNumberFormat = CurrencyToIntlNumberFormat;
   maxReceivedAtDate!: Date;
   minDeadlineDate!: Date;
@@ -102,13 +102,17 @@ export class ProjectFormComponent
     super();
   }
 
-  @Input() autoSave: boolean = false;
+  @Input() autoSave = false;
   @Input()
   set project(project: ProjectDto | null) {
     if (project) {
       this._project = project;
     }
     this.initializeForm(project);
+  }
+
+  get project(): ProjectDto | null {
+    return this._project;
   }
 
   ngOnInit() {
@@ -260,10 +264,6 @@ export class ProjectFormComponent
     });
   }
 
-  get project(): ProjectDto | null {
-    return this._project;
-  }
-
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -325,7 +325,6 @@ export class ProjectFormComponent
     this.form.get('status')?.valueChanges.subscribe((status) => {
       const statusCode = status as ProjectStatusCode;
       this.statusLabel = ProjectStatus[statusCode];
-      if (status) this.onSubmit();
     });
   }
 }
