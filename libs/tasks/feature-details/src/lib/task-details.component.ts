@@ -33,6 +33,7 @@ import { ProjectAutocompleteComponent } from '@TaskM/projects/form';
 import { LinguistAutocompleteComponent } from '@TaskM/linguists/form';
 import { ProjectService } from '@TaskM/projects/data-access';
 import { CompetenceService } from '@TaskM/linguists/data-access';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-task-details',
@@ -57,6 +58,7 @@ import { CompetenceService } from '@TaskM/linguists/data-access';
     PanelModule,
     SpinnerComponent,
     TagComponent,
+    TooltipModule,
   ],
   templateUrl: './task-details.component.html',
 })

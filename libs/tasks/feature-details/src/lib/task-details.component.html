@@ -101,12 +101,17 @@
                           }
                           @if (project$ | async; as project) {
                             <div class="text-xs">
-                              Internal Deadline:
-                              <span class="font-semibold"
-                                >{{
+                              <span
+                                pTooltip="Internal Deadline"
+                                tooltipPosition="left"
+                                >Deadline:
+                                <span class="font-semibold">{{
                                   project.internalDeadline | date: 'short'
-                                }}
-                                , {{ project.count }} {{ project.unit }}s</span
+                                }}</span></span
+                              >
+                              ,
+                              <span class="font-semibold"
+                                >{{ project.count }} {{ project.unit }}s</span
                               >,
                               <a
                                 routerLink="/projects"

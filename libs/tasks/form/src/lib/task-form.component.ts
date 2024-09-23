@@ -51,6 +51,7 @@ import { ProjectAutocompleteComponent } from '@TaskM/projects/form';
 import { CompetenceService } from '@TaskM/linguists/data-access';
 import { ProjectService } from '@TaskM/projects/data-access';
 import { RouterModule } from '@angular/router';
+import { TooltipModule } from 'primeng/tooltip';
 
 type DisabledFields = {
   project?: boolean;
@@ -81,6 +82,7 @@ type DisabledFields = {
     LinguistAutocompleteComponent,
     ProjectAutocompleteComponent,
     SpinnerComponent,
+    TooltipModule,
   ],
   templateUrl: './task-form.component.html',
 })
