@@ -6,6 +6,7 @@ import {
   UpdateCompetenceDto,
 } from '@TaskM/core/dto';
 import { paginateResult } from '@TaskM/core/helpers/backend';
+import { omit } from 'radash';
 
 @Injectable()
 export class CompetencesService {
@@ -18,10 +19,12 @@ export class CompetencesService {
       .filterByUnit(createCompetenceDto.unit)
       .filterByCurrency(createCompetenceDto.currency)
       .filterByRate(createCompetenceDto.rate)
+      .withDeleted()
       .getOne();
 
     if (existingCompetence) {
       existingCompetence.active = true;
+      existingCompetence.deletedAt = null;
       await this.competenceRepository.save(existingCompetence);
       return existingCompetence;
     }
@@ -55,16 +58,24 @@ export class CompetencesService {
       !updateCompetenceDto.unit;
 
     if (isRateChanged && isCurrencySame && isUnitSame) {
-      // Set the current competence to inactive
+      // Create a new competence with the updated rate
+      const competence = omit(existingCompetence, [
+        'id',
+        'createdAt',
+        'updatedAt',
+        'deletedAt',
+        'rate',
+      ]);
+      const newCompetence = await this.create({
+        ...competence,
+        rate: updateCompetenceDto.rate as number,
+      });
+
+      // Set the old competence to inactive
       existingCompetence.active = false;
       await this.competenceRepository.save(existingCompetence);
 
-      // Create a new competence with the updated rate
-      const { id, ...competence } = existingCompetence;
-      return this.create({
-        ...competence,
-        rate: updateCompetenceDto.rate!,
-      });
+      return newCompetence;
     }
 
     // If rate has not changed or currency/unit do not match, perform a simple update
