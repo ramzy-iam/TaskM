@@ -313,14 +313,16 @@
                       />
                     </div>
                   </div>
-                  <div class="mt-8 flex justify-center">
-                    <p-button
-                      type="submit"
-                      label="Save Changes"
-                      [loading]="loading"
-                      [disabled]="form.invalid || !form.dirty"
-                    />
-                  </div>
+                  @if (form.valid && form.dirty) {
+                    <div class="mt-8 flex justify-center">
+                      <p-button
+                        type="submit"
+                        label="Save Changes"
+                        [loading]="loading"
+                        [disabled]="form.invalid || !form.dirty"
+                      />
+                    </div>
+                  }
                 </div>
               </form>
             </div>
