@@ -1,5 +1,5 @@
 import { SelectQueryBuilder } from 'typeorm';
-import { Linguist } from '../entities';
+import { Competence, Linguist } from '../entities';
 import { OrderType } from '@TaskM/core/types';
 import { TaskTypeCode } from '@TaskM/core/constants';
 
@@ -42,11 +42,13 @@ export class LinguistsScope extends SelectQueryBuilder<Linguist> {
   }
 
   filterByCompetenceCode(code: TaskTypeCode) {
-    return this.andWhere(
-      '(competences.code = :code AND competences.active = true)',
-      {
-        code,
-      },
-    );
+    const subQuery = this.subQuery()
+      .from(Competence, '_competences')
+      .select('1')
+      .where('_competences.linguistId = Linguists.id')
+      .andWhere('_competences.code = :code', { code })
+      .andWhere('_competences.active = true');
+
+    return this.andWhere(`EXISTS (${subQuery.getQuery()})`);
   }
 }
