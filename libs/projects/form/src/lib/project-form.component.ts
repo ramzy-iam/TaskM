@@ -270,8 +270,9 @@ export class ProjectFormComponent
       return;
     }
     this.loading = true;
-    const values = this.formUtils.getDirtyValues(this.form);
-
+    const values = !this.project?.id
+      ? this.form.value
+      : this.formUtils.getDirtyValues(this.form);
     const operation = this.project?.id
       ? this.projectService.update(this.project.id, values)
       : this.projectService.create(values);

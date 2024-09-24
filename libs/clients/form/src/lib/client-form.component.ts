@@ -125,7 +125,9 @@ export class ClientFormComponent
       return;
     }
     this.loading = true;
-    const values = this.formUtils.getDirtyValues(this.form);
+    const values = !this.client?.id
+      ? this.form.value
+      : this.formUtils.getDirtyValues(this.form);
     const operation = this.client?.id
       ? this.clientService.update(this.client.id, values)
       : this.clientService.create(values);

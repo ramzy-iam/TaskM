@@ -119,7 +119,9 @@ export class LinguistFormComponent
       return;
     }
     this.loading = true;
-    const values = this.formUtils.getDirtyValues(this.form);
+    const values = !this.linguist?.id
+      ? this.form.value
+      : this.formUtils.getDirtyValues(this.form);
     const operation = this.linguist?.id
       ? this.linguistService.update(this.linguist.id, values)
       : this.linguistService.create(values);
