@@ -20,10 +20,6 @@ export class TaskService extends HttpBaseService {
   private url = 'tasks';
   private changes$ = new Subject<Task>();
 
-  constructor(private http: HttpClient) {
-    super();
-  }
-
   triggerChanges(task: Task): void {
     this.changes$.next(task);
   }

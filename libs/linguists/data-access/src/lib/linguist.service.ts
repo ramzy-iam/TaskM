@@ -19,10 +19,6 @@ export class LinguistService extends HttpBaseService {
   private url = 'linguists';
   private changes$ = new Subject<Linguist>();
 
-  constructor(private http: HttpClient) {
-    super();
-  }
-
   triggerChanges(linguist: Linguist): void {
     this.changes$.next(linguist);
   }

@@ -19,10 +19,6 @@ export class ProjectService extends HttpBaseService {
   private url = 'projects';
   private changes$ = new Subject<Project>();
 
-  constructor(private http: HttpClient) {
-    super();
-  }
-
   triggerChanges(project: Project): void {
     this.changes$.next(project);
   }

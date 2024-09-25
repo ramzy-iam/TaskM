@@ -19,10 +19,6 @@ export class ClientService extends HttpBaseService {
   private url = 'clients';
   private changes$ = new Subject<Client>();
 
-  constructor(private http: HttpClient) {
-    super();
-  }
-
   triggerChanges(client: Client): void {
     this.changes$.next(client);
   }

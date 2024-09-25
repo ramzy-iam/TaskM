@@ -18,10 +18,6 @@ export class CompetenceService extends HttpBaseService {
   private url = 'competences';
   private changes$ = new Subject<Competence>();
 
-  constructor(private http: HttpClient) {
-    super();
-  }
-
   triggerChanges(competence: Competence & { fromId?: string }): void {
     this.changes$.next(competence);
   }
