@@ -38,6 +38,7 @@ import { Nullable } from '@TaskM/core/types';
 import { DropdownModule } from 'primeng/dropdown';
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
+import { TooltipModule } from 'primeng/tooltip';
 
 type UrlParams = LinguistsFilterDto & {
   selectedLinguist: string | null;
@@ -67,6 +68,7 @@ type UrlParams = LinguistsFilterDto & {
     DropdownModule,
     AvatarModule,
     AvatarGroupModule,
+    TooltipModule,
   ],
   providers: [DialogService, provideIcons({ radixCross2 })],
   templateUrl: './linguist-list.component.html',

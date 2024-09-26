@@ -110,7 +110,20 @@
                           competence of linguist.competences;
                           track competence.id
                         ) {
-                          <p-avatar shape="circle">
+                          <p-avatar
+                            shape="circle"
+                            tooltipPosition="bottom"
+                            [pTooltip]="
+                              (competence.rate
+                                | currency
+                                  : competence.currency
+                                  : 'symbol'
+                                  : '1.2-6'
+                                  : 'en-CM') +
+                              ' / ' +
+                              competence.unit
+                            "
+                          >
                             <div class="!text-[8px] truncate">
                               {{ competence.code }}
                             </div>
