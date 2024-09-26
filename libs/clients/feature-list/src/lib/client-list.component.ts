@@ -242,7 +242,7 @@ export class ClientListComponent implements OnInit, OnDestroy {
 
   private updateUrlParams(filters: Nullable<ClientsFilterDto>): void {
     const queryParams: Params = {
-      query: filters?.query || null,
+      query: filters?.query ?? null,
     };
 
     this.router.navigate([], {
@@ -260,9 +260,5 @@ export class ClientListComponent implements OnInit, OnDestroy {
 
     this.isFormInitialized = true;
     this.resetAndFetchClients(this.buildFilter());
-    this.router.navigate([], {
-      queryParams: { selectedClient: null },
-      queryParamsHandling: 'merge',
-    });
   }
 }
