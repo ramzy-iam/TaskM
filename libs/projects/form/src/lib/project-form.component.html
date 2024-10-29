@@ -182,6 +182,9 @@
               <p-inputNumber
                 inputId="rate"
                 formControlName="rate"
+                mode="decimal"
+                [minFractionDigits]="0"
+                [maxFractionDigits]="6"
                 class="w-2"
                 [suffix]="' ' + clientCurrency"
               />
@@ -262,9 +265,8 @@
     @if (!autoSave) {
       <div class="mt-8 flex justify-center">
         <p-button
-          icon="pi pi-check"
           type="submit"
-          [label]="!project ? 'Submit' : 'Update'"
+          [label]="!project ? 'Create project' : 'Update project'"
           [loading]="loading"
           [disabled]="form.invalid"
         />

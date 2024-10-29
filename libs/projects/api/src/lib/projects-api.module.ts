@@ -19,5 +19,6 @@ import { ClientsService } from '@TaskM/clients/api';
     ClientsService,
     ClientsRepository,
   ],
+  exports: [ProjectsService],
 })
 export class ProjectsApiModule {}

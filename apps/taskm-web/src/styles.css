@@ -1,0 +1,146 @@
+@import '@angular/cdk/overlay-prebuilt.css';
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap'); */
+
+@layer tailwind-base,reset, primeng, tailwind-components, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer reset {
+  *:focus {
+    box-shadow: none !important;
+  }
+
+  button.p-button {
+    padding: 0.5rem 1rem !important;
+
+    .p-button-label {
+      font-weight: 500 !important;
+    }
+  }
+
+  .p-inputtext.with-icon {
+    padding-right: 35px !important;
+    position: relative;
+  }
+
+  p-inputnumber,
+  .p-inputnumber {
+    display: inline !important;
+  }
+
+  .p-inputnumber input.p-inputtext {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .p-button .p-button-icon-left {
+    margin-right: 0.5rem;
+  }
+
+  .p-dropdown,
+  .p-autocomplete,
+  .p-calendar {
+    width: 100%;
+  }
+
+  p-tag {
+    font-size: 14px;
+    .p-tag {
+      font-size: 0.75em !important;
+      padding: 0.25em 0.4em !important;
+    }
+  }
+
+  .p-autocomplete-input.p-inputtext {
+    width: 100% !important;
+  }
+
+  .p-multiselect-flex .p-multiselect {
+    display: flex !important;
+  }
+
+  .input-like-text {
+    .p-multiselect,
+    .p-autocomplete-input.p-inputtext,
+    .p-dropdown,
+    .p-calendar input {
+      box-shadow: none !important;
+      border: none !important;
+    }
+  }
+  .custom-header-padding .p-accordion-header-link {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .p-panel-header {
+    cursor: pointer;
+  }
+
+  .p-panel:not(.p-panel-expanded) .p-panel-header:hover {
+    background-color: #3b82f60f !important;
+  }
+
+  .large .p-tag-value {
+    padding: 4px 8px;
+  }
+
+  .custom-trigger {
+    .p-dropdown-trigger {
+      display: none !important;
+    }
+    &:hover {
+      .p-dropdown-trigger {
+        display: flex !important;
+      }
+    }
+    .p-dropdown-open {
+      .p-dropdown-trigger {
+        display: flex !important;
+      }
+    }
+  }
+}
+
+@layer tailwind-components {
+  @tailwind components;
+}
+@layer tailwind-utilities {
+  @tailwind utilities;
+}
+
+@layer tailwind-base {
+  body {
+    @apply relative z-1 bg-whiten  text-base font-normal text-body;
+  }
+}
+
+@layer tailwind-utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  margin: 0 2px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #babac0;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}

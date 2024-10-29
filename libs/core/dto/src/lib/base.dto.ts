@@ -1,7 +1,7 @@
 import { Currency, PAGINATION } from '@TaskM/core/constants';
 import { CastHelper } from '@TaskM/core/helpers';
 import { OrderType } from '@TaskM/core/types';
-import { Expose, Transform } from 'class-transformer';
+import { Expose, Transform, Type } from 'class-transformer';
 import {
   IsNotEmpty,
   IsOptional,
@@ -21,6 +21,9 @@ export class BaseDto {
 
   @Expose()
   updatedAt?: string;
+
+  @Expose()
+  deletedAt?: string;
 }
 
 export class BaseFilterDto {
@@ -40,7 +43,7 @@ export class BaseFilterDto {
   @IsOptional()
   @IsPositive()
   @Min(PAGINATION.DEFAULT_PAGE)
-  page?: number;
+  page?: number = PAGINATION.DEFAULT_PAGE;
 
   @Transform(({ value }) =>
     CastHelper.toNumber(value, {
@@ -50,7 +53,7 @@ export class BaseFilterDto {
   @IsOptional()
   @IsPositive()
   @Min(1)
-  @Max(PAGINATION.MAX_LIMIT)
+  @Max(PAGINATION.MAX_LIMIT + 1)
   limit?: number;
 
   @Transform(({ value }) => CastHelper.toOrder(value))
@@ -99,4 +102,36 @@ export class BaseClientDto {
 
   @Expose()
   currency: Currency;
+}
+
+export class BaseProjectDto {
+  @Expose()
+  id: string;
+
+  @Expose()
+  name: string;
+
+  @Expose()
+  poId: string;
+
+  @Type(() => BaseClientDto)
+  @Expose()
+  client: BaseClientDto;
+}
+
+export class BaseServiceProviderDto {
+  @Expose()
+  id: string;
+
+  @Expose()
+  fullName: string;
+
+  @Expose()
+  firstName: string;
+
+  @Expose()
+  lastName: string;
+
+  @Expose()
+  email: string;
 }

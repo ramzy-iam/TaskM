@@ -9,7 +9,7 @@ import {
 } from '@TaskM/core/dto';
 import { Nullable, ToastOptions } from '@TaskM/core/types';
 import { HttpBaseService } from '@TaskM/core/http';
-import { TOAST_COMMON_MESSAGES } from '@TaskM/core/constants';
+import { PAGINATION, TOAST_COMMON_MESSAGES } from '@TaskM/core/constants';
 import { Client } from './client';
 
 @Injectable({
@@ -18,10 +18,6 @@ import { Client } from './client';
 export class ClientService extends HttpBaseService {
   private url = 'clients';
   private changes$ = new Subject<Client>();
-
-  constructor(private http: HttpClient) {
-    super();
-  }
 
   triggerChanges(client: Client): void {
     this.changes$.next(client);
@@ -69,7 +65,11 @@ export class ClientService extends HttpBaseService {
     };
 
     return this.http.get<PaginationDto<ClientPreviewDto>>(this.url, {
-      params: this.createHttpParams(filters),
+      params: this.createHttpParams({
+        page: PAGINATION.DEFAULT_PAGE,
+        limit: PAGINATION.DEFAULT_LIMIT,
+        ...filters,
+      }),
       headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
     });
   }

@@ -1,5 +1,6 @@
 import { OrderType } from '@TaskM/core/types';
 import { BOOLEAN_ENUM } from '@TaskM/core/constants';
+import { DayjsHelper } from './dayjs.helper';
 
 interface ToNumberOptions {
   default?: number;
@@ -17,9 +18,9 @@ const trim = (value?: string): string | undefined => {
   return value?.trim();
 };
 
-const toDate = (value?: string): Date | undefined => {
+const toDate = (value?: string, excludeSeconds = true): Date | undefined => {
   if (!value) return;
-  return new Date(value);
+  return DayjsHelper.new(value, { excludeSeconds }).toDate();
 };
 
 const toBoolean = (value?: BOOLEAN_ENUM): boolean | undefined => {
@@ -60,6 +61,11 @@ const toOrder = (value?: string): OrderType | undefined => {
   return ['ASC', 'DESC'].includes(value) ? (value as OrderType) : undefined;
 };
 
+const toArray = (value?: string, sep = ','): string[] | undefined => {
+  if (!value) return;
+  return value.split(sep);
+};
+
 export default {
   toLowerCase,
   trim,
@@ -67,4 +73,5 @@ export default {
   toBoolean,
   toNumber,
   toOrder,
+  toArray,
 };

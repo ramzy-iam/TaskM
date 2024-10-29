@@ -1,1 +1,374 @@
-<p>projects-feature-details works!</p>
+@if (loading) {
+  <p-skeleton height="2rem" width="50%" borderRadius="5px" />
+  <p-skeleton height="2.25rem" styleClass="mt-10" borderRadius="5px" />
+  <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
+  <div class="grid grid-cols-2 gap-2">
+    <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
+    <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
+  </div>
+  <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
+  <div class="grid grid-cols-2 gap-2">
+    <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
+    <p-skeleton height="2.25rem" styleClass="mt-8" borderRadius="5px" />
+  </div>
+} @else {
+  @if (project$ | async; as project) {
+    <ng-container>
+      <div
+        class="flex sticky z-10 py-2 top-0 right-0 justify-end items-center bg-white"
+      >
+        <ui-close-button (click)="close()"></ui-close-button>
+      </div>
+      <div class="flex flex-col bg-white pb-2">
+        <div
+          class="flex justify-between items-center pt-5 bg-white sticky z-9 top-10 border-b border-gray pb-2"
+        >
+          <h1 class="text-[18px] text-black-2 font-semibold">
+            [{{ project.poId }}]
+          </h1>
+          <div>
+            <span
+              title="Copy PO ID"
+              class="cursor-pointer"
+              appClipboard
+              [value]="project.poId"
+              [duration]="1000"
+              [tempMessage]="
+                '<div class=\'inline border border-gray rounded-md p-1\'>
+                <i class=\'pi pi-check pi-copy\' style=\'font-size: 1rem\'></i>
+              </div>'
+              "
+            >
+              <div class="inline border border-gray rounded-md p-1 pt-2">
+                <i class="pi pi-copy" style="font-size: 1.2rem"></i></div
+            ></span>
+          </div>
+        </div>
+        <div class="col-span-1 mt-2">
+          <form [formGroup]="form" autocomplete="off" class="w-1/2">
+            <p-dropdown
+              [options]="projectStatuses"
+              optionLabel="name"
+              optionValue="value"
+              formControlName="status"
+              class="input-like-text custom-trigger"
+            >
+              @if (statusLabel && statusCode) {
+                <ng-template pTemplate="selectedItem">
+                  <div class="flex align-items-center gap-2">
+                    <ui-tag
+                      class="large"
+                      [value]="statusLabel"
+                      [severity]="projectTagSeverity[statusCode]"
+                    ></ui-tag>
+                  </div>
+                </ng-template>
+              }
+            </p-dropdown>
+          </form>
+        </div>
+        <div class="flex flex-col mt-2 gap-y-4">
+          <p-panel
+            header="Details"
+            [toggleable]="true"
+            toggler="header"
+            [expandIcon]="'pi pi-chevron-up'"
+            [collapseIcon]="'pi pi-chevron-down'"
+            [collapsed]="false"
+          >
+            <div class="bg-inherit flex flex-col gap-y-4">
+              <form [formGroup]="form" autocomplete="off" class="bg-white">
+                <div class="flex flex-col gap-x-4">
+                  <div class="grid grid-cols-2">
+                    <div class="col-span-full pt-8">
+                      <app-client-autocomplete
+                        [form]="form"
+                        inputId="clientName"
+                        [floatLabel]="true"
+                        label="Client"
+                        (selectClient)="onClientSelect($event)"
+                        [showClear]="true"
+                      />
+                      <input-error
+                        [fieldName]="'Client'"
+                        [control]="form.get('client.name')!"
+                        [formGroup]="getNestedFormGroup('client')"
+                      />
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2">
+                    <div class="col-span-full pt-8">
+                      <p-floatLabel>
+                        <input
+                          id="name"
+                          type="text"
+                          pInputText
+                          class="w-full"
+                          formControlName="name"
+                        />
+                        <label for="name">Name</label>
+                      </p-floatLabel>
+                      <input-error
+                        [control]="form.get('name')!"
+                        [formGroup]="form"
+                      />
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    @if (project?.id) {
+                      <div class="col-span-1 pt-8">
+                        <p-floatLabel>
+                          <input
+                            id="poId"
+                            type="text"
+                            pInputText
+                            class="w-full"
+                            formControlName="poId"
+                          />
+                          <label for="poId">PO ID</label>
+                        </p-floatLabel>
+                        <input-error
+                          [control]="form.get('poId')!"
+                          [formGroup]="form"
+                        />
+                      </div>
+                    }
+                    <div
+                      class="pt-8"
+                      [ngClass]="{
+                        'col-span-full': !project?.id,
+                        'col-span-1': project?.id,
+                      }"
+                    >
+                      <p-floatLabel>
+                        <input
+                          id="clientPoId"
+                          type="text"
+                          pInputText
+                          class="w-full"
+                          formControlName="clientPoId"
+                        />
+                        <label for="clientPoId">Client PO ID</label>
+                      </p-floatLabel>
+                      <input-error
+                        [control]="form.get('clientPoId')!"
+                        [formGroup]="form"
+                      />
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2">
+                    <div class="col-span-full pt-8">
+                      <p-floatLabel>
+                        <input
+                          id="clientPM"
+                          type="text"
+                          pInputText
+                          class="w-full"
+                          formControlName="clientPM"
+                        />
+                        <label for="clientPM">Client Project Manager</label>
+                      </p-floatLabel>
+                      <input-error
+                        [control]="form.get('clientPM')!"
+                        [formGroup]="form"
+                      />
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div class="col-span-1 pt-8">
+                      <p-floatLabel>
+                        <p-dropdown
+                          formControlName="taskType"
+                          [options]="taskTypes"
+                          optionLabel="name"
+                          optionValue="value"
+                          inputId="taskType"
+                          [editable]="true"
+                          [checkmark]="true"
+                          [showClear]="true"
+                        />
+                        <label for="taskType">Task</label>
+                      </p-floatLabel>
+                      <input-error
+                        [control]="form.get('taskType')!"
+                        [formGroup]="form"
+                      />
+                    </div>
+                    <div class="col-span-1 pt-8">
+                      <p-floatLabel>
+                        <p-dropdown
+                          formControlName="lang"
+                          [options]="languages"
+                          optionLabel="name"
+                          optionValue="value"
+                          inputId="lang"
+                          [editable]="true"
+                          [checkmark]="true"
+                          [showClear]="true"
+                        />
+                        <label for="lang">Language</label>
+                      </p-floatLabel>
+                      <input-error
+                        [control]="form.get('lang')!"
+                        [formGroup]="form"
+                      />
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div class="col-span-1 pt-8">
+                      <p-floatLabel>
+                        <p-inputNumber
+                          inputId="count"
+                          formControlName="count"
+                          class="w-2"
+                          placeholder="Ex: 257"
+                        />
+                        <label for="count">Load</label>
+                      </p-floatLabel>
+                      <input-error
+                        fieldName="Load"
+                        [control]="form.get('count')!"
+                        [formGroup]="form"
+                      />
+                    </div>
+                    <div class="col-span-1 pt-8">
+                      <p-floatLabel>
+                        <p-dropdown
+                          formControlName="unit"
+                          [options]="loadUnits"
+                          optionLabel="name"
+                          optionValue="value"
+                          inputId="unit"
+                          [editable]="true"
+                          [checkmark]="true"
+                          [showClear]="true"
+                        />
+                        <label for="lang">Load Unit</label>
+                      </p-floatLabel>
+                      <input-error
+                        fieldName="Load Unit"
+                        [control]="form.get('unit')!"
+                        [formGroup]="form"
+                      />
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2">
+                    <div class="col-span-full pt-8">
+                      <p-floatLabel>
+                        @if (clientCurrency) {
+                          <p-inputNumber
+                            inputId="rate"
+                            formControlName="rate"
+                            class="w-2"
+                            mode="currency"
+                            [currency]="
+                              CurrencyToIntlNumberFormat[clientCurrency]
+                            "
+                            [locale]="
+                              CurrencyToIntlNumberFormat[clientCurrency] ===
+                              'XAF'
+                                ? 'en-US'
+                                : 'fr-CM'
+                            "
+                            [maxFractionDigits]="5"
+                          />
+                        } @else {
+                          <p-inputNumber
+                            inputId="rate"
+                            formControlName="rate"
+                            class="w-2"
+                            [suffix]="' ' + clientCurrency"
+                          />
+                        }
+                        <label for="rate">Rate</label>
+                      </p-floatLabel>
+                      <input-error
+                        [control]="form.get('rate')!"
+                        [formGroup]="form"
+                      />
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div class="col-span-full pt-8">
+                      <p-floatLabel>
+                        <p-calendar
+                          appendTo="body"
+                          formControlName="receivedAt"
+                          [showIcon]="true"
+                          [showOnFocus]="false"
+                          [showTime]="true"
+                          hourFormat="24"
+                          dateFormat="dd/mm/yy"
+                          inputId="receivedAt"
+                          [maxDate]="maxReceivedAtDate"
+                          [showButtonBar]="true"
+                          [iconDisplay]="'input'"
+                        />
+                        <label for="receivedAt">Received At</label>
+                      </p-floatLabel>
+                      <input-error
+                        fieldName="Received At"
+                        [control]="form.get('receivedAt')!"
+                        [formGroup]="form"
+                      />
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div class="col-span-full pt-8">
+                      <p-floatLabel>
+                        <p-calendar
+                          appendTo="body"
+                          formControlName="internalDeadline"
+                          [showIcon]="true"
+                          [showOnFocus]="false"
+                          [showTime]="true"
+                          hourFormat="24"
+                          dateFormat="dd/mm/yy"
+                          inputId="internalDeadline"
+                          [minDate]="minInternalDeadlineDate"
+                          [maxDate]="maxInternalDeadlineDate"
+                          [showButtonBar]="true"
+                          [iconDisplay]="'input'"
+                        />
+                        <label for="internalDeadline">Internal Deadline</label>
+                      </p-floatLabel>
+                      <input-error
+                        fieldName="Internal Deadline"
+                        [control]="form.get('internalDeadline')!"
+                        [formGroup]="form"
+                      />
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div class="col-span-full pt-8">
+                      <p-floatLabel>
+                        <p-calendar
+                          appendTo="body"
+                          formControlName="deadline"
+                          [showIcon]="true"
+                          [showOnFocus]="false"
+                          [showTime]="true"
+                          hourFormat="24"
+                          dateFormat="dd/mm/yy"
+                          inputId="deadline"
+                          [minDate]="minDeadlineDate"
+                          [showButtonBar]="true"
+                          [iconDisplay]="'input'"
+                        />
+                        <label for="deadline">Deadline</label>
+                      </p-floatLabel>
+                      <input-error
+                        [control]="form.get('deadline')!"
+                        [formGroup]="form"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </p-panel>
+        </div>
+      </div>
+    </ng-container>
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "tasks-feature-list",
+  "$schema": "../../../node_modules/nx/schemas/task-schema.json",
+  "sourceRoot": "libs/tasks/feature-list/src",
+  "prefix": "app",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{taskRoot}"],
+      "options": {
+        "jestConfig": "libs/tasks/feature-list/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

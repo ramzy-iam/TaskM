@@ -5,30 +5,21 @@ import {
   MinLength,
   MaxLength,
   IsOptional,
-  IsEmail,
   IsEnum,
   IsPositive,
-  IsUppercase,
   IsDate,
-  IsUUID,
   ValidateNested,
 } from 'class-validator';
+import { BaseClientDto, BaseDto, ClientOwnedFilterDto } from './base.dto';
 import {
-  BaseClientDto,
-  BaseDto,
-  BaseFilterDto,
-  ClientOwnedFilterDto,
-} from './base.dto';
-import {
-  LANGUAGES_WITH_LABEL,
-  LANGUAGE_LABELS,
   Language,
+  LanguageCode,
   LoadUnit,
   ProjectDateFilterField,
   ProjectStatus,
-  TASK_LABELS,
-  TASK_TYPES_WITH_LABEL,
+  ProjectStatusCode,
   TaskType,
+  TaskTypeCode,
 } from '@TaskM/core/constants';
 import { CastHelper } from '@TaskM/core/helpers';
 import { ClientBaseDto } from './client.dto';
@@ -48,16 +39,16 @@ export class CreateProjectDto {
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
-  @IsEnum(ProjectStatus)
-  status: ProjectStatus;
+  @IsEnum(ProjectStatusCode)
+  status: ProjectStatusCode;
 
   @Transform(({ value }) => CastHelper.trim(value))
-  @IsEnum(TaskType)
-  taskType: TaskType;
+  @IsEnum(TaskTypeCode)
+  taskType: TaskTypeCode;
 
   @Transform(({ value }) => CastHelper.trim(value))
-  @IsEnum(Language)
-  lang: Language;
+  @IsEnum(LanguageCode)
+  lang: LanguageCode;
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsString()
@@ -105,24 +96,22 @@ export class UpdateProjectDto {
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
   @IsString()
-  @IsOptional()
   clientPM?: string;
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
-  @IsEnum(ProjectStatus)
-  @IsOptional()
-  status?: ProjectStatus;
+  @IsEnum(ProjectStatusCode)
+  status?: ProjectStatusCode;
 
   @Transform(({ value }) => CastHelper.trim(value))
-  @IsEnum(TaskType)
+  @IsEnum(TaskTypeCode)
   @IsOptional()
-  taskType?: TaskType;
+  taskType?: TaskTypeCode;
 
   @Transform(({ value }) => CastHelper.trim(value))
-  @IsEnum(Language)
+  @IsEnum(LanguageCode)
   @IsOptional()
-  lang?: Language;
+  lang?: LanguageCode;
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsString()
@@ -146,6 +135,7 @@ export class UpdateProjectDto {
   unit?: LoadUnit;
 
   @Transform(({ value }) => CastHelper.toDate(value))
+  @IsOptional()
   @IsDate()
   deadline?: Date;
 
@@ -176,24 +166,14 @@ export class ProjectsFilterDto extends ClientOwnedFilterDto {
   @IsEnum(ProjectDateFilterField)
   dateField?: ProjectDateFilterField | null;
 
-  @Transform(({ value }) =>
-    value
-      ? (ProjectStatus[CastHelper.trim(value) as keyof typeof ProjectStatus] ??
-        value)
-      : null,
-  )
   @IsOptional()
-  @IsEnum(ProjectStatus)
-  status?: ProjectStatus | null;
+  @IsEnum(ProjectStatusCode)
+  status?: ProjectStatusCode | null;
 
-  @Transform(({ value }) =>
-    value
-      ? (TaskType[CastHelper.trim(value) as keyof typeof TaskType] ?? value)
-      : null,
-  )
+  @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
-  @IsEnum(TaskType)
-  taskType?: TaskType | null;
+  @IsEnum(TaskTypeCode)
+  task?: TaskTypeCode | null;
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
@@ -205,20 +185,29 @@ export class ProjectPreviewDto extends BaseDto {
   name: string;
 
   @Expose()
-  status: ProjectStatus;
+  status: ProjectStatusCode;
 
   @Expose()
-  taskType: TaskType;
+  @Transform(
+    ({ obj }: { obj: { status: ProjectStatusCode } }) =>
+      ProjectStatus[obj.status],
+  )
+  statusLabel?: string;
 
   @Expose()
-  @Transform(({ obj }) => TASK_LABELS[obj.taskType]?.name)
+  taskType: TaskTypeCode;
+
+  @Expose()
+  @Transform(
+    ({ obj }: { obj: { taskType: TaskTypeCode } }) => TaskType[obj.taskType],
+  )
   taskLabel?: string;
 
   @Expose()
-  lang: Language;
+  lang: LanguageCode;
 
   @Expose()
-  @Transform(({ obj }) => LANGUAGE_LABELS[obj.lang]?.name)
+  @Transform(({ obj }: { obj: { lang: LanguageCode } }) => Language[obj.lang])
   langLabel?: string;
 
   @Expose()
@@ -232,6 +221,9 @@ export class ProjectPreviewDto extends BaseDto {
 
   @Expose()
   internalDeadline: Date;
+
+  @Expose()
+  receivedAt: Date;
 
   @Type(() => BaseClientDto)
   @Expose()
@@ -253,9 +245,6 @@ export class ProjectDto extends ProjectPreviewDto {
 
   @Expose()
   deadline: Date;
-
-  @Expose()
-  receivedAt: Date;
 
   @Expose()
   deliveredAt: Date;

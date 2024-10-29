@@ -24,6 +24,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FormInputErrorComponent } from '@TaskM/shared/ui';
+import { Currency, PaymentMethod } from '@TaskM/core/constants';
 
 @Component({
   selector: 'app-client-form',
@@ -68,6 +69,10 @@ export class ClientFormComponent
     this.initializeForm(client);
   }
 
+  get client(): ClientDto {
+    return this._client;
+  }
+
   ngOnInit() {
     this.initializeForm(this._client);
     this.triggerAutoSave();
@@ -97,24 +102,21 @@ export class ClientFormComponent
       billingPeriod: new FormControl<string>(client?.billingPeriod ?? '', [
         Validators.required,
       ]),
-      currency: new FormControl<string | undefined>(client?.currency, [
-        Validators.required,
-      ]),
+      currency: new FormControl<Currency | undefined>(
+        client?.currency ?? Currency.XAF,
+        [Validators.required],
+      ),
       paymentDueDays: new FormControl<number>(client?.paymentDueDays ?? 1, [
         Validators.min(1),
       ]),
-      paymentMethod: new FormControl<string | undefined>(
+      paymentMethod: new FormControl<PaymentMethod | undefined>(
         client?.paymentMethod,
         [Validators.required],
       ),
     });
 
     // Store initial form values
-    this.initialFormValues = this.form.getRawValue();
-  }
-
-  get client(): ClientDto {
-    return this._client;
+    this.initialFormValues = this.form.value;
   }
 
   onSubmit(): void {
@@ -123,16 +125,18 @@ export class ClientFormComponent
       return;
     }
     this.loading = true;
-
+    const values = !this.client?.id
+      ? this.form.value
+      : this.formUtils.getDirtyValues(this.form);
     const operation = this.client?.id
-      ? this.clientService.update(this.client.id, this.form.getRawValue())
-      : this.clientService.create(this.form.getRawValue());
+      ? this.clientService.update(this.client.id, values)
+      : this.clientService.create(values);
 
     operation.pipe(finalize(() => (this.loading = false))).subscribe({
       next: (client: ClientDto) => {
         if (this.dialogRef && !this.client?.id) this.dialogRef.close();
         // Store form values
-        this.initialFormValues = this.form.getRawValue();
+        this.initialFormValues = this.form.value;
         this.clientService.triggerChanges(client);
       },
       error: (error) => {

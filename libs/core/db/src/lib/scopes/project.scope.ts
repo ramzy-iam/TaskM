@@ -3,8 +3,8 @@ import { Project } from '../entities';
 import { OrderType } from '@TaskM/core/types';
 import {
   ProjectDateFilterField,
-  ProjectStatus,
-  TaskType,
+  ProjectStatusCode,
+  TaskTypeCode,
 } from '@TaskM/core/constants';
 
 export class ProjectsScope extends SelectQueryBuilder<Project> {
@@ -38,9 +38,12 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
   }
 
   filterByName(name: string) {
-    return this.andWhere('Projects.name ILIKE :name', {
-      name: `%${name}%`,
-    });
+    return this.andWhere(
+      '(Projects.name ILIKE :name OR Projects.poId ILIKE :name)',
+      {
+        name: `%${name}%`,
+      },
+    );
   }
 
   filterByDate(
@@ -75,13 +78,13 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
     return this.addOrderBy(`Projects.${field}`, order);
   }
 
-  filterByStatus(status: ProjectStatus) {
+  filterByStatus(status: ProjectStatusCode) {
     return this.andWhere('Projects.status = :status', {
       status,
     });
   }
 
-  filterByTaskType(taskType: TaskType) {
+  filterByTaskType(taskType: TaskTypeCode) {
     return this.andWhere('Projects.taskType = :taskType', {
       taskType,
     });

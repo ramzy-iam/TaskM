@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Link } from './link';
 import { RouterModule } from '@angular/router';
@@ -10,13 +10,14 @@ import {
   heroUserGroup,
   heroQueueList,
 } from '@ng-icons/heroicons/outline';
-import { LocalStorageService } from '@TaskM/shared/misc';
+import { StorageService } from '@TaskM/shared/misc';
 import { SIDEBAR_KEY } from '@TaskM/core/constants';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule, NgIconComponent],
+  imports: [CommonModule, RouterModule, NgIconComponent, TooltipModule],
   providers: [
     provideIcons({
       heroBuildingOffice,
@@ -29,23 +30,24 @@ import { SIDEBAR_KEY } from '@TaskM/core/constants';
   templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent implements OnInit {
-  private _isOpen = this.localStorageService.getItem<boolean>(
-    SIDEBAR_KEY,
-    true,
-  )!;
+  private _isOpen?: boolean | null;
+
   @Input()
   set isOpen(value: boolean) {
     this._isOpen = value;
-    this.localStorageService.setItem(SIDEBAR_KEY, value);
+    this.storageService.setItem(SIDEBAR_KEY, value);
   }
 
-  constructor(private localStorageService: LocalStorageService) {}
+  get isOpen(): boolean {
+    return !!this._isOpen;
+  }
+
+  constructor(
+    @Inject(StorageService) private readonly storageService: StorageService,
+  ) {}
 
   ngOnInit() {
-    this._isOpen = this.localStorageService.getItem(SIDEBAR_KEY, true)!;
-  }
-  get isOpen(): boolean {
-    return this._isOpen;
+    this._isOpen = !!this.storageService.getItem(SIDEBAR_KEY, true);
   }
 
   links: Link[] = [
@@ -72,8 +74,8 @@ export class SidebarComponent implements OnInit {
     },
     {
       icon: 'heroUserGroup',
-      label: 'Linguists',
-      link: 'linguists',
+      label: 'Service Providers',
+      link: 'service-providers',
     },
   ];
 }

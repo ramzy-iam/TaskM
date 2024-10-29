@@ -1,0 +1,20 @@
+{
+  "name": "tasks-form",
+  "$schema": "../../../node_modules/nx/schemas/task-schema.json",
+  "sourceRoot": "libs/tasks/form/src",
+  "prefix": "app",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{taskRoot}"],
+      "options": {
+        "jestConfig": "libs/tasks/form/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

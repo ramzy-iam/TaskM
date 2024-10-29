@@ -1,0 +1,20 @@
+{
+  "name": "service-providers-data-access",
+  "$schema": "../../../node_modules/nx/schemas/-service-provider-schema.json",
+  "sourceRoot": "libs/service-providers/data-access/src",
+  "prefix": "app",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{serviceProviderRoot}"],
+      "options": {
+        "jestConfig": "libs/service-providers/data-access/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

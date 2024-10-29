@@ -32,13 +32,6 @@
         "commands": [
           "npx ts-node -P ./libs/core/db/tsconfig.migrations.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./libs/core/db/typeorm.config.ts"
         ]
-      },
-      "configurations": {
-        "db-init": {
-          "commands": [
-            "npx ts-node -P ./libs/core/db/tsconfig.migrations.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./libs/core/db/typeorm.config-init.ts"
-          ]
-        }
       }
     }
   }

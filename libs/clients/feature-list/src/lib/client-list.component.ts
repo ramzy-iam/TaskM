@@ -18,9 +18,10 @@ import {
   BehaviorSubject,
   debounceTime,
   distinctUntilChanged,
+  filter,
   finalize,
 } from 'rxjs';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import {
   FormControl,
   FormGroup,
@@ -35,6 +36,9 @@ import { FormUtilsService, ScrollNearEndDirective } from '@TaskM/shared/misc';
 import { PAGINATION } from '@TaskM/core/constants';
 import { Nullable } from '@TaskM/core/types';
 
+type UrlParams = ClientsFilterDto & {
+  selectedClientCode: string | null;
+};
 @Component({
   selector: 'app-client-list',
   standalone: true,
@@ -67,42 +71,29 @@ export class ClientListComponent implements OnInit, OnDestroy {
   private page = PAGINATION.DEFAULT_PAGE;
   private limit = PAGINATION.DEFAULT_LIMIT;
   private hasMore = true;
-  filterForm = new FormGroup({
-    query: new FormControl<string>(''),
-  });
+  filterForm: FormGroup<{
+    query: FormControl<string | null>;
+  }>;
   private clientsSubject = new BehaviorSubject<Client[]>([]);
   clients$ = this.clientsSubject.asObservable();
   selectedClientCode: string | null = null;
   dialogRef?: DynamicDialogRef;
   isFilterActivated = false;
+  private isFormInitialized = false;
 
   constructor(
     private clientService: ClientService,
     private route: ActivatedRoute,
     private router: Router,
     private dialogService: DialogService,
-    private formUtilsService: FormUtilsService,
+    private formUtils: FormUtilsService,
   ) {}
 
   ngOnInit(): void {
-    this.filterForm.valueChanges
-      .pipe(debounceTime(1000), distinctUntilChanged())
-      .subscribe(({ ...filters }) => {
-        this.isFilterActivated = this.formUtilsService.isAnyFilterActivated(
-          this.filterForm,
-        );
-        this.resetAndFetchClients(filters);
-      });
-
-    this.loadInitialClients();
-
-    this.clientService.getChanges().subscribe((client) => {
-      if (client) this.handleClientUpdate(client);
-    });
-
-    this.route.queryParams.subscribe((params) => {
-      this.selectedClientCode = params['selectedClient'] ?? null;
-    });
+    this.initializeFilterForm();
+    this.subscribeToFilterChanges();
+    this.subscribeToRouteParams();
+    this.subscribeToProjectChanges();
   }
 
   showCreateDialog(): void {
@@ -194,7 +185,80 @@ export class ClientListComponent implements OnInit, OnDestroy {
     return this.page === PAGINATION.DEFAULT_PAGE;
   }
 
-  private loadInitialClients(): void {
-    this.fetchClients();
+  private subscribeToFilterChanges(): void {
+    this.filterForm.valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        filter(() => this.isFormInitialized),
+      )
+      .subscribe(() => {
+        this.isFilterActivated = this.formUtils.isAnyFilterActivated(
+          this.filterForm,
+        );
+        this.updateUrlParams(this.buildFilter());
+      });
+  }
+
+  private subscribeToProjectChanges(): void {
+    this.clientService.getChanges().subscribe((client) => {
+      if (client) this.handleClientUpdate(client);
+    });
+  }
+
+  private subscribeToRouteParams(): void {
+    this.route.queryParams
+      .pipe(
+        distinctUntilChanged(
+          (prev, curr) => prev['selectedClient'] === curr['selectedClient'],
+        ),
+      )
+      .subscribe((params) => {
+        this.selectedClientCode = params['selectedClient'] ?? null;
+      });
+
+    // Subscriber for other route params
+    this.route.queryParams
+      .pipe(
+        filter(() => this.isFormInitialized),
+        distinctUntilChanged((prev, curr) => {
+          const { selectedClient: prevClient, ...prevRest } = prev;
+          const { selectedClient: currClient, ...currRest } = curr;
+          return JSON.stringify(prevRest) === JSON.stringify(currRest);
+        }),
+      )
+      .subscribe(() => {
+        this.resetAndFetchClients(this.buildFilter());
+      });
+  }
+
+  private buildFilter() {
+    const { query } = this.filterForm.value;
+    const filters = { query } as ClientsFilterDto;
+    filters.query = query;
+
+    return filters;
+  }
+
+  private updateUrlParams(filters: Nullable<ClientsFilterDto>): void {
+    const queryParams: Params = {
+      query: filters?.query ?? null,
+    };
+
+    this.router.navigate([], {
+      queryParams,
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  private initializeFilterForm(): void {
+    const params = this.route.snapshot.queryParams as UrlParams;
+
+    this.filterForm = new FormGroup({
+      query: new FormControl<string | null>(params?.query ?? null),
+    });
+
+    this.isFormInitialized = true;
+    this.resetAndFetchClients(this.buildFilter());
   }
 }
