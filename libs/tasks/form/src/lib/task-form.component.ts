@@ -18,7 +18,7 @@ import {
   Subscription,
 } from 'rxjs';
 import {
-  BaseLinguistDto,
+  BaseServiceProviderDto,
   BaseProjectDto,
   CompetenceDto,
   ProjectDto,
@@ -46,16 +46,16 @@ import {
 
 import { CalendarModule } from 'primeng/calendar';
 import { DayjsHelper } from '@TaskM/core/helpers';
-import { LinguistAutocompleteComponent } from '@TaskM/linguists/form';
+import { ServiceProviderAutocompleteComponent } from '@TaskM/service-providers/form';
 import { ProjectAutocompleteComponent } from '@TaskM/projects/form';
-import { CompetenceService } from '@TaskM/linguists/data-access';
+import { CompetenceService } from '@TaskM/service-providers/data-access';
 import { ProjectService } from '@TaskM/projects/data-access';
 import { RouterModule } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 
 type DisabledFields = {
   project?: boolean;
-  linguist?: boolean;
+  serviceProvider?: boolean;
   type?: boolean;
   status?: boolean;
   count?: boolean;
@@ -79,7 +79,7 @@ type DisabledFields = {
     InputNumberModule,
     FormInputErrorComponent,
     CalendarModule,
-    LinguistAutocompleteComponent,
+    ServiceProviderAutocompleteComponent,
     ProjectAutocompleteComponent,
     SpinnerComponent,
     TooltipModule,
@@ -167,7 +167,7 @@ export class TaskFormComponent
       : DayjsHelper.new().add(2, 'day').toDate();
 
     if (task?.project) this.onProjectSelect(task.project);
-    if (task?.linguist) this.onLinguistSelect(task.linguist);
+    if (task?.serviceProvider) this.onServiceProviderSelect(task.serviceProvider);
     if (task) {
       this.statusCode = task.status;
       this.statusLabel = TaskStatus[this.statusCode];
@@ -177,10 +177,10 @@ export class TaskFormComponent
       project: this.formUtils.createMinimalProjectForm(task?.project ?? null, {
         disabled: disabledFields.project,
       }),
-      linguist: this.formUtils.createMinimalLinguistForm(
-        task?.linguist ?? null,
+      serviceProvider: this.formUtils.createMinimalServiceProviderForm(
+        task?.serviceProvider ?? null,
         {
-          disabled: disabledFields.linguist,
+          disabled: disabledFields.serviceProvider,
         },
       ),
       type: new FormControl<string | undefined>(
@@ -226,13 +226,13 @@ export class TaskFormComponent
       return;
     }
     this.loading = true;
-    const { project, linguist, ...values } = this.form.getRawValue();
+    const { project, serviceProvider, ...values } = this.form.getRawValue();
 
     const formData = {
       ...values,
       rateId: this.rate?.id,
       projectId: project?.id,
-      linguistId: linguist?.id,
+      serviceProviderId: serviceProvider?.id,
     };
 
     const operation = this.task?.id
@@ -285,16 +285,16 @@ export class TaskFormComponent
     this.fetchProject(project?.id);
   }
 
-  onLinguistSelect(linguist: Partial<BaseLinguistDto> | null) {
-    this.fetchCompetences(linguist?.id);
+  onServiceProviderSelect(serviceProvider: Partial<BaseServiceProviderDto> | null) {
+    this.fetchCompetences(serviceProvider?.id);
   }
 
-  protected fetchCompetences(linguistId?: string, code?: TaskTypeCode): void {
+  protected fetchCompetences(serviceProviderId?: string, code?: TaskTypeCode): void {
     this.loadingCompetences = true;
     this.competenceService
       .getList(
         {
-          linguistId,
+          serviceProviderId,
           code,
           limit: PAGINATION.MAX_LIMIT,
         },
@@ -302,7 +302,7 @@ export class TaskFormComponent
       )
       .pipe(
         finalize(() => (this.loadingCompetences = false)),
-        filter(() => !!linguistId),
+        filter(() => !!serviceProviderId),
       )
       .subscribe((data) => {
         const competences = data.items;

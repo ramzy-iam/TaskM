@@ -116,18 +116,18 @@
       </div>
       <div class="grid grid-cols-2">
         <div class="col-span-full pt-8">
-          <app-linguist-autocomplete
+          <app-service-provider-autocomplete
             [form]="form"
-            inputId="linguist"
+            inputId="serviceProvider"
             [floatLabel]="true"
-            label="Linguist"
-            (selectLinguist)="onLinguistSelect($event)"
+            label="Service Provider"
+            (selectServiceProvider)="onServiceProviderSelect($event)"
             [showClear]="true"
           />
           <input-error
-            [fieldName]="'Linguist'"
-            [control]="form.get('linguist.name')!"
-            [formGroup]="getNestedFormGroup('linguist')"
+            [fieldName]="'Service Provider'"
+            [control]="form.get('serviceProvider.name')!"
+            [formGroup]="getNestedFormGroup('serviceProvider')"
           />
         </div>
       </div>

@@ -14,7 +14,7 @@ export class CompetencesService {
 
   async create(createCompetenceDto: CreateCompetenceDto): Promise<Competence> {
     const existingCompetence = await this.competenceRepository.scoped
-      .filterByLinguistId(createCompetenceDto.linguistId)
+      .filterByServiceProviderId(createCompetenceDto.serviceProviderId)
       .filterByCode(createCompetenceDto.code)
       .filterByUnit(createCompetenceDto.unit)
       .filterByCurrency(createCompetenceDto.currency)
@@ -94,7 +94,7 @@ export class CompetencesService {
     const query = this.competenceRepository.scoped;
     if (filters?.active) query.filterByActive(filters?.active);
     if (filters?.withDeleted) query.withDeleted();
-    if (filters?.linguistId) query.filterByLinguistId(filters?.linguistId);
+    if (filters?.serviceProviderId) query.filterByServiceProviderId(filters?.serviceProviderId);
     if (filters?.code) query.filterByCode(filters?.code);
 
     query._orderBy();
@@ -125,7 +125,7 @@ export class CompetencesService {
     if (filters?.id) query.filterById(filters?.id);
     if (filters?.active) query.filterByActive(filters?.active);
     if (filters?.withDeleted) query.withDeleted();
-    if (filters?.linguistId) query.filterByLinguistId(filters?.linguistId);
+    if (filters?.serviceProviderId) query.filterByServiceProviderId(filters?.serviceProviderId);
     if (filters?.code) query.filterByCode(filters?.code);
 
     return query.getOne();

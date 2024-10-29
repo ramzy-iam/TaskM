@@ -1,4 +1,4 @@
-import { ProjectStatusCode } from './linguist.constants';
+import { ProjectStatusCode } from './service-provider.constants';
 import { CustomTagSeverity } from './constants';
 
 export const ProjectTagSeverity: {

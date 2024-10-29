@@ -2,10 +2,10 @@ import { Column, Entity, ManyToOne, Unique } from 'typeorm';
 import { AppBaseEntity } from './base.entity';
 import { Currency, LoadUnit, TaskTypeCode } from '@TaskM/core/constants';
 import { AmountColumn } from './db.decorator';
-import { Linguist } from './linguist.entity';
+import { ServiceProvider } from './service-provider.entity';
 
 @Entity({ name: 'Competences' })
-@Unique(['linguist', 'code', 'unit', 'currency', 'rate'])
+@Unique(['serviceProvider', 'code', 'unit', 'currency', 'rate'])
 export class Competence extends AppBaseEntity {
   @Column({
     type: 'enum',
@@ -34,9 +34,9 @@ export class Competence extends AppBaseEntity {
   })
   currency: Currency;
 
-  @ManyToOne(() => Linguist, (linguist) => linguist.id)
-  linguist: Linguist;
+  @ManyToOne(() => ServiceProvider, (serviceProvider) => serviceProvider.id)
+  serviceProvider: ServiceProvider;
 
   @Column()
-  linguistId: string;
+  serviceProviderId: string;
 }

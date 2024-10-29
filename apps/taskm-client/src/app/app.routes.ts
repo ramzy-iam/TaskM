@@ -26,10 +26,10 @@ export const appRoutes: Route[] = [
           import('@TaskM/tasks/feature-list').then((c) => c.TaskListComponent),
       },
       {
-        path: 'linguists',
+        path: 'service-providers',
         loadComponent: () =>
-          import('@TaskM/linguists/feature-list').then(
-            (c) => c.LinguistListComponent,
+          import('@TaskM/service-providers/feature-list').then(
+            (c) => c.ServiceProviderListComponent,
           ),
       },
     ],

@@ -20,7 +20,7 @@ export class CompetenceBaseDto {
   @Transform(({ value }) => CastHelper.trim(value))
   @IsUUID()
   @IsNotEmpty()
-  linguistId: string;
+  serviceProviderId: string;
 }
 
 export class CreateCompetenceDto {
@@ -44,7 +44,7 @@ export class CreateCompetenceDto {
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsUUID()
-  linguistId: string;
+  serviceProviderId: string;
 }
 
 export class UpdateCompetenceDto {
@@ -73,14 +73,14 @@ export class UpdateCompetenceDto {
   @IsOptional()
   @Transform(({ value }) => CastHelper.trim(value))
   @IsUUID()
-  linguistId?: string;
+  serviceProviderId?: string;
 }
 
 export class CompetencesFilterDto extends BaseFilterDto {
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
   @IsUUID()
-  linguistId?: string;
+  serviceProviderId?: string;
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
@@ -107,7 +107,7 @@ export class CompetencePreviewDto extends BaseDto {
   unit: LoadUnit;
 
   @Expose()
-  linguistId: string;
+  serviceProviderId: string;
 }
 
 export class CompetenceDto extends CompetencePreviewDto {}

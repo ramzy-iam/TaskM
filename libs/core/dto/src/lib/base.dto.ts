@@ -119,7 +119,7 @@ export class BaseProjectDto {
   client: BaseClientDto;
 }
 
-export class BaseLinguistDto {
+export class BaseServiceProviderDto {
   @Expose()
   id: string;
 

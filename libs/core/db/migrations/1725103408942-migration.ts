@@ -5,7 +5,7 @@ export class Migration1725103408942 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`ALTER TABLE "taskm"."Competences" ADD "active" boolean NOT NULL DEFAULT true`);
-        await queryRunner.query(`ALTER TABLE "taskm"."Competences" ADD CONSTRAINT "UQ_e627d7caf7c45f9b5ff10bd8a44" UNIQUE ("linguistId", "code", "unit", "currency", "rate")`);
+        await queryRunner.query(`ALTER TABLE "taskm"."Competences" ADD CONSTRAINT "UQ_e627d7caf7c45f9b5ff10bd8a44" UNIQUE ("serviceproviderId", "code", "unit", "currency", "rate")`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

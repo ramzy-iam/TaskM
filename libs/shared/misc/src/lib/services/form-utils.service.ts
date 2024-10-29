@@ -1,6 +1,6 @@
 import {
   BaseClientDto,
-  BaseLinguistDto,
+  BaseServiceProviderDto,
   BaseProjectDto,
 } from '@TaskM/core/dto';
 import { Injectable } from '@angular/core';
@@ -131,8 +131,8 @@ export class FormUtilsService {
     });
   }
 
-  createMinimalLinguistForm(
-    linguist: BaseLinguistDto | null,
+  createMinimalServiceProviderForm(
+    serviceProvider: BaseServiceProviderDto | null,
     {
       required = true,
       disabled = false,
@@ -142,35 +142,35 @@ export class FormUtilsService {
     return new FormGroup({
       id: new FormControl<string | undefined | null>(
         {
-          value: linguist?.id,
+          value: serviceProvider?.id,
           disabled,
         },
         [...validators],
       ),
       name: new FormControl<string | undefined | null>(
         {
-          value: linguist?.fullName,
+          value: serviceProvider?.fullName,
           disabled,
         },
         [...validators],
       ),
       //   email: new FormControl<string | undefined | null>(
       //     {
-      //       value: linguist?.email,
+      //       value: serviceProvider?.email,
       //       disabled,
       //     },
       //     [...validators],
       //   ),
       //   firstName: new FormControl<string | undefined | null>(
       //     {
-      //       value: linguist?.firstName,
+      //       value: serviceProvider?.firstName,
       //       disabled,
       //     },
       //     [...validators],
       //   ),
       //   lastName: new FormControl<string | undefined | null>(
       //     {
-      //       value: linguist?.lastName,
+      //       value: serviceProvider?.lastName,
       //       disabled,
       //     },
       //     [...validators],

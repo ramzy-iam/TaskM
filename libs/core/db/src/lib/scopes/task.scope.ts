@@ -32,9 +32,9 @@ export class TasksScope extends SelectQueryBuilder<Task> {
     });
   }
 
-  filterByLinguistId(linguistId: string) {
-    return this.andWhere('Tasks.linguistId = :linguistId', {
-      linguistId,
+  filterByServiceProviderId(serviceProviderId: string) {
+    return this.andWhere('Tasks.serviceProviderId = :serviceProviderId', {
+      serviceProviderId,
     });
   }
 
@@ -112,8 +112,8 @@ export class TasksScope extends SelectQueryBuilder<Task> {
     return this.leftJoinAndSelect('project.client', 'client');
   }
 
-  joinLinguist() {
-    return this.leftJoinAndSelect('Tasks.linguist', 'linguist');
+  joinServiceProvider() {
+    return this.leftJoinAndSelect('Tasks.serviceProvider', 'serviceProvider');
   }
 
   joinRate() {

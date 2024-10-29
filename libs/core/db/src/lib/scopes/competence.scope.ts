@@ -10,9 +10,9 @@ export class CompetencesScope extends SelectQueryBuilder<Competence> {
     });
   }
 
-  filterByLinguistId(linguistId: string) {
-    return this.andWhere('Competences.linguistId = :linguistId', {
-      linguistId,
+  filterByServiceProviderId(serviceProviderId: string) {
+    return this.andWhere('Competences.serviceProviderId = :serviceProviderId', {
+      serviceProviderId,
     });
   }
 
