@@ -30,9 +30,9 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { CalendarModule } from 'primeng/calendar';
 import { PanelModule } from 'primeng/panel';
 import { ProjectAutocompleteComponent } from '@TaskM/projects/form';
-import { LinguistAutocompleteComponent } from '@TaskM/linguists/form';
+import { ServiceProviderAutocompleteComponent } from '@TaskM/service-providers/form';
 import { ProjectService } from '@TaskM/projects/data-access';
-import { CompetenceService } from '@TaskM/linguists/data-access';
+import { CompetenceService } from '@TaskM/service-providers/data-access';
 import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
@@ -53,7 +53,7 @@ import { TooltipModule } from 'primeng/tooltip';
     FormInputErrorComponent,
     CalendarModule,
     ProjectAutocompleteComponent,
-    LinguistAutocompleteComponent,
+    ServiceProviderAutocompleteComponent,
     ClipboardDirective,
     PanelModule,
     SpinnerComponent,

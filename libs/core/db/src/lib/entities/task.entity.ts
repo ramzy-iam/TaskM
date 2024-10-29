@@ -8,17 +8,17 @@ import {
 } from '@TaskM/core/constants';
 import { DateTzColumn } from './db.decorator';
 import { Competence } from './competence.entity';
-import { Linguist } from './linguist.entity';
+import { ServiceProvider } from './service-provider.entity';
 import { Project } from './project.entity';
 
 @Entity({ name: 'Tasks' })
 @Unique(['code'])
 export class Task extends AppBaseEntity {
-  @ManyToOne(() => Linguist, (linguist) => linguist.id)
-  linguist: Linguist;
+  @ManyToOne(() => ServiceProvider, (serviceProvider) => serviceProvider.id)
+  serviceProvider: ServiceProvider;
 
   @Column()
-  linguistId: string;
+  serviceProviderId: string;
 
   @ManyToOne(() => Project, (project) => project.id)
   project: Project;

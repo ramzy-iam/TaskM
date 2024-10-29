@@ -45,7 +45,7 @@ import {
 import { Nullable } from '@TaskM/core/types';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from 'primeng/dropdown';
-import { LinguistAutocompleteComponent } from '@TaskM/linguists/form';
+import { ServiceProviderAutocompleteComponent } from '@TaskM/service-providers/form';
 import { CalendarModule } from 'primeng/calendar';
 import { DayjsHelper } from '@TaskM/core/helpers';
 import { ProjectService } from '@TaskM/projects/data-access';
@@ -79,7 +79,7 @@ type UrlParams = TasksFilterDto & {
     TagComponent,
     MultiSelectModule,
     DropdownModule,
-    LinguistAutocompleteComponent,
+    ServiceProviderAutocompleteComponent,
     ProjectAutocompleteComponent,
     CalendarModule,
   ],
@@ -108,7 +108,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
       code: FormControl<string | null | undefined>;
       name: FormControl<string | null | undefined>;
     }>;
-    linguist: FormGroup<{
+    serviceProvider: FormGroup<{
       id: FormControl<string | null | undefined>;
       name: FormControl<string | null | undefined>;
     }>;
@@ -263,7 +263,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
         name: TaskType[params.task!] ?? null,
       }),
       project: this.formUtils.createMinimalClientForm(null, {}),
-      linguist: this.formUtils.createMinimalLinguistForm(null, {}),
+      serviceProvider: this.formUtils.createMinimalServiceProviderForm(null, {}),
       period: new FormControl<(Date | null)[] | null | undefined>(
         this.getPeriodFromParams(params),
       ),
@@ -341,14 +341,14 @@ export class TaskListComponent implements OnInit, OnDestroy {
   }
 
   private buildFilter() {
-    const { query, status, task, project, period, linguist } =
+    const { query, status, task, project, period, serviceProvider } =
       this.filterForm.value;
     const filters = { query } as TasksFilterDto;
     filters.query = query;
     filters.status = status?.code;
     filters.task = task?.code;
     filters.projectCode = project?.code;
-    filters.linguistId = linguist?.id;
+    filters.serviceProviderId = serviceProvider?.id;
     const [start, end] = period ?? [];
     filters.from = start
       ? (DayjsHelper.new(start)
@@ -372,7 +372,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
       project: filters?.projectCode || null,
       from: filters?.from || null,
       to: filters?.to || null,
-      linguist: filters?.linguistId || null,
+      serviceProvider: filters?.serviceProviderId || null,
     };
 
     this.router.navigate([], {

@@ -14,7 +14,7 @@ import {
 import {
   BaseClientDto,
   BaseDto,
-  BaseLinguistDto,
+  BaseServiceProviderDto,
   BaseProjectDto,
   ClientOwnedFilterDto,
 } from './base.dto';
@@ -71,7 +71,7 @@ export class CreateTaskDto {
   @Transform(({ value }) => CastHelper.trim(value))
   @IsUUID()
   @IsNotEmpty()
-  linguistId: string;
+  serviceProviderId: string;
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsUUID()
@@ -122,7 +122,7 @@ export class UpdateTaskDto {
   @Transform(({ value }) => CastHelper.trim(value))
   @IsUUID()
   @IsOptional()
-  linguistId?: string;
+  serviceProviderId?: string;
 }
 
 export class TasksFilterDto extends ClientOwnedFilterDto {
@@ -157,7 +157,7 @@ export class TasksFilterDto extends ClientOwnedFilterDto {
   @Transform(({ value }) => CastHelper.trim(value))
   @IsUUID()
   @IsOptional()
-  linguistId?: string | null;
+  serviceProviderId?: string | null;
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsString()
@@ -207,9 +207,9 @@ export class TaskPreviewDto extends BaseDto {
   @Expose()
   project: BaseProjectDto;
 
-  @Type(() => BaseLinguistDto)
+  @Type(() => BaseServiceProviderDto)
   @Expose()
-  linguist: BaseLinguistDto;
+  serviceProvider: BaseServiceProviderDto;
 }
 
 export class TaskDto extends TaskPreviewDto {

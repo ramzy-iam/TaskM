@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 import { DatabaseModule } from '@TaskM/core/db';
 import { ClientsApiModule } from '@TaskM/clients/api';
 import { ProjectsApiModule } from '@TaskM/projects/api';
-import { LinguistsApiModule } from '@TaskM/linguists/api';
+import { ServiceProvidersApiModule } from '@TaskM/service-providers/api';
 import { CompetencesApiModule } from '@TaskM/competences/api';
 import { TasksApiModule } from '@TaskM/tasks/api';
 
@@ -14,7 +14,7 @@ import { TasksApiModule } from '@TaskM/tasks/api';
     DatabaseModule,
     ClientsApiModule,
     ProjectsApiModule,
-    LinguistsApiModule,
+    ServiceProvidersApiModule,
     CompetencesApiModule,
     TasksApiModule,
   ],

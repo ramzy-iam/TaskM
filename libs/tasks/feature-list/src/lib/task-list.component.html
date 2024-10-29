@@ -24,9 +24,9 @@
                   class="col-span-2 input-like-text"
                   [showClear]="true"
                 />
-                <app-linguist-autocomplete
+                <app-service-provider-autocomplete
                   [form]="filterForm"
-                  inputId="linguistName"
+                  inputId="serviceProviderName"
                   class="col-span-2 input-like-text"
                   [showClear]="true"
                 />
@@ -121,7 +121,7 @@
               <div class="grid-cols-1 pl-4">Task</div>
               <div class="grid-cols-1 pl-4">Load</div>
               <div class="grid-cols-1 pl-4">Status</div>
-              <div class="grid-cols-1 hidden xl:block">Linguist</div>
+              <div class="grid-cols-1 hidden xl:block">Service Provider</div>
             </div>
           </ui-list-item>
           <div class="h-full w-full">
@@ -165,9 +165,9 @@
                     </div>
                     <div
                       class="grid-cols-1 truncate pl-1"
-                      [title]="task.linguist.fullName"
+                      [title]="task.serviceProvider.fullName"
                     >
-                      {{ task.linguist.fullName }}
+                      {{ task.serviceProvider.fullName }}
                     </div>
                   </div>
                 </ui-list-item>

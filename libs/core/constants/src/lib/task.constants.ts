@@ -1,4 +1,4 @@
-import { TaskStatusCode } from './linguist.constants';
+import { TaskStatusCode } from './service-provider.constants';
 import { CustomTagSeverity } from './constants';
 
 export const TaskTagSeverity: {

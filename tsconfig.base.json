@@ -17,9 +17,6 @@
     "strictPropertyInitialization": false,
     "esModuleInterop": true,
     "paths": {
-      "@TaskM/auth/api": ["libs/auth/api/src/index.ts"],
-      "@TaskM/authz/api": ["libs/authz/api/src/index.ts"],
-      "@TaskM/authz/types": ["libs/authz/types/src/index.ts"],
       "@TaskM/clients/api": ["libs/clients/api/src/index.ts"],
       "@TaskM/clients/data-access": ["libs/clients/data-access/src/index.ts"],
       "@TaskM/clients/feature-details": [
@@ -37,17 +34,6 @@
       "@TaskM/core/http": ["libs/core/http/src/index.ts"],
       "@TaskM/core/interceptors": ["libs/core/interceptors/src/index.ts"],
       "@TaskM/core/types": ["libs/core/types/src/index.ts"],
-      "@TaskM/linguists/api": ["libs/linguists/api/src/index.ts"],
-      "@TaskM/linguists/data-access": [
-        "libs/linguists/data-access/src/index.ts"
-      ],
-      "@TaskM/linguists/feature-details": [
-        "libs/linguists/feature-details/src/index.ts"
-      ],
-      "@TaskM/linguists/feature-list": [
-        "libs/linguists/feature-list/src/index.ts"
-      ],
-      "@TaskM/linguists/form": ["libs/linguists/form/src/index.ts"],
       "@TaskM/projects/api": ["libs/projects/api/src/index.ts"],
       "@TaskM/projects/data-access": ["libs/projects/data-access/src/index.ts"],
       "@TaskM/projects/feature-details": [
@@ -57,6 +43,17 @@
         "libs/projects/feature-list/src/index.ts"
       ],
       "@TaskM/projects/form": ["libs/projects/form/src/index.ts"],
+      "@TaskM/service-providers/api": ["libs/service-providers/api/src/index.ts"],
+      "@TaskM/service-providers/data-access": [
+        "libs/service-providers/data-access/src/index.ts"
+      ],
+      "@TaskM/service-providers/feature-details": [
+        "libs/service-providers/feature-details/src/index.ts"
+      ],
+      "@TaskM/service-providers/feature-list": [
+        "libs/service-providers/feature-list/src/index.ts"
+      ],
+      "@TaskM/service-providers/form": ["libs/service-providers/form/src/index.ts"],
       "@TaskM/shared/layout": ["libs/shared/layout/src/index.ts"],
       "@TaskM/shared/misc": ["libs/shared/misc/src/index.ts"],
       "@TaskM/shared/ui": ["libs/shared/ui/src/index.ts"],
@@ -67,10 +64,6 @@
       ],
       "@TaskM/tasks/feature-list": ["libs/tasks/feature-list/src/index.ts"],
       "@TaskM/tasks/form": ["libs/tasks/form/src/index.ts"],
-      "@TaskM/users/api": ["libs/users/api/src/index.ts"],
-      "@TaskM/users/types": ["libs/users/types/src/index.ts"],
-      "@TaskM/workspace-users/api": ["libs/workspace-users/api/src/index.ts"],
-      "@TaskM/workspaces/api": ["libs/workspaces/api/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

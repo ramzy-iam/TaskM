@@ -36,7 +36,7 @@ export class TasksService {
     return this.tasksRepository.scoped
       .filterById(id)
       .joinProject()
-      .joinLinguist()
+      .joinServiceProvider()
       .joinRate()
       .getOneOrFail();
   }
@@ -66,16 +66,16 @@ export class TasksService {
     if (taskDto?.rateId) {
       const rate = await this.competencesService.findOne({
         id: taskDto.rateId,
-        linguistId: taskDto?.linguistId ?? existingTask?.linguistId,
+        serviceProviderId: taskDto?.serviceProviderId ?? existingTask?.serviceProviderId,
       });
 
       if (!rate) throw new BadRequestException(`Rate not found`);
       if (
         existingTask &&
-        (taskDto?.linguistId ?? existingTask?.linguistId) !== rate.linguistId
+        (taskDto?.serviceProviderId ?? existingTask?.serviceProviderId) !== rate.serviceProviderId
       ) {
         throw new BadRequestException(
-          `Rate is not associated with the linguist`,
+          `Rate is not associated with the serviceProvider`,
         );
       }
     }
@@ -128,7 +128,7 @@ export class TasksService {
     const query = this.buildQuery(filters)
       .joinProject()
       .joinClient()
-      .joinLinguist()
+      .joinServiceProvider()
       .joinRate()
       ._orderBy(filters?.orderField, filters?.order);
 
@@ -161,7 +161,7 @@ export class TasksService {
   findOne(filters?: TasksFilterDto) {
     return this.buildQuery(filters)
       .joinProject()
-      .joinLinguist()
+      .joinServiceProvider()
       .joinRate()
       .getOne();
   }
@@ -171,7 +171,7 @@ export class TasksService {
 
     if (filters?.id) query.filterById(filters.id);
     if (filters?.code) query.filterByCode(filters.code);
-    if (filters?.linguistId) query.filterByLinguistId(filters.linguistId);
+    if (filters?.serviceProviderId) query.filterByServiceProviderId(filters.serviceProviderId);
     if (filters?.projectId) query.filterByProjectId(filters.projectId);
     if (filters?.projectCode) query.filterByProjectCode(filters.projectCode);
     if (filters?.task) query.filterByType(filters?.task);

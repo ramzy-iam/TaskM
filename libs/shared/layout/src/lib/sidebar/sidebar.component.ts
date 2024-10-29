@@ -74,8 +74,8 @@ export class SidebarComponent implements OnInit {
     },
     {
       icon: 'heroUserGroup',
-      label: 'Linguists',
-      link: 'linguists',
+      label: 'Service Providers',
+      link: 'service-providers',
     },
   ];
 }
