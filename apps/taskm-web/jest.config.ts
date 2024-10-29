@@ -1,9 +1,9 @@
 /* eslint-disable */
 export default {
-  displayName: 'taskm-client',
+  displayName: 'taskm-web',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/apps/taskm-client',
+  coverageDirectory: '../../coverage/apps/taskm-web',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
