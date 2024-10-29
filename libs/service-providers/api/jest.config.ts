@@ -1,11 +1,11 @@
 /* eslint-disable */
 export default {
-  displayName: 'serviceProviders-api',
+  displayName: 'service-providers-api',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../../coverage/libsservice-providers/api',
+  coverageDirectory: '../../../coverage/libs/service-providers/api',
 };

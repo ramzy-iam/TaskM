@@ -1,7 +1,7 @@
 {
-  "name": "serviceProviders-feature-list",
+  "name": "service-providers-feature-list",
   "$schema": "../../../node_modules/nx/schemas/-service-provider-schema.json",
-  "sourceRoot": "libsservice-providers/feature-list/src",
+  "sourceRoot": "libs/service-providers/feature-list/src",
   "prefix": "app",
   "projectType": "library",
   "tags": [],
@@ -10,7 +10,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{serviceProviderRoot}"],
       "options": {
-        "jestConfig": "libsservice-providers/feature-list/jest.config.ts"
+        "jestConfig": "libs/service-providers/feature-list/jest.config.ts"
       }
     },
     "lint": {

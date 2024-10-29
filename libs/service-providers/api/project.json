@@ -1,9 +1,9 @@
 {
-  "name": "serviceProviders-api",
+  "name": "service-providers-api",
   "$schema": "../../../node_modules/nx/schemas/-service-provider-schema.json",
-  "sourceRoot": "libsservice-providers/api/src",
+  "sourceRoot": "libs/service-providers/api/src",
   "projectType": "library",
   "tags": [],
-  "// targets": "to see all targets run: nx show serviceProvider serviceProviders-api --web",
+  "// targets": "to see all targets run: nx show serviceProvider service-providers-api --web",
   "targets": {}
 }

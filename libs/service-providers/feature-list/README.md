@@ -1,7 +1,7 @@
-# serviceProviders-feature-list
+# service-providers-feature-list
 
 This library was generated with [Nx](https://nx.dev).
 
 ## Running unit tests
 
-Run `nx test serviceProviders-feature-list` to execute the unit tests.
+Run `nx test service-providers-feature-list` to execute the unit tests.

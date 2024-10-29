@@ -1,9 +1,9 @@
 /* eslint-disable */
 export default {
-  displayName: 'serviceProviders-feature-details',
+  displayName: 'service-providers-feature-details',
   preset: '../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../coverage/libsservice-providers/feature-details',
+  coverageDirectory: '../../../coverage/libs/service-providers/feature-details',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
