@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpContext,
+  HttpContextToken,
+  HttpHeaders,
+  HttpParams,
+} from '@angular/common/http';
 import { Nullable, ToastOptions } from '@TaskM/core/types';
-import { TOAST_HEADER_KEY } from '@TaskM/core/constants';
+import { TOAST_OPTIONS_CONTEXT_TOKEN } from './http-context';
 
 @Injectable({
   providedIn: 'root',
@@ -9,51 +15,19 @@ import { TOAST_HEADER_KEY } from '@TaskM/core/constants';
 export class HttpBaseService {
   constructor(protected http: HttpClient) {}
 
-  protected createHeaders(
-    options?: ToastOptions,
-    additionalHeaders?: { [key: string]: string },
-  ): HttpHeaders {
+  protected buildHeaders(listOfHeaders: {
+    [key: string]: string;
+  }): HttpHeaders {
     let headers = new HttpHeaders();
 
-    if (options) {
-      headers = headers.set(TOAST_HEADER_KEY, JSON.stringify(options));
-    }
-
-    if (additionalHeaders) {
-      headers = this.addAdditionalHeaders(headers, additionalHeaders);
-    }
-
-    return headers;
-  }
-
-  private addAdditionalHeaders(
-    headers: HttpHeaders,
-    additionalHeaders: { [key: string]: string },
-  ): HttpHeaders {
-    for (const [key, value] of Object.entries(additionalHeaders)) {
+    for (const [key, value] of Object.entries(listOfHeaders)) {
       headers = headers.set(key, value);
     }
+
     return headers;
   }
 
-  protected toastOptionsToHeaders(
-    defaultOptions?: ToastOptions,
-    toastOptions?: ToastOptions,
-  ) {
-    const mergedOptions: ToastOptions = {
-      success: {
-        ...(defaultOptions?.success ?? {}),
-        ...(toastOptions?.success ?? {}),
-      },
-      error: {
-        ...(defaultOptions?.error ?? {}),
-        ...(toastOptions?.error ?? {}),
-      },
-    };
-    return this.createHeaders(mergedOptions);
-  }
-
-  protected createHttpParams<P>(filters?: Nullable<P>): HttpParams {
+  protected buildHttpParams<P>(filters?: Nullable<P>): HttpParams {
     let params = new HttpParams();
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
@@ -69,5 +43,39 @@ export class HttpBaseService {
       });
     }
     return params;
+  }
+
+  protected buildHttpContext<T>(
+    contextMap: Map<HttpContextToken<T>, T>,
+  ): HttpContext {
+    let context = new HttpContext();
+
+    contextMap.forEach((value, token) => {
+      context = context.set(token, value);
+    });
+
+    return context;
+  }
+
+  protected buildToastContext(
+    defaultOptions: ToastOptions,
+    options?: ToastOptions,
+  ): HttpContext {
+    const contextMap = new Map();
+
+    const mergedOptions: ToastOptions = {
+      success: {
+        ...(defaultOptions?.success ?? {}),
+        ...(options?.success ?? {}),
+      },
+      error: {
+        ...(defaultOptions?.error ?? {}),
+        ...(options?.error ?? {}),
+      },
+    };
+
+    contextMap.set(TOAST_OPTIONS_CONTEXT_TOKEN, options ?? mergedOptions);
+
+    return this.buildHttpContext(contextMap);
   }
 }

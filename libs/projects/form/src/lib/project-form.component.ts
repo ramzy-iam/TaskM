@@ -322,9 +322,10 @@ export class ProjectFormComponent
     this.clientCurrency = client?.currency ?? '';
   }
 
-  private subscribeToStatusChange() {
-    this.form.get('status')?.valueChanges.subscribe((status) => {
+  protected subscribeToStatusChange() {
+    this.form?.get('status')?.valueChanges.subscribe((status) => {
       const statusCode = status as ProjectStatusCode;
+      this.statusCode = statusCode;
       this.statusLabel = ProjectStatus[statusCode];
     });
   }

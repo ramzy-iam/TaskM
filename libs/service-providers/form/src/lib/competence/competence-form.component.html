@@ -19,12 +19,12 @@
               [checkmark]="true"
               [showClear]="true"
             />
-            <label for="code">Task</label>
+            <label for="code">Service Type</label>
           </p-floatLabel>
           <input-error
             [control]="form.get('code')!"
             [formGroup]="form"
-            [fieldName]="'Task'"
+            [fieldName]="'Service type'"
           />
         </div>
       </div>
@@ -102,7 +102,7 @@
     <div class="mt-8 flex justify-center">
       <p-button
         type="submit"
-        [label]="!competence.id ? 'Create skill' : 'Update skill'"
+        [label]="!competence.id ? 'Create service' : 'Update service'"
         [loading]="loading"
         [disabled]="form.invalid"
       />

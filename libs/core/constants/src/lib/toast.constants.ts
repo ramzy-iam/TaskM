@@ -1,5 +1,3 @@
-export const TOAST_HEADER_KEY = 'X-Toast-Options';
-
 export enum TOAST_COMMON_MESSAGES {
   SOMETHING_WENT_WRONG = 'Something went wrong',
   FAILED_TO_LOAD_RESOURCE = 'Failed to load the resource',

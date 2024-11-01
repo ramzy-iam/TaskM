@@ -36,7 +36,7 @@ export class ServiceProviderService extends HttpBaseService {
     };
 
     return this.http.post<ServiceProviderDto>(this.url, serviceProviderDto, {
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
@@ -49,14 +49,18 @@ export class ServiceProviderService extends HttpBaseService {
       success: { message: TOAST_COMMON_MESSAGES.UPDATED_SUCCESSFULLY },
       error: { message: TOAST_COMMON_MESSAGES.FAILED_TO_UPDATE },
     };
-    return this.http.patch<ServiceProviderDto>(`${this.url}/${id}`, serviceProviderDto, {
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
-    });
+    return this.http.patch<ServiceProviderDto>(
+      `${this.url}/${id}`,
+      serviceProviderDto,
+      {
+        context: this.buildToastContext(defaultToastOptions, toastOptions),
+      },
+    );
   }
 
   getList(
     filters?: Nullable<ServiceProvidersFilterDto>,
-    toastOptions: ToastOptions = {},
+    toastOptions?: ToastOptions,
   ): Observable<PaginationDto<ServiceProviderPreviewDto>> {
     const defaultToastOptions: ToastOptions = {
       success: { onSuccess: false },
@@ -64,23 +68,26 @@ export class ServiceProviderService extends HttpBaseService {
     };
 
     return this.http.get<PaginationDto<ServiceProviderPreviewDto>>(this.url, {
-      params: this.createHttpParams({
+      params: this.buildHttpParams({
         page: PAGINATION.DEFAULT_PAGE,
         limit: PAGINATION.DEFAULT_LIMIT,
         ...filters,
       }),
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
-  getOne(id: string, toastOptions?: ToastOptions): Observable<ServiceProviderDto> {
+  getOne(
+    id: string,
+    toastOptions?: ToastOptions,
+  ): Observable<ServiceProviderDto> {
     const defaultToastOptions: ToastOptions = {
       success: { onSuccess: false },
       error: { message: TOAST_COMMON_MESSAGES.FAILED_TO_LOAD_RESOURCE },
     };
 
     return this.http.get<ServiceProviderDto>(`${this.url}/${id}`, {
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
@@ -94,8 +101,8 @@ export class ServiceProviderService extends HttpBaseService {
     };
 
     return this.http.get<ServiceProviderDto | null>(`${this.url}/one`, {
-      params: this.createHttpParams(filters),
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      params: this.buildHttpParams(filters),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 }

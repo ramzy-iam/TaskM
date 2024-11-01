@@ -35,7 +35,7 @@ export class TaskService extends HttpBaseService {
     };
 
     return this.http.post<TaskDto>(this.url, taskDto, {
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
@@ -49,13 +49,13 @@ export class TaskService extends HttpBaseService {
       error: { message: TOAST_COMMON_MESSAGES.FAILED_TO_UPDATE },
     };
     return this.http.patch<TaskDto>(`${this.url}/${id}`, taskDto, {
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
   getList(
     filters?: Nullable<TasksFilterDto>,
-    toastOptions: ToastOptions = {},
+    toastOptions?: ToastOptions,
   ): Observable<PaginationDto<TaskPreviewDto>> {
     const defaultToastOptions: ToastOptions = {
       success: { onSuccess: false },
@@ -63,12 +63,12 @@ export class TaskService extends HttpBaseService {
     };
 
     return this.http.get<PaginationDto<TaskPreviewDto>>(this.url, {
-      params: this.createHttpParams({
+      params: this.buildHttpParams({
         page: PAGINATION.DEFAULT_PAGE,
         limit: PAGINATION.DEFAULT_LIMIT,
         ...filters,
       }),
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
@@ -79,7 +79,7 @@ export class TaskService extends HttpBaseService {
     };
 
     return this.http.get<TaskDto>(`${this.url}/${id}`, {
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
@@ -93,8 +93,8 @@ export class TaskService extends HttpBaseService {
     };
 
     return this.http.get<TaskDto | null>(`${this.url}/one`, {
-      params: this.createHttpParams(filters),
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      params: this.buildHttpParams(filters),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
@@ -108,8 +108,8 @@ export class TaskService extends HttpBaseService {
     };
 
     return this.http.get<number>(`${this.url}/remaining-load`, {
-      params: this.createHttpParams(filters),
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      params: this.buildHttpParams(filters),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 }

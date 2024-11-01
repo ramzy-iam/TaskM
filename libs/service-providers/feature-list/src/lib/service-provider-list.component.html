@@ -5,7 +5,9 @@
         <div class="flex flex-col gap-8">
           <div class="flex justify-between items-center">
             <div class="flex">
-              <h1 class="text-[24px] text-black-2 font-semibold">Service Providers</h1>
+              <h1 class="text-[24px] text-black-2 font-semibold">
+                Service Providers
+              </h1>
             </div>
             <p-button label="New Provider" (onClick)="showCreateDialog()" />
           </div>
@@ -21,7 +23,7 @@
                 <p-dropdown
                   [options]="taskTypes"
                   formControlName="code"
-                  placeholder="Skill"
+                  placeholder="Service"
                   showClear="true"
                   optionLabel="name"
                   class="col-span-2 input-like-text"
@@ -84,13 +86,17 @@
             >
               <div class="grid-cols-1">First Name</div>
               <div class="grid-cols-1">Last Name</div>
-              <div class="grid-cols-1">Skills</div>
+              <div class="grid-cols-1">Services</div>
               <div class="grid-cols-1 hidden xl:block">Email Address</div>
               <div class="grid-cols-1 hidden xl:block">Phone</div>
             </div>
           </ui-list-item>
           <div class="h-full w-full">
-            @for (serviceProvider of serviceProviders; track i; let i = $index) {
+            @for (
+              serviceProvider of serviceProviders;
+              track i;
+              let i = $index
+            ) {
               <a
                 routerLink="."
                 [queryParams]="{ selectedServiceProvider: serviceProvider.id }"
@@ -102,8 +108,12 @@
               >
                 <ui-list-item [isSelected]="rla.isActive">
                   <div class="grid grid-cols-3 xl:grid-cols-5 items-center">
-                    <div class="grid-cols-1">{{ serviceProvider.firstName }}</div>
-                    <div class="grid-cols-1">{{ serviceProvider.lastName }}</div>
+                    <div class="grid-cols-1">
+                      {{ serviceProvider.firstName }}
+                    </div>
+                    <div class="grid-cols-1">
+                      {{ serviceProvider.lastName }}
+                    </div>
                     <div class="grid-cols-1">
                       <p-avatarGroup>
                         @for (

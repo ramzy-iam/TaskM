@@ -150,7 +150,7 @@
                           [checkmark]="true"
                           [showClear]="true"
                         />
-                        <label for="taskType">Task</label>
+                        <label for="taskType">Service</label>
                       </p-floatLabel>
                       <input-error
                         fieldName="Task"
@@ -201,7 +201,9 @@
                         inputId="serviceProvider"
                         [floatLabel]="true"
                         label="Service Provider"
-                        (selectServiceProvider)="onServiceProviderSelect($event)"
+                        (selectServiceProvider)="
+                          onServiceProviderSelect($event)
+                        "
                         [showClear]="true"
                       />
                       <input-error

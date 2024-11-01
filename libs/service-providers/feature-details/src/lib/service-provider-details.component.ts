@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-   Competence,
+  Competence,
   CompetenceService,
   ServiceProviderService,
 } from '@TaskM/service-providers/data-access';
@@ -44,7 +44,8 @@ import { PanelModule } from 'primeng/panel';
 })
 export class ServiceProviderDetailsComponent implements OnInit, OnChanges {
   @Input() serviceProviderId!: string;
-  private serviceProvidersSubject = new BehaviorSubject<ServiceProviderDto | null>(null);
+  private serviceProvidersSubject =
+    new BehaviorSubject<ServiceProviderDto | null>(null);
   loading = false;
   serviceProvider$ = this.serviceProvidersSubject.asObservable();
 
@@ -68,9 +69,10 @@ export class ServiceProviderDetailsComponent implements OnInit, OnChanges {
   }
 
   showCompetenceDialog(competence?: CompetenceDto): void {
-    const serviceProviderCompetences = this.serviceProvidersSubject?.value?.competences ?? [];
+    const serviceProviderCompetences =
+      this.serviceProvidersSubject?.value?.competences ?? [];
     this.dialogService.open(CompetenceFormComponent, {
-      header: 'New Skill',
+      header: 'New Service',
       breakpoints: { '1199px': '75vw', '575px': '90vw' },
       style: { width: '50vw' },
       modal: true,
@@ -116,7 +118,8 @@ export class ServiceProviderDetailsComponent implements OnInit, OnChanges {
   }
 
   private handleCompetenceUpdate(competence: Competence): void {
-    const serviceProvider = this.serviceProvidersSubject.value as ServiceProviderDto;
+    const serviceProvider = this.serviceProvidersSubject
+      .value as ServiceProviderDto;
     const competences = serviceProvider?.competences ?? [];
 
     const index = competences.findIndex((t) => t.id === competence.id);
@@ -133,6 +136,9 @@ export class ServiceProviderDetailsComponent implements OnInit, OnChanges {
     else competences.push(competence);
 
     this.serviceProvidersSubject.next({ ...serviceProvider, competences });
-    this.serviceProviderService.triggerChanges({ ...serviceProvider, competences });
+    this.serviceProviderService.triggerChanges({
+      ...serviceProvider,
+      competences,
+    });
   }
 }

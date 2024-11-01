@@ -64,13 +64,14 @@ export class ProjectDetailsComponent
     protected override projectService: ProjectService,
     @Optional() protected override dialogRef: DynamicDialogRef,
     protected override formUtils: FormUtilsService,
-    private router: Router,
+    private readonly router: Router,
   ) {
     super(projectService, dialogRef, formUtils);
   }
 
   override ngOnInit(): void {
     this.triggerAutoSave(true);
+    this.subscribeToStatusChange();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

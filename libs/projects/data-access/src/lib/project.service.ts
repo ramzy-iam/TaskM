@@ -37,7 +37,7 @@ export class ProjectService extends HttpBaseService {
     };
 
     return this.http.post<ProjectDto>(this.url, projectDto, {
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
@@ -51,13 +51,13 @@ export class ProjectService extends HttpBaseService {
       error: { message: TOAST_COMMON_MESSAGES.FAILED_TO_UPDATE },
     };
     return this.http.patch<ProjectDto>(`${this.url}/${id}`, projectDto, {
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
   getList(
     filters?: Nullable<ProjectsFilterDto>,
-    toastOptions: ToastOptions = {},
+    toastOptions?: ToastOptions,
   ): Observable<PaginationDto<ProjectPreviewDto>> {
     const defaultToastOptions: ToastOptions = {
       success: { onSuccess: false },
@@ -65,12 +65,12 @@ export class ProjectService extends HttpBaseService {
     };
 
     return this.http.get<PaginationDto<ProjectPreviewDto>>(this.url, {
-      params: this.createHttpParams({
+      params: this.buildHttpParams({
         page: PAGINATION.DEFAULT_PAGE,
         limit: PAGINATION.DEFAULT_LIMIT,
         ...filters,
       }),
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
@@ -81,7 +81,7 @@ export class ProjectService extends HttpBaseService {
     };
 
     return this.http.get<ProjectDto>(`${this.url}/${id}`, {
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
@@ -95,8 +95,8 @@ export class ProjectService extends HttpBaseService {
     };
 
     return this.http.get<ProjectDto | null>(`${this.url}/one`, {
-      params: this.createHttpParams(filters),
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      params: this.buildHttpParams(filters),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 }

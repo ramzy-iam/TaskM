@@ -24,6 +24,14 @@
                   class="col-span-2 input-like-text"
                   [showClear]="true"
                 />
+                <p-dropdown
+                  [options]="taskTypes"
+                  formControlName="task"
+                  placeholder="Service"
+                  showClear="true"
+                  optionLabel="name"
+                  class="col-span-2 input-like-text"
+                />
                 <app-service-provider-autocomplete
                   [form]="filterForm"
                   inputId="serviceProviderName"
@@ -39,14 +47,6 @@
                   class="col-span-2 input-like-text"
                 />
 
-                <p-dropdown
-                  [options]="taskTypes"
-                  formControlName="task"
-                  placeholder="Type"
-                  showClear="true"
-                  optionLabel="name"
-                  class="col-span-2 input-like-text"
-                />
                 <p-calendar
                   placeholder="Period"
                   formControlName="period"
@@ -118,7 +118,7 @@
             >
               <div class="grid-cols-1">N°</div>
               <div class="grid-cols-1">Project</div>
-              <div class="grid-cols-1 pl-4">Task</div>
+              <div class="grid-cols-1 pl-4">Service</div>
               <div class="grid-cols-1 pl-4">Load</div>
               <div class="grid-cols-1 pl-4">Status</div>
               <div class="grid-cols-1 hidden xl:block">Service Provider</div>
