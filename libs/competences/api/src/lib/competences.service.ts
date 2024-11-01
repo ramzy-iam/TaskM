@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { Competence, CompetencesRepository } from '@TaskM/core/db';
 import {
   CompetencesFilterDto,
@@ -12,15 +16,26 @@ import { omit } from 'radash';
 export class CompetencesService {
   constructor(private readonly competenceRepository: CompetencesRepository) {}
 
-  async create(createCompetenceDto: CreateCompetenceDto): Promise<Competence> {
+  async create(competenceDto: CreateCompetenceDto): Promise<Competence> {
+    const { rate } = competenceDto;
+
     const existingCompetence = await this.competenceRepository.scoped
-      .filterByServiceProviderId(createCompetenceDto.serviceProviderId)
-      .filterByCode(createCompetenceDto.code)
-      .filterByUnit(createCompetenceDto.unit)
-      .filterByCurrency(createCompetenceDto.currency)
-      .filterByRate(createCompetenceDto.rate)
+      .filterByServiceProviderId(competenceDto.serviceProviderId)
+      .filterByCode(competenceDto.code)
+      .filterByUnit(competenceDto.unit)
+      .filterByCurrency(competenceDto.currency)
       .withDeleted()
       .getOne();
+
+    if (
+      existingCompetence &&
+      existingCompetence.rate !== rate &&
+      !existingCompetence.deletedAt
+    ) {
+      throw new ConflictException(
+        'Competence already exists with a different rate',
+      );
+    }
 
     if (existingCompetence) {
       existingCompetence.active = true;
@@ -30,7 +45,7 @@ export class CompetencesService {
     }
 
     const newCompetence = this.competenceRepository.create({
-      ...createCompetenceDto,
+      ...competenceDto,
       active: true,
     });
 
@@ -94,7 +109,8 @@ export class CompetencesService {
     const query = this.competenceRepository.scoped;
     if (filters?.active) query.filterByActive(filters?.active);
     if (filters?.withDeleted) query.withDeleted();
-    if (filters?.serviceProviderId) query.filterByServiceProviderId(filters?.serviceProviderId);
+    if (filters?.serviceProviderId)
+      query.filterByServiceProviderId(filters?.serviceProviderId);
     if (filters?.code) query.filterByCode(filters?.code);
 
     query._orderBy();
@@ -125,7 +141,8 @@ export class CompetencesService {
     if (filters?.id) query.filterById(filters?.id);
     if (filters?.active) query.filterByActive(filters?.active);
     if (filters?.withDeleted) query.withDeleted();
-    if (filters?.serviceProviderId) query.filterByServiceProviderId(filters?.serviceProviderId);
+    if (filters?.serviceProviderId)
+      query.filterByServiceProviderId(filters?.serviceProviderId);
     if (filters?.code) query.filterByCode(filters?.code);
 
     return query.getOne();
