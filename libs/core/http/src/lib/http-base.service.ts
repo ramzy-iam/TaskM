@@ -74,7 +74,7 @@ export class HttpBaseService {
       },
     };
 
-    contextMap.set(TOAST_OPTIONS_CONTEXT_TOKEN, options ?? mergedOptions);
+    contextMap.set(TOAST_OPTIONS_CONTEXT_TOKEN, mergedOptions);
 
     return this.buildHttpContext(contextMap);
   }
