@@ -102,6 +102,23 @@
       }
     }
   }
+
+  .custom-dropdown-hover {
+    .p-dropdown-panel
+      .p-dropdown-items
+      .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover {
+      background-color: #f1f5f9 !important;
+    }
+    .p-dropdown-panel
+      .p-dropdown-items
+      .p-dropdown-item:not(.p-highlight):not(.p-disabled).p-focus {
+      background: #f1f5f9 !important;
+    }
+
+    .p-dropdown-panel .p-dropdown-item.p-highlight {
+      background-color: #dee9f4 !important;
+    }
+  }
 }
 
 @layer tailwind-components {

@@ -51,7 +51,7 @@
               optionLabel="name"
               optionValue="value"
               formControlName="status"
-              class="input-like-text custom-trigger"
+              class="input-like-text custom-trigger custom-dropdown-hover"
             >
               @if (statusLabel && statusCode) {
                 <ng-template pTemplate="selectedItem">
@@ -60,6 +60,15 @@
                       class="large"
                       [value]="statusLabel"
                       [severity]="projectTagSeverity[statusCode]"
+                    ></ui-tag>
+                  </div>
+                </ng-template>
+                <ng-template let-status pTemplate="item">
+                  <div class="flex align-items-center gap-2">
+                    <ui-tag
+                      class="large"
+                      [value]="status.name"
+                      [severity]="getProjectTagSeverity(status.value)"
                     ></ui-tag>
                   </div>
                 </ng-template>

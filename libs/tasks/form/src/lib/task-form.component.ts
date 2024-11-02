@@ -42,6 +42,7 @@ import {
   TaskStatusCode,
   TaskTypeCode,
   TaskTagSeverity,
+  CustomTagSeverity,
 } from '@TaskM/core/constants';
 
 import { CalendarModule } from 'primeng/calendar';
@@ -440,5 +441,11 @@ export class TaskFormComponent
       this.statusLabel = TaskStatus[statusCode];
       if (status) this.onSubmit();
     });
+  }
+
+  protected getTaskTagSeverity(statusCode: string): CustomTagSeverity {
+    return this.taskTagSeverity[
+      statusCode as keyof typeof this.taskTagSeverity
+    ];
   }
 }

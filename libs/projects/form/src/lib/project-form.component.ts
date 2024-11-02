@@ -26,6 +26,7 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FormInputErrorComponent } from '@TaskM/shared/ui';
 import {
   CurrencyToIntlNumberFormat,
+  CustomTagSeverity,
   LoadUnit,
   ProjectStatus,
   ProjectStatusCode,
@@ -328,5 +329,11 @@ export class ProjectFormComponent
       this.statusCode = statusCode;
       this.statusLabel = ProjectStatus[statusCode];
     });
+  }
+
+  protected getProjectTagSeverity(statusCode: string): CustomTagSeverity {
+    return this.projectTagSeverity[
+      statusCode as keyof typeof this.projectTagSeverity
+    ];
   }
 }
