@@ -13,7 +13,7 @@ import { heroBars3BottomLeft } from '@ng-icons/heroicons/outline';
       heroBars3BottomLeft,
     }),
   ],
-  imports: [CommonModule,RouterModule, NgIconComponent, OverlayModule],
+  imports: [CommonModule, RouterModule, NgIconComponent, OverlayModule],
   templateUrl: './header.component.html',
 })
 export class HeaderComponent {
@@ -22,6 +22,4 @@ export class HeaderComponent {
   toggleSidebar() {
     this.toggleSidebarEvent.emit();
   }
-
-
 }
