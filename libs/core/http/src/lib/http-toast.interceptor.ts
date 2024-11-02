@@ -10,11 +10,8 @@ import {
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { ToastOptions } from '@TaskM/core/types';
-import {
-  ErrorMessages,
-  HttpStatus,
-  TOAST_HEADER_KEY,
-} from '@TaskM/core/constants';
+import { ErrorMessages, HttpStatus } from '@TaskM/core/constants';
+import { TOAST_OPTIONS_CONTEXT_TOKEN } from './http-context';
 
 export const HttpToastInterceptor: HttpInterceptorFn = (
   request: HttpRequest<unknown>,
@@ -64,8 +61,8 @@ export const HttpToastInterceptor: HttpInterceptorFn = (
   };
 
   const getToastOptions = (req: HttpRequest<unknown>): ToastOptions => {
-    const headers = req.headers.get(TOAST_HEADER_KEY);
-    return headers ? JSON.parse(headers) : {};
+    const context = req.context.get(TOAST_OPTIONS_CONTEXT_TOKEN);
+    return context ? context : {};
   };
 
   const shouldDisplayToast = (displayCondition?: boolean): boolean =>

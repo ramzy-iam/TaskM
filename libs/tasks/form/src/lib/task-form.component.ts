@@ -167,7 +167,8 @@ export class TaskFormComponent
       : DayjsHelper.new().add(2, 'day').toDate();
 
     if (task?.project) this.onProjectSelect(task.project);
-    if (task?.serviceProvider) this.onServiceProviderSelect(task.serviceProvider);
+    if (task?.serviceProvider)
+      this.onServiceProviderSelect(task.serviceProvider);
     if (task) {
       this.statusCode = task.status;
       this.statusLabel = TaskStatus[this.statusCode];
@@ -285,11 +286,16 @@ export class TaskFormComponent
     this.fetchProject(project?.id);
   }
 
-  onServiceProviderSelect(serviceProvider: Partial<BaseServiceProviderDto> | null) {
+  onServiceProviderSelect(
+    serviceProvider: Partial<BaseServiceProviderDto> | null,
+  ) {
     this.fetchCompetences(serviceProvider?.id);
   }
 
-  protected fetchCompetences(serviceProviderId?: string, code?: TaskTypeCode): void {
+  protected fetchCompetences(
+    serviceProviderId?: string,
+    code?: TaskTypeCode,
+  ): void {
     this.loadingCompetences = true;
     this.competenceService
       .getList(
@@ -430,6 +436,7 @@ export class TaskFormComponent
   private subscribeToStatusChange() {
     this.form.get('status')?.valueChanges.subscribe((status) => {
       const statusCode = status as TaskStatusCode;
+      this.statusCode = statusCode;
       this.statusLabel = TaskStatus[statusCode];
       if (status) this.onSubmit();
     });

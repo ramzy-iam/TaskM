@@ -24,8 +24,8 @@ export class FormInputErrorComponent {
     for (const validatorName in this.control?.errors) {
       if (this.control.touched) {
         const fieldName =
-          this.fieldName ||
-          this.getControlName(this.formGroup as FormGroup, this.control) ||
+          this.fieldName ??
+          this.getControlName(this.formGroup as FormGroup, this.control) ??
           'This field';
         return getValidatorErrorMessage(
           validatorName,

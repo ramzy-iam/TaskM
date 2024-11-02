@@ -1,16 +1,16 @@
 <div>
-  <p-toast />
+  <p-toast p-toast position="bottom-left" />
   <app-header (toggleSidebarEvent)="toggleSidebar()"></app-header>
   <div class="pt-16 flex overflow-hidden">
     <app-sidebar [isOpen]="isSidebarOpen"></app-sidebar>
-    <div
+    <main
       class="h-full w-full overflow-y-auto relative transition-all duration-300 ease-linear"
       [ngClass]="{
         'ml-64': isSidebarOpen,
         'ml-12': !isSidebarOpen,
       }"
     >
-      <main class="h-[calc(100vh-64px)] max-h-[calc(100vh-64px)]">
+      <div class="h-[calc(100vh-64px)] max-h-[calc(100vh-64px)]">
         <div
           [ngClass]="{
             'px-3': isSidebarOpen,
@@ -22,14 +22,15 @@
               class="flex flex-col flex-shrink-0 flex-grow basis-0 overflow-hidden"
             >
               <div
-                class="flex flex-col pb-5 px-10 bg-white overflow-hidden h-[calc(100vh-64px)] max-h-[calc(100vh-64px)]"
+                [@routeAnimations]="prepareRoute(outlet)"
+                class="flex flex-col pb-5 px-10 bg-white overflow-hidden h-[calc(100vh-64px)] max-h-[calc(100vh-64px)] relative"
               >
-                <router-outlet></router-outlet>
+                <router-outlet #outlet="outlet"></router-outlet>
               </div>
             </div>
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   </div>
 </div>

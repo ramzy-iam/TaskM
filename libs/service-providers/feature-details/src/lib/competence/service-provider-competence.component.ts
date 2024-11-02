@@ -60,7 +60,7 @@ export class ServiceProviderCompetenceComponent {
 
   private edit(): void {
     this.dialogService.open(CompetenceFormComponent, {
-      header: 'Edit Skill',
+      header: 'Edit Service',
       breakpoints: { '1199px': '75vw', '575px': '90vw' },
       style: { width: '50vw' },
       modal: true,

@@ -37,7 +37,7 @@ export class CompetenceService extends HttpBaseService {
     };
 
     return this.http.post<CompetenceDto>(this.url, competenceDto, {
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
@@ -51,7 +51,7 @@ export class CompetenceService extends HttpBaseService {
       error: { message: TOAST_COMMON_MESSAGES.FAILED_TO_UPDATE },
     };
     return this.http.patch<CompetenceDto>(`${this.url}/${id}`, competenceDto, {
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
@@ -62,13 +62,13 @@ export class CompetenceService extends HttpBaseService {
     };
 
     return this.http.get<CompetenceDto>(`${this.url}/${id}`, {
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
   getList(
     filters?: Nullable<CompetencesFilterDto>,
-    toastOptions: ToastOptions = {},
+    toastOptions?: ToastOptions,
   ): Observable<PaginationDto<CompetenceDto>> {
     const defaultToastOptions: ToastOptions = {
       success: { onSuccess: false },
@@ -76,12 +76,12 @@ export class CompetenceService extends HttpBaseService {
     };
 
     return this.http.get<PaginationDto<CompetenceDto>>(this.url, {
-      params: this.createHttpParams({
+      params: this.buildHttpParams({
         page: PAGINATION.DEFAULT_PAGE,
         limit: PAGINATION.DEFAULT_LIMIT,
         ...filters,
       }),
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
@@ -91,7 +91,7 @@ export class CompetenceService extends HttpBaseService {
       error: { message: TOAST_COMMON_MESSAGES.FAILED_TO_DELETE },
     };
     return this.http.delete<CompetenceDto>(`${this.url}/${id}`, {
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 }

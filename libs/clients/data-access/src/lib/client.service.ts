@@ -37,7 +37,7 @@ export class ClientService extends HttpBaseService {
     };
 
     return this.http.post<ClientDto>(this.url, clientDto, {
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
@@ -50,14 +50,15 @@ export class ClientService extends HttpBaseService {
       success: { message: TOAST_COMMON_MESSAGES.UPDATED_SUCCESSFULLY },
       error: { message: TOAST_COMMON_MESSAGES.FAILED_TO_UPDATE },
     };
+
     return this.http.patch<ClientDto>(`${this.url}/${id}`, clientDto, {
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
   getList(
     filters?: Nullable<ClientsFilterDto>,
-    toastOptions: ToastOptions = {},
+    toastOptions?: ToastOptions,
   ): Observable<PaginationDto<ClientPreviewDto>> {
     const defaultToastOptions: ToastOptions = {
       success: { onSuccess: false },
@@ -65,12 +66,12 @@ export class ClientService extends HttpBaseService {
     };
 
     return this.http.get<PaginationDto<ClientPreviewDto>>(this.url, {
-      params: this.createHttpParams({
+      params: this.buildHttpParams({
         page: PAGINATION.DEFAULT_PAGE,
         limit: PAGINATION.DEFAULT_LIMIT,
         ...filters,
       }),
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
@@ -81,7 +82,7 @@ export class ClientService extends HttpBaseService {
     };
 
     return this.http.get<ClientDto>(`${this.url}/${id}`, {
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 
@@ -95,8 +96,8 @@ export class ClientService extends HttpBaseService {
     };
 
     return this.http.get<ClientDto | null>(`${this.url}/one`, {
-      params: this.createHttpParams(filters),
-      headers: this.toastOptionsToHeaders(defaultToastOptions, toastOptions),
+      params: this.buildHttpParams(filters),
+      context: this.buildToastContext(defaultToastOptions, toastOptions),
     });
   }
 }

@@ -7,6 +7,7 @@ import {
   provideRouter,
   withComponentInputBinding,
   withEnabledBlockingInitialNavigation,
+  withViewTransitions,
 } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -21,6 +22,7 @@ export const appConfig: ApplicationConfig = {
       appRoutes,
       withComponentInputBinding(),
       withEnabledBlockingInitialNavigation(),
+      withViewTransitions(),
     ),
     provideHttpClient(
       withInterceptors([baseHttpUrlInterceptor, HttpToastInterceptor]),
