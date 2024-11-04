@@ -82,7 +82,10 @@
                   <div class="grid grid-cols-2 xl:grid-cols-4 items-center">
                     <div class="grid-cols-1">{{ client.code }}</div>
                     <div class="grid-cols-1">{{ client.name }}</div>
-                    <div class="grid-cols-1 hidden xl:block">
+                    <div
+                      class="grid-cols-1 hidden xl:block truncate"
+                      [title]="client.billingEmailAddress"
+                    >
                       {{ client.billingEmailAddress }}
                     </div>
                     <div class="grid-cols-1 hidden xl:block">
