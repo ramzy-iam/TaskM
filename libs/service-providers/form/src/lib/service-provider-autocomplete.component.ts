@@ -44,7 +44,7 @@ import {
               (onClear)="onServiceProviderUnselect()"
               [forceSelection]="true"
               [showClear]="showClear()"
-              placeholder="Service Provider"
+              [placeholder]="placeholder()"
               [inputId]="inputId()"
               class="w-full"
             ></p-autoComplete>
@@ -61,7 +61,7 @@ import {
             (onClear)="onServiceProviderUnselect()"
             [forceSelection]="true"
             [showClear]="showClear()"
-            placeholder="Service Provider"
+            [placeholder]="placeholder()"
             [inputId]="inputId()"
             class="w-full"
           ></p-autoComplete>
@@ -77,6 +77,7 @@ export class ServiceProviderAutocompleteComponent {
   inputId = input<string>('');
   floatLabel = input<boolean>(false);
   label = input<string>('');
+  placeholder = input<string>('Service Provider');
   dropdown = input<boolean>(false);
   showClear = input<boolean>(false);
   selectServiceProvider = output<BaseServiceProviderDto | null>();

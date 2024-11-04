@@ -209,14 +209,15 @@
                         [form]="form"
                         inputId="serviceProvider"
                         [floatLabel]="true"
-                        label="Service Provider"
+                        label="Assignee"
                         (selectServiceProvider)="
                           onServiceProviderSelect($event)
                         "
                         [showClear]="true"
+                        placeholder="Assignee"
                       />
                       <input-error
-                        [fieldName]="'Service Provider'"
+                        [fieldName]="'Assignee'"
                         [control]="form.get('serviceProvider.name')!"
                         [formGroup]="getNestedFormGroup('serviceProvider')"
                       />
