@@ -5,10 +5,11 @@ export const ProjectTagSeverity: {
   [key in ProjectStatusCode]: CustomTagSeverity;
 } = {
   [ProjectStatusCode.DELIVERED_WAITING_QA]: 'success',
-  [ProjectStatusCode.COMPLETED]: 'success',
+  [ProjectStatusCode.DELIVERED]: 'success',
   [ProjectStatusCode.NOT_STARTED]: 'info',
-  [ProjectStatusCode.DELIVERED_CLOSED]: 'warning',
+  [ProjectStatusCode.APPROVED_CLOSED]: 'success',
   [ProjectStatusCode.IN_PROGRESS]: 'info',
   [ProjectStatusCode.CANCELLED]: 'danger',
   [ProjectStatusCode.ON_HOLD]: 'danger',
+  [ProjectStatusCode.QA_REVIEW]: 'warning',
 };
