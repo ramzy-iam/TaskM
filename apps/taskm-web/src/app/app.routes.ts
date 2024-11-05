@@ -2,11 +2,18 @@ import { BaseLayoutComponent } from '@TaskM/shared/layout';
 import { Route } from '@angular/router';
 
 export const appRoutes: Route[] = [
-  { path: '', redirectTo: 'projects', pathMatch: 'full' },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
     path: '',
     component: BaseLayoutComponent,
     children: [
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('@TaskM/dashboards/home-dashboard').then(
+            (c) => c.HomeDashboardComponent,
+          ),
+      },
       {
         path: 'clients',
         loadComponent: () =>

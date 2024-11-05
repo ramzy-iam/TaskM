@@ -23,6 +23,7 @@ import {
 } from '@TaskM/core/constants';
 import { CastHelper } from '@TaskM/core/helpers';
 import { ClientBaseDto } from './client.dto';
+import { TaskPreviewDto } from './task.dto';
 
 export class CreateProjectDto {
   @Transform(({ value }) => CastHelper.trim(value))
@@ -178,6 +179,14 @@ export class ProjectsFilterDto extends ClientOwnedFilterDto {
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
   poId?: string | null;
+
+  @Transform(({ value }) => CastHelper.toBoolean(value))
+  @IsOptional()
+  withTasks?: boolean;
+
+  @Transform(({ value }) => CastHelper.toNumber(value))
+  @IsOptional()
+  minNumberOfTasks?: number;
 }
 
 export class ProjectPreviewDto extends BaseDto {
@@ -225,6 +234,25 @@ export class ProjectPreviewDto extends BaseDto {
   @Expose()
   receivedAt: Date;
 
+  @Expose()
+  count: number;
+
+  @Expose()
+  unit: LoadUnit;
+
+  @Expose()
+  deadline: Date;
+
+  @Type(() => TaskPreviewDto)
+  @Expose()
+  tasks?: TaskPreviewDto[];
+
+  @Expose()
+  @Transform(
+    ({ obj }: { obj: { tasks: TaskPreviewDto[] } }) => obj.tasks?.length ?? 0,
+  )
+  tasksCount: number;
+
   @Type(() => BaseClientDto)
   @Expose()
   client: BaseClientDto;
@@ -232,19 +260,10 @@ export class ProjectPreviewDto extends BaseDto {
 
 export class ProjectDto extends ProjectPreviewDto {
   @Expose()
-  count: number;
-
-  @Expose()
   rate: number;
 
   @Expose()
-  unit: LoadUnit;
-
-  @Expose()
   clientPM: string;
-
-  @Expose()
-  deadline: Date;
 
   @Expose()
   deliveredAt: Date;

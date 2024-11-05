@@ -126,6 +126,9 @@ export class ProjectsService {
     if (filters?.clientCode) query.filterByClientCode(filters?.clientCode);
     if (filters?.task) query.filterByTaskType(filters?.task);
     if (filters?.status) query.filterByStatus(filters?.status);
+    if (filters?.withTasks) query.joinTasks();
+    if (filters?.minNumberOfTasks)
+      query.filterByAtLeastNumberOfTasks(filters?.minNumberOfTasks);
 
     query.filterByDate(filters?.from, filters?.to, filters?.dateField);
 

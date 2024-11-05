@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, Unique } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, Unique } from 'typeorm';
 import { AppBaseEntity } from './base.entity';
 import {
   LanguageCode,
@@ -8,6 +8,7 @@ import {
 } from '@TaskM/core/constants';
 import { Client } from './client.entity';
 import { AmountColumn, DateTzColumn } from './db.decorator';
+import { Task } from './task.entity';
 
 @Entity({ name: 'Projects' })
 @Unique(['poId'])
@@ -91,4 +92,7 @@ export class Project extends AppBaseEntity {
 
   @DateTzColumn({ nullable: true })
   paidAt: Date;
+
+  @OneToMany(() => Task, (task) => task.project)
+  tasks: Task[];
 }

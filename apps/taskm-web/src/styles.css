@@ -161,3 +161,22 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #888;
 }
+
+table,
+td,
+th,
+tr {
+  border: 1px solid #ddd;
+  border-collapse: collapse;
+  padding: 5px;
+}
+table.table-no-border {
+  border: none;
+
+  /* th, th */
+}
+
+td table {
+  margin: -2px;
+  width: calc(100%);
+}

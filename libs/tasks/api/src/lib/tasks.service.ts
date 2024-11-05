@@ -66,13 +66,15 @@ export class TasksService {
     if (taskDto?.rateId) {
       const rate = await this.competencesService.findOne({
         id: taskDto.rateId,
-        serviceProviderId: taskDto?.serviceProviderId ?? existingTask?.serviceProviderId,
+        serviceProviderId:
+          taskDto?.serviceProviderId ?? existingTask?.serviceProviderId,
       });
 
       if (!rate) throw new BadRequestException(`Rate not found`);
       if (
         existingTask &&
-        (taskDto?.serviceProviderId ?? existingTask?.serviceProviderId) !== rate.serviceProviderId
+        (taskDto?.serviceProviderId ?? existingTask?.serviceProviderId) !==
+          rate.serviceProviderId
       ) {
         throw new BadRequestException(
           `Rate is not associated with the serviceProvider`,
@@ -171,7 +173,8 @@ export class TasksService {
 
     if (filters?.id) query.filterById(filters.id);
     if (filters?.code) query.filterByCode(filters.code);
-    if (filters?.serviceProviderId) query.filterByServiceProviderId(filters.serviceProviderId);
+    if (filters?.serviceProviderId)
+      query.filterByServiceProviderId(filters.serviceProviderId);
     if (filters?.projectId) query.filterByProjectId(filters.projectId);
     if (filters?.projectCode) query.filterByProjectCode(filters.projectCode);
     if (filters?.task) query.filterByType(filters?.task);

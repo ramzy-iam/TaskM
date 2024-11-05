@@ -51,11 +51,11 @@ export class SidebarComponent implements OnInit {
   }
 
   links: Link[] = [
-    // {
-    //   icon: 'heroSquares2x2',
-    //   label: 'Dashboard',
-    //   link: 'dashboard',
-    // },
+    {
+      icon: 'heroSquares2x2',
+      label: 'Dashboard',
+      link: 'dashboard',
+    },
     {
       icon: 'heroBuildingOffice',
       label: 'Clients',

@@ -1,0 +1,236 @@
+<div class="h-full gap-0 grid grid-rows-4 mt-4">
+  <app-section-header>
+    <div>
+      <div class="py-8 bg-white border-b border-gray">
+        <div class="flex flex-col gap-8">
+          <div class="flex justify-between items-center">
+            <div class="flex">
+              <h1 class="text-[24px] text-black-2 font-semibold">Dashboard</h1>
+            </div>
+            <!-- <p-button label="New Project" (onClick)="showCreateDialog()" /> -->
+          </div>
+          <div>
+            <form [formGroup]="filterForm">
+              <div
+                class="grid grid-cols-[270px_repeat(11,minmax(0,1fr))] gap-4"
+              >
+                <ui-input-search
+                  [control]="filterForm.controls.query"
+                  [attributes]="{ placeholder: 'Search' }"
+                  class="col-span-1"
+                />
+                <app-client-autocomplete
+                  [form]="filterForm"
+                  inputId="clientName"
+                  class="col-span-2 input-like-text"
+                  [showClear]="true"
+                />
+                <p-dropdown
+                  [options]="projectStatus"
+                  formControlName="status"
+                  placeholder="Status"
+                  showClear="true"
+                  optionLabel="name"
+                  class="col-span-2 input-like-text"
+                />
+
+                <p-dropdown
+                  [options]="taskTypes"
+                  formControlName="task"
+                  placeholder="Task"
+                  showClear="true"
+                  optionLabel="name"
+                  class="col-span-2 input-like-text"
+                />
+                <p-calendar
+                  placeholder="Period"
+                  formControlName="period"
+                  selectionMode="range"
+                  class="col-span-3 input-like-text"
+                  showIcon="true"
+                  [iconDisplay]="'input'"
+                  showButtonBar="true"
+                />
+                @if (isFilterActivated) {
+                  <p-button
+                    label="Clear"
+                    title="Clear filters"
+                    severity="secondary"
+                    class="col-span-2"
+                    icon="pi pi-filter-slash"
+                    (click)="clearFilters()"
+                  />
+                }
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </app-section-header>
+  <div class="h-auto max-w-full max-h-full row-span-3 overflow-hiddexn">
+    <div
+      appScrollNearEnd
+      (nearEnd)="onNearEndScroll()"
+      class="relative w-full h-full max-h-full overflow-scroll bg-white mb-2"
+    >
+      @if (loading) {
+        <div class="grid grid-cols-4 gap-10">
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+        </div>
+        <div class="grid grid-cols-4 gap-10 mt-10">
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+        </div>
+        <div class="grid grid-cols-4 gap-10 mt-8">
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+        </div>
+        <div class="grid grid-cols-4 gap-10 mt-8">
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+          <p-skeleton height="2.25rem" borderRadius="5px" />
+        </div>
+      } @else {
+        @if (projects$ | async; as projects) {
+          <table class="w-full table-auto">
+            <thead>
+              <tr>
+                <th scope="col" rowspan="2" class="px-6 py-3">PO ID</th>
+                <th scope="col" rowspan="2" class="px-6 py-3">Count</th>
+                <th scope="col" colspan="2" class="px-6 py-3">
+                  Client Deadline
+                </th>
+                <th scope="col" colspan="2" class="px-6 py-3">
+                  Internal Deadline
+                </th>
+                <th scope="col" colspan="6" class="px-6 py-3">Task</th>
+                <th scope="col" rowspan="2" class="px-6 py-3">
+                  Project Status
+                </th>
+              </tr>
+              <tr>
+                <th scope="col" class="px-6">Day</th>
+                <th scope="col" class="px-6">Time</th>
+                <th scope="col" class="px-6 py-3">Day</th>
+                <th scope="col" class="px-6 py-3">Time</th>
+                <th scope="col" class="px-6 py-3">ID</th>
+                <th scope="col" class="px-6 py-3">Type</th>
+                <th scope="col" class="px-6 py-3">Language</th>
+                <th scope="col" class="px-6 py-3">Count</th>
+                <th scope="col" class="px-6 py-3">Assignee</th>
+                <th scope="col" class="px-6 py-3">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (project of projects; track i; let i = $index) {
+                <tr class="bg-white border-b">
+                  <td class="px-6 py-4">
+                    {{ project.poId }}
+                  </td>
+                  <td class="px-6 py-4">
+                    {{ project.count }}
+                  </td>
+
+                  <td class="px-6 py-4">
+                    {{ project.deadline | date }}
+                  </td>
+                  <td class="px-6 py-4">
+                    {{ project.deadline | date: 'shortTime' }}
+                  </td>
+                  <td class="px-6 py-4">
+                    {{ project.internalDeadline | date }}
+                  </td>
+                  <td class="px-6 py-4">
+                    {{ project.internalDeadline | date: 'shortTime' }}
+                  </td>
+
+                  @for (task of project.tasks; track j; let j = $index) {
+                    <td class="px-6 py-4">
+                      {{ task.code }}
+                    </td>
+                    <td class="px-6 py-4">
+                      {{ task.typeLabel }}
+                    </td>
+                    <td class="px-6 py-4">
+                      {{ task.lang }}
+                    </td>
+                    <td class="px-6 py-4">
+                      {{ task.count }}
+                    </td>
+                    <td class="px-6 py-4">
+                      {{ task.serviceProvider.fullName }}
+                    </td>
+                    <td class="px-6 py-4">
+                      {{ task.statusLabel }}
+                    </td>
+                  }
+                  <td class="flex">
+                    <table class="table-no-border w-full h-full">
+                      <thead>
+                        <tr>
+                          <th scope="col" class="px-6 py-3">ID</th>
+                          <th scope="col" class="px-6 py-3">Type</th>
+                          <th scope="col" class="px-6 py-3">Language</th>
+                          <th scope="col" class="px-6 py-3">Count</th>
+                          <th scope="col" class="px-6 py-3">Assignee</th>
+                          <th scope="col" class="px-6 py-3">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (task of project.tasks; track j; let j = $index) {
+                          <tr>
+                            <td class="px-6 py-4">
+                              {{ task.code }}
+                            </td>
+                            <td class="px-6 py-4">
+                              {{ task.typeLabel }}
+                            </td>
+                            <td class="px-6 py-4">
+                              {{ task.lang }}
+                            </td>
+                            <td class="px-6 py-4">
+                              {{ task.count }}
+                            </td>
+                            <td class="px-6 py-4">
+                              {{ task.serviceProvider.fullName }}
+                            </td>
+                            <td class="px-6 py-4">
+                              {{ task.statusLabel }}
+                            </td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </td>
+
+                  <td class="px-6 py-4">
+                    {{ project.statusLabel }}
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      }
+    </div>
+    @if (selectedProjectCode) {
+      <div
+        class="relative h-full- max-h-full pb-3 px-8 m-1 mb-2 bg-white overflow-x-auto overflow-y-scroll"
+      >
+        <app-project-details
+          (close)="onCloseChild()"
+          [code]="selectedProjectCode"
+        ></app-project-details>
+      </div>
+    }
+  </div>
+</div>
