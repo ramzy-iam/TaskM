@@ -168,5 +168,9 @@ table.custom-table,
 .custom-table tr {
   border: 1px solid #ddd;
   border-collapse: collapse;
-  padding: 5px;
+  padding: 10px;
+}
+
+.custom-table td {
+  white-space: nowrap;
 }

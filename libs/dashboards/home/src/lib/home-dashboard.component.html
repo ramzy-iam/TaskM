@@ -68,11 +68,11 @@
       </div>
     </div>
   </app-section-header>
-  <div class="h-auto max-w-full max-h-full row-span-3 overflow-hiddexn">
+  <div class="row-span-3 overflow-hidden">
     <div
       appScrollNearEnd
       (nearEnd)="onNearEndScroll()"
-      class="relative w-full h-full max-h-full overflow-auto bg-white mb-2"
+      class="overflow-auto bg-white mb-2 pb-4"
     >
       @if (loading) {
         <div class="grid grid-cols-4 gap-10">
@@ -101,33 +101,39 @@
         </div>
       } @else {
         @if (projects$ | async; as projects) {
-          <table class="table-auto w-auto custom-table">
+          <table class="custom-table">
             <thead>
               <tr>
-                <th scope="col" rowspan="2" class="px-1 py-1 w-50">PO ID</th>
-                <th scope="col" rowspan="2" class="px-1 py-1">Count</th>
-                <th scope="col" colspan="2" class="px-1 py-1">
-                  Client Deadline
+                <th scope="col" rowspan="2" class="px-1 py-1 min-w-25">
+                  <div>PO ID</div>
+                </th>
+                <th scope="col" rowspan="2" class="px-1 py-1 min-w-8">
+                  <div>Count</div>
                 </th>
                 <th scope="col" colspan="2" class="px-1 py-1">
-                  Internal Deadline
+                  <div>Client Deadline</div>
                 </th>
-                <th scope="col" colspan="6" class="px-1 py-1">Task</th>
+                <th scope="col" colspan="2" class="px-1 py-1">
+                  <div>Internal Deadline</div>
+                </th>
+                <th scope="col" colspan="6" class="px-1 py-1">
+                  <div>Task</div>
+                </th>
                 <th scope="col" rowspan="2" class="px-1 py-1 w-40">
-                  Project Status
+                  <div>Project Status</div>
                 </th>
               </tr>
               <tr>
-                <th scope="col" class="px-1 py-1">Day</th>
-                <th scope="col" class="px-1 py-1">Time</th>
-                <th scope="col" class="px-1 py-1">Day</th>
-                <th scope="col" class="px-1 py-1">Time</th>
-                <th scope="col" class="px-1 py-1">ID</th>
-                <th scope="col" class="px-1 py-1">Type</th>
-                <th scope="col" class="px-1 py-1">Language</th>
-                <th scope="col" class="px-1 py-1">Count</th>
-                <th scope="col" class="px-1 py-1">Assignee</th>
-                <th scope="col" class="px-1 py-1">Status</th>
+                <th scope="col" class="px-1 py-1 min-w-11"><div>Day</div></th>
+                <th scope="col" class="px-1 py-1 min-w-11"><div>Time</div></th>
+                <th scope="col" class="px-1 py-1 min-w-11"><div>Day</div></th>
+                <th scope="col" class="px-1 py-1 min-w-11"><div>Time</div></th>
+                <th scope="col" class="px-1 py-1"><div>ID</div></th>
+                <th scope="col" class="px-1 py-1"><div>Type</div></th>
+                <th scope="col" class="px-1 py-1"><div>Language</div></th>
+                <th scope="col" class="px-1 py-1"><div>Count</div></th>
+                <th scope="col" class="px-1 py-1"><div>Assignee</div></th>
+                <th scope="col" class="px-1 py-1"><div>Status</div></th>
               </tr>
             </thead>
             <tbody>
