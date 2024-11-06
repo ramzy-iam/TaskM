@@ -72,7 +72,7 @@
     <div
       appScrollNearEnd
       (nearEnd)="onNearEndScroll()"
-      class="relative w-full h-full max-h-full overflow-scroll bg-white mb-2"
+      class="relative w-full h-full max-h-full overflow-auto bg-white mb-2"
     >
       @if (loading) {
         <div class="grid grid-cols-4 gap-10">
@@ -101,121 +101,74 @@
         </div>
       } @else {
         @if (projects$ | async; as projects) {
-          <table class="w-full table-auto">
+          <table class="table-auto w-auto">
             <thead>
               <tr>
-                <th scope="col" rowspan="2" class="px-6 py-3">PO ID</th>
-                <th scope="col" rowspan="2" class="px-6 py-3">Count</th>
-                <th scope="col" colspan="2" class="px-6 py-3">
+                <th scope="col" rowspan="2" class="px-1 py-1 w-50">PO ID</th>
+                <th scope="col" rowspan="2" class="px-1 py-1">Count</th>
+                <th scope="col" colspan="2" class="px-1 py-1">
                   Client Deadline
                 </th>
-                <th scope="col" colspan="2" class="px-6 py-3">
+                <th scope="col" colspan="2" class="px-1 py-1">
                   Internal Deadline
                 </th>
-                <th scope="col" colspan="6" class="px-6 py-3">Task</th>
-                <th scope="col" rowspan="2" class="px-6 py-3">
+                <th scope="col" colspan="6" class="px-1 py-1">Task</th>
+                <th scope="col" rowspan="2" class="px-1 py-1 w-40">
                   Project Status
                 </th>
               </tr>
               <tr>
-                <th scope="col" class="px-6">Day</th>
-                <th scope="col" class="px-6">Time</th>
-                <th scope="col" class="px-6 py-3">Day</th>
-                <th scope="col" class="px-6 py-3">Time</th>
-                <th scope="col" class="px-6 py-3">ID</th>
-                <th scope="col" class="px-6 py-3">Type</th>
-                <th scope="col" class="px-6 py-3">Language</th>
-                <th scope="col" class="px-6 py-3">Count</th>
-                <th scope="col" class="px-6 py-3">Assignee</th>
-                <th scope="col" class="px-6 py-3">Status</th>
+                <th scope="col" class="px-1 py-1">Day</th>
+                <th scope="col" class="px-1 py-1">Time</th>
+                <th scope="col" class="px-1 py-1">Day</th>
+                <th scope="col" class="px-1 py-1">Time</th>
+                <th scope="col" class="px-1 py-1">ID</th>
+                <th scope="col" class="px-1 py-1">Type</th>
+                <th scope="col" class="px-1 py-1">Language</th>
+                <th scope="col" class="px-1 py-1">Count</th>
+                <th scope="col" class="px-1 py-1">Assignee</th>
+                <th scope="col" class="px-1 py-1">Status</th>
               </tr>
             </thead>
             <tbody>
               @for (project of projects; track i; let i = $index) {
-                <tr class="bg-white border-b">
-                  <td class="px-6 py-4">
+                <tr>
+                  <td class="px-1 py-1" [attr.rowspan]="project.tasksCount + 1">
                     {{ project.poId }}
                   </td>
-                  <td class="px-6 py-4">
+                  <td class="px-1 py-1" [attr.rowspan]="project.tasksCount + 1">
                     {{ project.count }}
                   </td>
-
-                  <td class="px-6 py-4">
+                  <td class="px-1 py-1" [attr.rowspan]="project.tasksCount + 1">
                     {{ project.deadline | date }}
                   </td>
-                  <td class="px-6 py-4">
+                  <td class="px-1 py-1" [attr.rowspan]="project.tasksCount + 1">
                     {{ project.deadline | date: 'shortTime' }}
                   </td>
-                  <td class="px-6 py-4">
+                  <td class="px-1 py-1" [attr.rowspan]="project.tasksCount + 1">
                     {{ project.internalDeadline | date }}
                   </td>
-                  <td class="px-6 py-4">
+                  <td class="px-1 py-1" [attr.rowspan]="project.tasksCount + 1">
                     {{ project.internalDeadline | date: 'shortTime' }}
                   </td>
-
-                  @for (task of project.tasks; track j; let j = $index) {
-                    <td class="px-6 py-4">
-                      {{ task.code }}
-                    </td>
-                    <td class="px-6 py-4">
-                      {{ task.typeLabel }}
-                    </td>
-                    <td class="px-6 py-4">
-                      {{ task.lang }}
-                    </td>
-                    <td class="px-6 py-4">
-                      {{ task.count }}
-                    </td>
-                    <td class="px-6 py-4">
-                      {{ task.serviceProvider.fullName }}
-                    </td>
-                    <td class="px-6 py-4">
-                      {{ task.statusLabel }}
-                    </td>
-                  }
-                  <td class="flex">
-                    <table class="table-no-border w-full h-full">
-                      <thead>
-                        <tr>
-                          <th scope="col" class="px-6 py-3">ID</th>
-                          <th scope="col" class="px-6 py-3">Type</th>
-                          <th scope="col" class="px-6 py-3">Language</th>
-                          <th scope="col" class="px-6 py-3">Count</th>
-                          <th scope="col" class="px-6 py-3">Assignee</th>
-                          <th scope="col" class="px-6 py-3">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        @for (task of project.tasks; track j; let j = $index) {
-                          <tr>
-                            <td class="px-6 py-4">
-                              {{ task.code }}
-                            </td>
-                            <td class="px-6 py-4">
-                              {{ task.typeLabel }}
-                            </td>
-                            <td class="px-6 py-4">
-                              {{ task.lang }}
-                            </td>
-                            <td class="px-6 py-4">
-                              {{ task.count }}
-                            </td>
-                            <td class="px-6 py-4">
-                              {{ task.serviceProvider.fullName }}
-                            </td>
-                            <td class="px-6 py-4">
-                              {{ task.statusLabel }}
-                            </td>
-                          </tr>
-                        }
-                      </tbody>
-                    </table>
-                  </td>
-
-                  <td class="px-6 py-4">
-                    {{ project.statusLabel }}
-                  </td>
                 </tr>
+
+                @for (task of project.tasks; track j; let j = $index) {
+                  <tr>
+                    <td>{{ task.code }}</td>
+                    <td>{{ task.typeLabel }}</td>
+                    <td>{{ task.lang }}</td>
+                    <td>{{ task.count }}</td>
+                    <td>{{ task.serviceProvider.fullName }}</td>
+                    <td>{{ task.statusLabel }}</td>
+
+                    @if (j === 0) {
+                      <td [attr.rowspan]="project.tasksCount">
+                        {{ project.statusLabel }}
+                      </td>
+                    }
+                  </tr>
+                }
               }
             </tbody>
           </table>

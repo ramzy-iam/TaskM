@@ -108,8 +108,7 @@ export class HomeDashboardComponent implements OnInit, OnDestroy {
     }>;
     period: FormControl<(Date | null)[] | null | undefined>;
   }>;
-  private projectsSubject = new BehaviorSubject<Project[]>([]);
-  projects$ = this.projectsSubject.asObservable();
+  projects$ = new BehaviorSubject<Project[]>([]);
   selectedProjectCode: string | null = null;
   dialogRef?: DynamicDialogRef;
   isFilterActivated = false;
@@ -156,7 +155,7 @@ export class HomeDashboardComponent implements OnInit, OnDestroy {
   private resetAndFetchProjects(filters?: Nullable<ProjectsFilterDto>): void {
     this.page = PAGINATION.DEFAULT_PAGE;
     this.hasMore = true;
-    this.projectsSubject.next([]);
+    this.projects$.next([]);
     this.fetchProjects(filters);
   }
 
@@ -169,7 +168,7 @@ export class HomeDashboardComponent implements OnInit, OnDestroy {
   }
 
   private handleProjectUpdate(project: ProjectPreviewDto): void {
-    const currentProjects = this.projectsSubject.getValue();
+    const currentProjects = this.projects$.getValue();
     const index = currentProjects.findIndex((t) => t.id === project.id);
 
     if (index !== -1) {
@@ -178,7 +177,7 @@ export class HomeDashboardComponent implements OnInit, OnDestroy {
       currentProjects.unshift(project);
     }
 
-    this.projectsSubject.next(currentProjects);
+    this.projects$.next(currentProjects);
   }
 
   private fetchProjects(filters?: Nullable<ProjectsFilterDto>): void {
@@ -197,8 +196,8 @@ export class HomeDashboardComponent implements OnInit, OnDestroy {
       })
       .pipe(finalize(() => this.setLoadingState(false, false)))
       .subscribe((data) => {
-        const currentProjects = this.projectsSubject.getValue();
-        this.projectsSubject.next(
+        const currentProjects = this.projects$.getValue();
+        this.projects$.next(
           this.isInitialLoad()
             ? data.items
             : [...currentProjects, ...data.items],
