@@ -11,7 +11,10 @@ import {
   NoDataComponent,
   SpinnerComponent,
 } from '@TaskM/shared/ui';
-import { ServiceProvider, ServiceProviderService } from '@TaskM/service-providers/data-access';
+import {
+  ServiceProvider,
+  ServiceProviderService,
+} from '@TaskM/service-providers/data-access';
 import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import {
@@ -22,13 +25,11 @@ import {
   finalize,
 } from 'rxjs';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { ServiceProviderPreviewDto, ServiceProvidersFilterDto } from '@TaskM/core/dto';
+  ServiceProviderPreviewDto,
+  ServiceProvidersFilterDto,
+} from '@TaskM/core/dto';
 import { ServiceProviderDetailsComponent } from '@TaskM/service-providers/feature-details';
 import { ServiceProviderFormComponent } from '@TaskM/service-providers/form';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -50,7 +51,7 @@ type UrlParams = ServiceProvidersFilterDto & {
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule,
+
     ReactiveFormsModule,
     NgIconComponent,
     SectionHeaderComponent,
@@ -124,16 +125,22 @@ export class ServiceProviderListComponent implements OnInit, OnDestroy {
     });
   }
 
-  private resetAndFetchServiceProviders(filters?: Nullable<ServiceProvidersFilterDto>): void {
+  private resetAndFetchServiceProviders(
+    filters?: Nullable<ServiceProvidersFilterDto>,
+  ): void {
     this.page = PAGINATION.DEFAULT_PAGE;
     this.hasMore = false;
     this.serviceProvidersSubject.next([]);
     this.fetchServiceProviders(filters);
   }
 
-  private handleServiceProviderUpdate(serviceProvider: ServiceProviderPreviewDto): void {
+  private handleServiceProviderUpdate(
+    serviceProvider: ServiceProviderPreviewDto,
+  ): void {
     const currentServiceProviders = this.serviceProvidersSubject.getValue();
-    const index = currentServiceProviders.findIndex((t) => t.id === serviceProvider.id);
+    const index = currentServiceProviders.findIndex(
+      (t) => t.id === serviceProvider.id,
+    );
 
     if (index !== -1) {
       currentServiceProviders[index] = serviceProvider;
@@ -144,7 +151,9 @@ export class ServiceProviderListComponent implements OnInit, OnDestroy {
     this.serviceProvidersSubject.next(currentServiceProviders);
   }
 
-  private fetchServiceProviders(filters?: Nullable<ServiceProvidersFilterDto>): void {
+  private fetchServiceProviders(
+    filters?: Nullable<ServiceProvidersFilterDto>,
+  ): void {
     if (this.loading || (this.isLoadingMore && !this.hasMore)) return;
 
     this.setLoadingState(this.isInitialLoad(), !this.isInitialLoad());
@@ -227,11 +236,13 @@ export class ServiceProviderListComponent implements OnInit, OnDestroy {
     this.route.queryParams
       .pipe(
         distinctUntilChanged(
-          (prev, curr) => prev['selectedServiceProvider'] === curr['selectedServiceProvider'],
+          (prev, curr) =>
+            prev['selectedServiceProvider'] === curr['selectedServiceProvider'],
         ),
       )
       .subscribe((params) => {
-        this.selectedServiceProvider = params['selectedServiceProvider'] ?? null;
+        this.selectedServiceProvider =
+          params['selectedServiceProvider'] ?? null;
       });
 
     // Subscriber for other route params
@@ -239,8 +250,10 @@ export class ServiceProviderListComponent implements OnInit, OnDestroy {
       .pipe(
         filter(() => this.isFormInitialized),
         distinctUntilChanged((prev, curr) => {
-          const { selectedServiceProvider: prevServiceProvider, ...prevRest } = prev;
-          const { selectedServiceProvider: currServiceProvider, ...currRest } = curr;
+          const { selectedServiceProvider: prevServiceProvider, ...prevRest } =
+            prev;
+          const { selectedServiceProvider: currServiceProvider, ...currRest } =
+            curr;
           return JSON.stringify(prevRest) === JSON.stringify(currRest);
         }),
       )

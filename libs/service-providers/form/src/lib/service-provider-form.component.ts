@@ -4,7 +4,6 @@ import { ServiceProviderService } from '@TaskM/service-providers/data-access';
 import {
   FormControl,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -30,7 +29,7 @@ import { FormInputErrorComponent } from '@TaskM/shared/ui';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
+
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
@@ -84,9 +83,10 @@ export class ServiceProviderFormComponent
 
   private initializeForm(serviceProvider: ServiceProviderDto | null) {
     this.form = new FormGroup({
-      firstName: new FormControl<string | undefined>(serviceProvider?.firstName, [
-        Validators.required,
-      ]),
+      firstName: new FormControl<string | undefined>(
+        serviceProvider?.firstName,
+        [Validators.required],
+      ),
       lastName: new FormControl<string | undefined>(serviceProvider?.lastName, [
         Validators.required,
       ]),
@@ -97,9 +97,10 @@ export class ServiceProviderFormComponent
       accountType: new FormControl<string>(serviceProvider?.accountType ?? '', [
         Validators.required,
       ]),
-      accountName: new FormControl<string | undefined>(serviceProvider?.accountName, [
-        Validators.required,
-      ]),
+      accountName: new FormControl<string | undefined>(
+        serviceProvider?.accountName,
+        [Validators.required],
+      ),
       accountNumber: new FormControl<string | undefined>(
         serviceProvider?.accountNumber,
         [Validators.required],
@@ -141,7 +142,8 @@ export class ServiceProviderFormComponent
 
         this.formUtils.handleErrors(this.form, error.error);
 
-        if (this.serviceProvider?.id) this.form.patchValue(this.initialFormValues); // Reset form with initial values on error
+        if (this.serviceProvider?.id)
+          this.form.patchValue(this.initialFormValues); // Reset form with initial values on error
 
         // Resubscribe to form value changes
         this.triggerAutoSave();

@@ -20,7 +20,7 @@ import {
 import { Router } from '@angular/router';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ClipboardDirective, FormUtilsService } from '@TaskM/shared/misc';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
@@ -37,7 +37,6 @@ import { PanelModule } from 'primeng/panel';
     CommonModule,
     SkeletonModule,
     CloseButtonComponent,
-    FormsModule,
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,

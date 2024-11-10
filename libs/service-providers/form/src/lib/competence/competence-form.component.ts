@@ -4,7 +4,6 @@ import { CompetenceService } from '@TaskM/service-providers/data-access';
 import {
   FormControl,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -29,7 +28,7 @@ import {
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
+
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
@@ -116,7 +115,9 @@ export class CompetenceFormComponent
         competence?.currency ?? Currency.XAF,
         [Validators.required],
       ),
-      serviceProviderId: new FormControl<string | undefined>(competence?.serviceProviderId),
+      serviceProviderId: new FormControl<string | undefined>(
+        competence?.serviceProviderId,
+      ),
     });
 
     // Store initial form values

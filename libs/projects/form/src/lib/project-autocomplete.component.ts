@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { map } from 'rxjs';
 import { BaseProjectDto } from '@TaskM/core/dto';
 import { ButtonModule } from 'primeng/button';
@@ -20,7 +20,6 @@ import {
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,

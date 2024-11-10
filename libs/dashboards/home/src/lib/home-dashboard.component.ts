@@ -17,38 +17,48 @@ import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import {
   BehaviorSubject,
+  Subject,
   debounceTime,
   distinctUntilChanged,
   filter,
   finalize,
+  of,
+  switchMap,
+  takeUntil,
 } from 'rxjs';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import {
+  FormBuilder,
   FormControl,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
 import { ProjectPreviewDto, ProjectsFilterDto } from '@TaskM/core/dto';
 import { ProjectDetailsComponent } from '@TaskM/projects/feature-details';
-import { ProjectFormComponent } from '@TaskM/projects/form';
 import { SkeletonModule } from 'primeng/skeleton';
-import { FormUtilsService, ScrollNearEndDirective } from '@TaskM/shared/misc';
 import {
+  BaseEnumComponent,
+  FormUtilsService,
+  ScrollNearEndDirective,
+} from '@TaskM/shared/misc';
+import {
+  CustomTagSeverity,
   PAGINATION,
   ProjectStatus,
   ProjectStatusCode,
   ProjectTagSeverity,
-  TaskType,
-  TaskTypeCode,
+  TaskStatus,
+  TaskStatusCode,
+  TaskTagSeverity,
 } from '@TaskM/core/constants';
 import { Nullable } from '@TaskM/core/types';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { DropdownModule } from 'primeng/dropdown';
+import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 import { ClientAutocompleteComponent } from '@TaskM/clients/form';
 import { CalendarModule } from 'primeng/calendar';
 import { DayjsHelper } from '@TaskM/core/helpers';
 import { ClientService } from '@TaskM/clients/data-access';
+import { Task, TaskService } from '@TaskM/tasks/data-access';
 
 type UrlParams = ProjectsFilterDto & {
   selectedProject: string | null;
@@ -61,7 +71,6 @@ type UrlParams = ProjectsFilterDto & {
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule,
     ReactiveFormsModule,
     NgIconComponent,
     SectionHeaderComponent,
@@ -85,20 +94,18 @@ type UrlParams = ProjectsFilterDto & {
   templateUrl: './home-dashboard.component.html',
   host: { class: 'h-full py-1' },
 })
-export class HomeDashboardComponent implements OnInit, OnDestroy {
+export class HomeDashboardComponent
+  extends BaseEnumComponent
+  implements OnInit, OnDestroy
+{
   loading = false;
   isLoadingMore = false;
   private page = PAGINATION.DEFAULT_PAGE;
   private limit = PAGINATION.DEFAULT_LIMIT;
   private hasMore = true;
   filterForm!: FormGroup<{
-    query: FormControl<string | null>;
     status: FormControl<{
       code: ProjectStatusCode | null;
-      name: string | null;
-    } | null>;
-    task: FormControl<{
-      code: TaskTypeCode | null;
       name: string | null;
     } | null>;
     client: FormGroup<{
@@ -113,26 +120,43 @@ export class HomeDashboardComponent implements OnInit, OnDestroy {
   dialogRef?: DynamicDialogRef;
   isFilterActivated = false;
   projectTagSeverity = ProjectTagSeverity;
-  projectStatus = Object.keys(ProjectStatus).map((key) => ({
-    code: key,
-    name: ProjectStatus[key as keyof typeof ProjectStatusCode],
-  }));
-
-  taskTypes = Object.entries(TaskType).map(([key, value]) => ({
-    code: key,
-    name: value,
-  }));
+  taskTagSeverity = TaskTagSeverity;
+  private unsubscribe$ = new Subject<void>();
+  private excludedProjectStatuses = [
+    ProjectStatusCode.NOT_STARTED,
+    ProjectStatusCode.CANCELLED,
+  ];
+  filterProjectStatus: {
+    code: string;
+    name: string;
+  }[] = [];
+  projectsForm: FormGroup;
 
   private isFormInitialized = false;
 
   constructor(
     private projectService: ProjectService,
+    private taskService: TaskService,
     private route: ActivatedRoute,
     private router: Router,
     private dialogService: DialogService,
     private formUtils: FormUtilsService,
     private clientService: ClientService,
-  ) {}
+    private fb: FormBuilder,
+  ) {
+    super();
+    this.filterProjectStatus = this.projectStatuses
+      .filter(
+        (status) =>
+          !this.excludedProjectStatuses.includes(
+            status.value as ProjectStatusCode,
+          ),
+      )
+      .map((status) => ({
+        code: status.value,
+        name: status.name,
+      }));
+  }
 
   ngOnInit(): void {
     this.initializeFilterForm();
@@ -141,22 +165,23 @@ export class HomeDashboardComponent implements OnInit, OnDestroy {
     this.subscribeToProjectChanges();
   }
 
-  showCreateDialog(): void {
-    this.dialogRef = this.dialogService.open(ProjectFormComponent, {
-      header: 'New Project',
-      breakpoints: { '1199px': '75vw', '575px': '90vw' },
-      style: { width: '50vw' },
-      modal: true,
-      closeOnEscape: true,
-      data: { autoSave: true },
-    });
-  }
-
   private resetAndFetchProjects(filters?: Nullable<ProjectsFilterDto>): void {
     this.page = PAGINATION.DEFAULT_PAGE;
     this.hasMore = true;
     this.projects$.next([]);
     this.fetchProjects(filters);
+  }
+
+  getProjectTagSeverity(statusCode: string): CustomTagSeverity {
+    return this.projectTagSeverity[
+      statusCode as keyof typeof this.projectTagSeverity
+    ];
+  }
+
+  getTaskTagSeverity(statusCode: string): CustomTagSeverity {
+    return this.taskTagSeverity[
+      statusCode as keyof typeof this.taskTagSeverity
+    ];
   }
 
   private subscribeToProjectChanges(): void {
@@ -197,15 +222,109 @@ export class HomeDashboardComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => this.setLoadingState(false, false)))
       .subscribe((data) => {
         const currentProjects = this.projects$.getValue();
-        this.projects$.next(
-          this.isInitialLoad()
-            ? data.items
-            : [...currentProjects, ...data.items],
-        );
+        const newProjects = data.items;
 
+        if (!this.projectsForm) {
+          this.projectsForm = this.fb.group({});
+        }
+
+        newProjects.forEach((project) => {
+          const existingProjectIndex = currentProjects.findIndex(
+            (existingProject) => existingProject.id === project.id,
+          );
+
+          if (existingProjectIndex === -1) {
+            this.addProjectControl(project);
+            this.subscribeToProjectStatusChange(project.id);
+          }
+
+          project.tasks?.forEach((task) => {
+            if (!this.getTaskControlById(task.id)) {
+              this.addTaskControl(task);
+              this.subscribeToTaskStatusChange(task.id);
+            }
+          });
+        });
+        const projects = this.isInitialLoad()
+          ? (data.items ?? [...newProjects])
+          : [...currentProjects, ...newProjects];
+
+        this.projects$.next(projects);
         this.hasMore = this.page < data.meta.totalPages;
         if (this.hasMore) this.page++;
       });
+  }
+
+  private addProjectControl(project: Project): void {
+    const projectControl = new FormControl(project.status);
+    this.projectsForm.addControl(`project-${project.id}`, projectControl);
+  }
+
+  private addTaskControl(task: Task): void {
+    const taskControl = new FormControl(task.status);
+    this.projectsForm.addControl(`task-${task.id}`, taskControl);
+  }
+
+  private getTaskControlById(taskId: string): FormControl | null {
+    const controls = Object.keys(this.projectsForm.controls);
+    for (const controlKey of controls) {
+      if (controlKey.includes(`task-${taskId}`)) {
+        return this.projectsForm.get(controlKey) as FormControl;
+      }
+    }
+    return null;
+  }
+
+  subscribeToProjectStatusChange(projectId: string) {
+    const control = this.projectsForm.get(`project-${projectId}`);
+    if (control) {
+      control.valueChanges
+        .pipe(
+          debounceTime(300), // Debounce time to limit rapid calls
+          switchMap((status: ProjectStatusCode) =>
+            this.projectService.update(projectId, { status }).pipe(
+              switchMap((updatedProject) =>
+                this.projectService
+                  .findOne({ poId: updatedProject.poId, withTasks: true })
+                  .pipe(
+                    switchMap((project) => {
+                      this.projectService.triggerChanges(project as Project);
+                      return of(project);
+                    }),
+                  ),
+              ),
+            ),
+          ),
+          takeUntil(this.unsubscribe$),
+        )
+        .subscribe();
+    }
+  }
+
+  subscribeToTaskStatusChange(taskId: string) {
+    const control = this.projectsForm.get(`task-${taskId}`);
+    if (control) {
+      control.valueChanges
+        .pipe(
+          debounceTime(300), // Debounce time to limit rapid calls
+          switchMap((status: TaskStatusCode) =>
+            this.taskService.update(taskId, { status }).pipe(
+              switchMap((updatedTask) =>
+                this.projectService
+                  .findOne({ poId: updatedTask.project.poId, withTasks: true })
+                  .pipe(
+                    switchMap((project) => {
+                      this.projectService.triggerChanges(project as Project);
+                      return of(project); // Ensure the observable chain continues
+                    }),
+                  ),
+              ),
+            ),
+          ),
+          takeUntil(this.unsubscribe$),
+        )
+        .subscribe();
+    }
   }
 
   private setLoadingState(loading: boolean, isLoadingMore: boolean): void {
@@ -213,20 +332,9 @@ export class HomeDashboardComponent implements OnInit, OnDestroy {
     this.isLoadingMore = isLoadingMore;
   }
 
-  onCloseChild(): void {
-    this.selectedProjectCode = null;
-    this.selectProject(null);
-  }
-
-  selectProject(projectCode: string | null): void {
-    this.router.navigate([], {
-      queryParams: { selectedProject: projectCode },
-      queryParamsHandling: 'merge',
-    });
-  }
-
   ngOnDestroy(): void {
-    this.dialogRef?.close();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   onNearEndScroll(): void {
@@ -244,20 +352,12 @@ export class HomeDashboardComponent implements OnInit, OnDestroy {
     const params = this.route.snapshot.queryParams as UrlParams;
 
     this.filterForm = new FormGroup({
-      query: new FormControl<string | null>(params?.query ?? null),
       status: new FormControl<{
         code: ProjectStatusCode | null;
         name: string | null;
       } | null>({
         code: params?.status ?? null,
         name: ProjectStatus[params?.status as ProjectStatusCode] ?? null,
-      }),
-      task: new FormControl<{
-        code: TaskTypeCode | null;
-        name: string | null;
-      } | null>({
-        code: params?.task ?? null,
-        name: TaskType[params.task!] ?? null,
       }),
       client: this.formUtils.createMinimalClientForm(null, {}),
       period: new FormControl<(Date | null)[] | null | undefined>(
@@ -337,11 +437,9 @@ export class HomeDashboardComponent implements OnInit, OnDestroy {
   }
 
   private buildFilter() {
-    const { query, status, task, client, period } = this.filterForm.value;
-    const filters = { query } as ProjectsFilterDto;
-    filters.query = query;
+    const { status, client, period } = this.filterForm.value;
+    const filters = {} as ProjectsFilterDto;
     filters.status = status?.code;
-    filters.task = task?.code;
     filters.clientCode = client?.code;
     const [start, end] = period ?? [];
     filters.from = start
@@ -360,12 +458,10 @@ export class HomeDashboardComponent implements OnInit, OnDestroy {
 
   private updateUrlParams(filters: Nullable<ProjectsFilterDto>): void {
     const queryParams: Params = {
-      query: filters?.query || null,
-      status: filters?.status || null,
-      task: filters?.task || null,
-      client: filters?.clientCode || null,
-      from: filters?.from || null,
-      to: filters?.to || null,
+      status: filters?.status ?? null,
+      client: filters?.clientCode ?? null,
+      from: filters?.from ?? null,
+      to: filters?.to ?? null,
     };
 
     this.router.navigate([], {
@@ -412,5 +508,16 @@ export class HomeDashboardComponent implements OnInit, OnDestroy {
       queryParams: {},
       queryParamsHandling: 'merge',
     });
+  }
+
+  onTaskStatusChange(event: DropdownChangeEvent, project: Project, task: Task) {
+    task.statusLabel = TaskStatus[event.value as keyof typeof TaskStatus];
+    task.status = event.value as TaskStatusCode;
+  }
+
+  onProjectStatusChange(event: DropdownChangeEvent, project: Project) {
+    project.statusLabel =
+      ProjectStatus[event.value as keyof typeof ProjectStatus];
+    project.status = event.value as ProjectStatusCode;
   }
 }

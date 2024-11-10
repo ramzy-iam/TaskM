@@ -7,41 +7,27 @@
             <div class="flex">
               <h1 class="text-[24px] text-black-2 font-semibold">Dashboard</h1>
             </div>
-            <!-- <p-button label="New Project" (onClick)="showCreateDialog()" /> -->
           </div>
           <div>
             <form [formGroup]="filterForm">
               <div
                 class="grid grid-cols-[270px_repeat(11,minmax(0,1fr))] gap-4"
               >
-                <ui-input-search
-                  [control]="filterForm.controls.query"
-                  [attributes]="{ placeholder: 'Search' }"
-                  class="col-span-1"
-                />
                 <app-client-autocomplete
                   [form]="filterForm"
                   inputId="clientName"
-                  class="col-span-2 input-like-text"
+                  class="col-span-1 input-like-text"
                   [showClear]="true"
                 />
                 <p-dropdown
-                  [options]="projectStatus"
+                  [options]="filterProjectStatus"
                   formControlName="status"
-                  placeholder="Status"
+                  placeholder="Project status"
                   showClear="true"
                   optionLabel="name"
                   class="col-span-2 input-like-text"
                 />
 
-                <p-dropdown
-                  [options]="taskTypes"
-                  formControlName="task"
-                  placeholder="Task"
-                  showClear="true"
-                  optionLabel="name"
-                  class="col-span-2 input-like-text"
-                />
                 <p-calendar
                   placeholder="Period"
                   formControlName="period"
@@ -68,13 +54,9 @@
       </div>
     </div>
   </app-section-header>
-  <div class="row-span-3 overflow-hidden">
-    <div
-      appScrollNearEnd
-      (nearEnd)="onNearEndScroll()"
-      class="overflow-auto bg-white mb-2 pb-4"
-    >
-      @if (loading) {
+  <div class="row-span-3 overflow-auto pb-4 pr-4 mt-2 bg-white">
+    @if (loading) {
+      <ng-container>
         <div class="grid grid-cols-4 gap-10">
           <p-skeleton height="2.25rem" borderRadius="5px" />
           <p-skeleton height="2.25rem" borderRadius="5px" />
@@ -99,97 +81,227 @@
           <p-skeleton height="2.25rem" borderRadius="5px" />
           <p-skeleton height="2.25rem" borderRadius="5px" />
         </div>
-      } @else {
-        @if (projects$ | async; as projects) {
-          <table class="custom-table">
-            <thead>
-              <tr>
-                <th scope="col" rowspan="2" class="px-1 py-1 min-w-25">
-                  <div>PO ID</div>
-                </th>
-                <th scope="col" rowspan="2" class="px-1 py-1 min-w-8">
-                  <div>Count</div>
-                </th>
-                <th scope="col" colspan="2" class="px-1 py-1">
-                  <div>Client Deadline</div>
-                </th>
-                <th scope="col" colspan="2" class="px-1 py-1">
-                  <div>Internal Deadline</div>
-                </th>
-                <th scope="col" colspan="6" class="px-1 py-1">
-                  <div>Task</div>
-                </th>
-                <th scope="col" rowspan="2" class="px-1 py-1 w-40">
-                  <div>Project Status</div>
-                </th>
-              </tr>
-              <tr>
-                <th scope="col" class="px-1 py-1 min-w-11"><div>Day</div></th>
-                <th scope="col" class="px-1 py-1 min-w-11"><div>Time</div></th>
-                <th scope="col" class="px-1 py-1 min-w-11"><div>Day</div></th>
-                <th scope="col" class="px-1 py-1 min-w-11"><div>Time</div></th>
-                <th scope="col" class="px-1 py-1"><div>ID</div></th>
-                <th scope="col" class="px-1 py-1"><div>Type</div></th>
-                <th scope="col" class="px-1 py-1"><div>Language</div></th>
-                <th scope="col" class="px-1 py-1"><div>Count</div></th>
-                <th scope="col" class="px-1 py-1"><div>Assignee</div></th>
-                <th scope="col" class="px-1 py-1"><div>Status</div></th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (project of projects; track i; let i = $index) {
-                <tr>
-                  <td class="px-1 py-1" [attr.rowspan]="project.tasksCount + 1">
-                    {{ project.poId }}
-                  </td>
-                  <td class="px-1 py-1" [attr.rowspan]="project.tasksCount + 1">
-                    {{ project.count }}
-                  </td>
-                  <td class="px-1 py-1" [attr.rowspan]="project.tasksCount + 1">
-                    {{ project.deadline | date }}
-                  </td>
-                  <td class="px-1 py-1" [attr.rowspan]="project.tasksCount + 1">
-                    {{ project.deadline | date: 'shortTime' }}
-                  </td>
-                  <td class="px-1 py-1" [attr.rowspan]="project.tasksCount + 1">
-                    {{ project.internalDeadline | date }}
-                  </td>
-                  <td class="px-1 py-1" [attr.rowspan]="project.tasksCount + 1">
-                    {{ project.internalDeadline | date: 'shortTime' }}
-                  </td>
-                </tr>
-
-                @for (task of project.tasks; track j; let j = $index) {
+      </ng-container>
+    } @else {
+      @if (projects$ | async; as projects) {
+        @if (projects[0]) {
+          <div appScrollNearEnd (nearEnd)="onNearEndScroll()" class="w-fit">
+            <form [formGroup]="projectsForm">
+              <table class="custom-table">
+                <thead>
                   <tr>
-                    <td>{{ task.code }}</td>
-                    <td>{{ task.typeLabel }}</td>
-                    <td>{{ task.lang }}</td>
-                    <td>{{ task.count }}</td>
-                    <td>{{ task.serviceProvider.fullName }}</td>
-                    <td>{{ task.statusLabel }}</td>
-
-                    @if (j === 0) {
-                      <td [attr.rowspan]="project.tasksCount">
-                        {{ project.statusLabel }}
-                      </td>
-                    }
+                    <th scope="col" rowspan="2" class="px-1 py-1 min-w-25">
+                      <div>PO ID</div>
+                    </th>
+                    <th scope="col" rowspan="2" class="px-1 py-1 min-w-8">
+                      <div>Count</div>
+                    </th>
+                    <th scope="col" colspan="2" class="px-1 py-1">
+                      <div>Client Deadline</div>
+                    </th>
+                    <th scope="col" colspan="2" class="px-1 py-1">
+                      <div>Internal Deadline</div>
+                    </th>
+                    <th scope="col" colspan="6" class="px-1 py-1">
+                      <div>Task</div>
+                    </th>
+                    <th scope="col" rowspan="2" class="px-1 py-1">
+                      <div>Project Status</div>
+                    </th>
                   </tr>
-                }
-              }
-            </tbody>
-          </table>
+                  <tr>
+                    <th scope="col" class="px-1 py-1 min-w-11">
+                      <div>Day</div>
+                    </th>
+                    <th scope="col" class="px-1 py-1 min-w-11">
+                      <div>Time</div>
+                    </th>
+                    <th scope="col" class="px-1 py-1 min-w-11">
+                      <div>Day</div>
+                    </th>
+                    <th scope="col" class="px-1 py-1 min-w-11">
+                      <div>Time</div>
+                    </th>
+                    <th scope="col" class="px-1 py-1"><div>ID</div></th>
+                    <th scope="col" class="px-1 py-1"><div>Type</div></th>
+                    <th scope="col" class="px-1 py-1"><div>Language</div></th>
+                    <th scope="col" class="px-1 py-1"><div>Count</div></th>
+                    <th scope="col" class="px-1 py-1"><div>Assignee</div></th>
+                    <th scope="col" class="px-1 py-1">
+                      <div>Status</div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (project of projects; track i; let i = $index) {
+                    <tr>
+                      <td
+                        class="px-1 py-1"
+                        [attr.rowspan]="project.tasksCount + 1"
+                      >
+                        <a
+                          routerLink="/projects"
+                          [queryParams]="{
+                            selectedProject: project.poId,
+                          }"
+                          #rla="routerLinkActive"
+                          routerLinkActive
+                          [routerLinkActiveOptions]="{ exact: true }"
+                          class="hover:text-primary"
+                          target="_blank"
+                          >{{ project.poId }}</a
+                        >
+                      </td>
+                      <td
+                        class="px-1 py-1"
+                        [attr.rowspan]="project.tasksCount + 1"
+                      >
+                        {{ project.count }}
+                      </td>
+                      <td
+                        class="px-1 py-1"
+                        [attr.rowspan]="project.tasksCount + 1"
+                      >
+                        {{ project.deadline | date }}
+                      </td>
+                      <td
+                        class="px-1 py-1"
+                        [attr.rowspan]="project.tasksCount + 1"
+                      >
+                        {{ project.deadline | date: 'shortTime' }}
+                      </td>
+                      <td
+                        class="px-1 py-1"
+                        [attr.rowspan]="project.tasksCount + 1"
+                      >
+                        {{ project.internalDeadline | date }}
+                      </td>
+                      <td
+                        class="px-1 py-1"
+                        [attr.rowspan]="project.tasksCount + 1"
+                      >
+                        {{ project.internalDeadline | date: 'shortTime' }}
+                      </td>
+                    </tr>
+
+                    @for (task of project.tasks; track j; let j = $index) {
+                      <tr>
+                        <td>
+                          <a
+                            routerLink="/tasks"
+                            [queryParams]="{
+                              selectedTask: task.code,
+                            }"
+                            #rla="routerLinkActive"
+                            routerLinkActive
+                            [routerLinkActiveOptions]="{ exact: true }"
+                            class="hover:text-primary"
+                            target="_blank"
+                            >{{ task.code }}</a
+                          >
+                        </td>
+                        <td>{{ task.typeLabel }}</td>
+                        <td>{{ task.lang }}</td>
+                        <td>{{ task.count }}</td>
+                        <td>
+                          <a
+                            routerLink="/service-providers"
+                            [queryParams]="{
+                              selectedServiceProvider: task.serviceProvider.id,
+                            }"
+                            #rla="routerLinkActive"
+                            routerLinkActive
+                            [routerLinkActiveOptions]="{ exact: true }"
+                            class="hover:text-primary"
+                            target="_blank"
+                            >{{ task.serviceProvider.fullName }}</a
+                          >
+                        </td>
+                        <td>
+                          <p-dropdown
+                            [options]="taskStatuses"
+                            formControlName="task-{{ task.id }}"
+                            optionLabel="name"
+                            optionValue="value"
+                            appendTo="body"
+                            class="w-full input-like-text"
+                            (onChange)="
+                              ($event);
+                              onTaskStatusChange($event, project, task)
+                            "
+                          >
+                            <ng-template pTemplate="selectedItem">
+                              <div class="flex align-items-center gap-2">
+                                <ui-tag
+                                  class="large"
+                                  [value]="task.statusLabel"
+                                  [severity]="taskTagSeverity[task.status]"
+                                ></ui-tag>
+                              </div>
+                            </ng-template>
+                            <ng-template let-status pTemplate="item">
+                              <div class="flex align-items-center gap-2">
+                                <ui-tag
+                                  class="large"
+                                  [value]="status.name"
+                                  [severity]="getTaskTagSeverity(status.value)"
+                                ></ui-tag>
+                              </div>
+                            </ng-template>
+                          </p-dropdown>
+                        </td>
+
+                        @if (j === 0) {
+                          <td [attr.rowspan]="project.tasksCount">
+                            <p-dropdown
+                              formControlName="project-{{ project.id }}"
+                              [options]="projectStatuses"
+                              optionLabel="name"
+                              optionValue="value"
+                              appendTo="body"
+                              class="w-full input-like-text"
+                              (onChange)="
+                                ($event); onProjectStatusChange($event, project)
+                              "
+                            >
+                              <ng-template pTemplate="selectedItem">
+                                <div class="flex align-items-center gap-2">
+                                  <ui-tag
+                                    class="large"
+                                    [value]="project.statusLabel"
+                                    [severity]="
+                                      projectTagSeverity[project.status]
+                                    "
+                                  ></ui-tag>
+                                </div>
+                              </ng-template>
+                              <ng-template let-status pTemplate="item">
+                                <div class="flex align-items-center gap-2">
+                                  <ui-tag
+                                    class="large"
+                                    [value]="status.name"
+                                    [severity]="
+                                      getProjectTagSeverity(status.value)
+                                    "
+                                  ></ui-tag>
+                                </div>
+                              </ng-template>
+                            </p-dropdown>
+                          </td>
+                        }
+                      </tr>
+                    }
+                  }
+                </tbody>
+              </table>
+            </form>
+          </div>
+        } @else {
+          <div class="w-full flex items-center justify-center">
+            <ui-no-data message="No started project" />
+          </div>
         }
       }
-    </div>
-    @if (selectedProjectCode) {
-      <div
-        class="relative h-full- max-h-full pb-3 px-8 m-1 mb-2 bg-white overflow-x-auto overflow-y-scroll"
-      >
-        <app-project-details
-          (close)="onCloseChild()"
-          [code]="selectedProjectCode"
-        ></app-project-details>
-      </div>
     }
   </div>
 </div>

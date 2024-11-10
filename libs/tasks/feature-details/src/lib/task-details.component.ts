@@ -21,7 +21,7 @@ import {
 import { Router, RouterModule } from '@angular/router';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ClipboardDirective, FormUtilsService } from '@TaskM/shared/misc';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
@@ -43,7 +43,7 @@ import { TooltipModule } from 'primeng/tooltip';
     SkeletonModule,
     RouterModule,
     CloseButtonComponent,
-    FormsModule,
+
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,

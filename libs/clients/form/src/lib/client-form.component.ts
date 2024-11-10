@@ -4,7 +4,6 @@ import { ClientService } from '@TaskM/clients/data-access';
 import {
   FormControl,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -31,7 +30,6 @@ import { Currency, PaymentMethod } from '@TaskM/core/constants';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,

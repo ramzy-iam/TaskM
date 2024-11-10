@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { radixMagnifyingGlass, radixCross2 } from '@ng-icons/radix-icons';
 import { InputTextModule } from 'primeng/inputtext';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'ui-input-search',
@@ -12,7 +12,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     NgIconComponent,
     InputTextModule,
-    FormsModule,
+
     ReactiveFormsModule,
   ],
   providers: [

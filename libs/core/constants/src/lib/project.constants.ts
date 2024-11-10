@@ -4,17 +4,17 @@ import { CustomTagSeverity } from './constants';
 export const ProjectTagSeverity: {
   [key in ProjectStatusCode]: CustomTagSeverity;
 } = {
-  [ProjectStatusCode.DELIVERED_WAITING_QA]: 'success',
+  [ProjectStatusCode.WAITING_QA]: 'success',
   [ProjectStatusCode.DELIVERED]: 'success',
   [ProjectStatusCode.NOT_STARTED]: 'info',
-  [ProjectStatusCode.APPROVED_CLOSED]: 'success',
+  [ProjectStatusCode.CLOSED]: 'danger',
   [ProjectStatusCode.IN_PROGRESS]: 'info',
   [ProjectStatusCode.CANCELLED]: 'danger',
   [ProjectStatusCode.ON_HOLD]: 'danger',
-  [ProjectStatusCode.QA_REVIEW]: 'warning',
+  [ProjectStatusCode.QA_ING]: 'warning',
 };
 
 export const ClosedProjectStatus = [
-  ProjectStatusCode.APPROVED_CLOSED,
+  ProjectStatusCode.CLOSED,
   ProjectStatusCode.CANCELLED,
 ];

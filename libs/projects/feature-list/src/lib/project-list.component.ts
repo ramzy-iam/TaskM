@@ -23,12 +23,7 @@ import {
   finalize,
 } from 'rxjs';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ProjectPreviewDto, ProjectsFilterDto } from '@TaskM/core/dto';
 import { ProjectDetailsComponent } from '@TaskM/projects/feature-details';
 import { ProjectFormComponent } from '@TaskM/projects/form';
@@ -61,7 +56,7 @@ type UrlParams = ProjectsFilterDto & {
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule,
+
     ReactiveFormsModule,
     NgIconComponent,
     SectionHeaderComponent,

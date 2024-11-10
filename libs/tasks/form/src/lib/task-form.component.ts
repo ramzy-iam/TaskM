@@ -4,7 +4,6 @@ import { TaskService } from '@TaskM/tasks/data-access';
 import {
   FormControl,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -70,7 +69,7 @@ type DisabledFields = {
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
+
     RouterModule,
     ReactiveFormsModule,
     ButtonModule,

@@ -23,12 +23,7 @@ import {
   finalize,
 } from 'rxjs';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TaskPreviewDto, TasksFilterDto } from '@TaskM/core/dto';
 import { TaskDetailsComponent } from '@TaskM/tasks/feature-details';
 import { TaskFormComponent } from '@TaskM/tasks/form';
@@ -62,7 +57,7 @@ type UrlParams = TasksFilterDto & {
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule,
+
     ReactiveFormsModule,
     NgIconComponent,
     SectionHeaderComponent,
@@ -263,7 +258,10 @@ export class TaskListComponent implements OnInit, OnDestroy {
         name: TaskType[params.task!] ?? null,
       }),
       project: this.formUtils.createMinimalClientForm(null, {}),
-      serviceProvider: this.formUtils.createMinimalServiceProviderForm(null, {}),
+      serviceProvider: this.formUtils.createMinimalServiceProviderForm(
+        null,
+        {},
+      ),
       period: new FormControl<(Date | null)[] | null | undefined>(
         this.getPeriodFromParams(params),
       ),
