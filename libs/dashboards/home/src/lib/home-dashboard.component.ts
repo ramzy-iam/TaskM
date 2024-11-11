@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionHeaderComponent } from '@TaskM/shared/layout';
 import { ButtonModule } from 'primeng/button';
@@ -13,18 +13,14 @@ import {
   TagComponent,
 } from '@TaskM/shared/ui';
 import { Project, ProjectService } from '@TaskM/projects/data-access';
-import { DialogModule } from 'primeng/dialog';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import {
   BehaviorSubject,
-  Subject,
   debounceTime,
   distinctUntilChanged,
   filter,
   finalize,
   of,
   switchMap,
-  takeUntil,
 } from 'rxjs';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import {
@@ -79,7 +75,6 @@ type UrlParams = ProjectsFilterDto & {
     InputSearchComponent,
     ListItemComponent,
     ProjectDetailsComponent,
-    DialogModule,
     SkeletonModule,
     SpinnerComponent,
     ScrollNearEndDirective,
@@ -90,13 +85,13 @@ type UrlParams = ProjectsFilterDto & {
     ClientAutocompleteComponent,
     CalendarModule,
   ],
-  providers: [DialogService, provideIcons({ radixCross2 })],
+  providers: [provideIcons({ radixCross2 })],
   templateUrl: './home-dashboard.component.html',
   host: { class: 'h-full py-1' },
 })
 export class HomeDashboardComponent
   extends BaseEnumComponent
-  implements OnInit, OnDestroy
+  implements OnInit
 {
   loading = false;
   isLoadingMore = false;
@@ -117,11 +112,9 @@ export class HomeDashboardComponent
   }>;
   projects$ = new BehaviorSubject<Project[]>([]);
   selectedProjectCode: string | null = null;
-  dialogRef?: DynamicDialogRef;
   isFilterActivated = false;
   projectTagSeverity = ProjectTagSeverity;
   taskTagSeverity = TaskTagSeverity;
-  private unsubscribe$ = new Subject<void>();
   private excludedProjectStatuses = [
     ProjectStatusCode.NOT_STARTED,
     ProjectStatusCode.CANCELLED,
@@ -139,7 +132,6 @@ export class HomeDashboardComponent
     private taskService: TaskService,
     private route: ActivatedRoute,
     private router: Router,
-    private dialogService: DialogService,
     private formUtils: FormUtilsService,
     private clientService: ClientService,
     private fb: FormBuilder,
@@ -295,7 +287,6 @@ export class HomeDashboardComponent
               ),
             ),
           ),
-          takeUntil(this.unsubscribe$),
         )
         .subscribe();
     }
@@ -321,7 +312,6 @@ export class HomeDashboardComponent
               ),
             ),
           ),
-          takeUntil(this.unsubscribe$),
         )
         .subscribe();
     }
@@ -330,11 +320,6 @@ export class HomeDashboardComponent
   private setLoadingState(loading: boolean, isLoadingMore: boolean): void {
     this.loading = loading;
     this.isLoadingMore = isLoadingMore;
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 
   onNearEndScroll(): void {

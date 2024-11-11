@@ -6,7 +6,7 @@ export const ProjectTagSeverity: {
 } = {
   [ProjectStatusCode.WAITING_QA]: 'success',
   [ProjectStatusCode.DELIVERED]: 'success',
-  [ProjectStatusCode.NOT_STARTED]: 'info',
+  [ProjectStatusCode.NOT_STARTED]: 'warning',
   [ProjectStatusCode.CLOSED]: 'danger',
   [ProjectStatusCode.IN_PROGRESS]: 'info',
   [ProjectStatusCode.CANCELLED]: 'danger',

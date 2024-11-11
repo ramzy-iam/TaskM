@@ -10,13 +10,11 @@
           </div>
           <div>
             <form [formGroup]="filterForm">
-              <div
-                class="grid grid-cols-[270px_repeat(11,minmax(0,1fr))] gap-4"
-              >
+              <div class="grid grid-cols-[repeat(12,minmax(0,1fr))] gap-4">
                 <app-client-autocomplete
                   [form]="filterForm"
                   inputId="clientName"
-                  class="col-span-1 input-like-text"
+                  class="col-span-2 input-like-text"
                   [showClear]="true"
                 />
                 <p-dropdown
@@ -32,7 +30,7 @@
                   placeholder="Period"
                   formControlName="period"
                   selectionMode="range"
-                  class="col-span-3 input-like-text"
+                  class="col-span-2 input-like-text"
                   showIcon="true"
                   [iconDisplay]="'input'"
                   showButtonBar="true"
