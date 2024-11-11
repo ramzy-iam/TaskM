@@ -3,15 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SectionHeaderComponent } from '@TaskM/shared/layout';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { radixCross2 } from '@ng-icons/radix-icons';
-import {
-  InputSearchComponent,
-  ListItemComponent,
-  NoDataComponent,
-  SpinnerComponent,
-  TagComponent,
-} from '@TaskM/shared/ui';
+import { NoDataComponent, TagComponent } from '@TaskM/shared/ui';
 import { Project, ProjectService } from '@TaskM/projects/data-access';
 import {
   BehaviorSubject,
@@ -30,7 +22,6 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { ProjectPreviewDto, ProjectsFilterDto } from '@TaskM/core/dto';
-import { ProjectDetailsComponent } from '@TaskM/projects/feature-details';
 import { SkeletonModule } from 'primeng/skeleton';
 import {
   BaseEnumComponent,
@@ -68,15 +59,10 @@ type UrlParams = ProjectsFilterDto & {
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
-    NgIconComponent,
     SectionHeaderComponent,
     ButtonModule,
     InputTextModule,
-    InputSearchComponent,
-    ListItemComponent,
-    ProjectDetailsComponent,
     SkeletonModule,
-    SpinnerComponent,
     ScrollNearEndDirective,
     NoDataComponent,
     TagComponent,
@@ -85,7 +71,6 @@ type UrlParams = ProjectsFilterDto & {
     ClientAutocompleteComponent,
     CalendarModule,
   ],
-  providers: [provideIcons({ radixCross2 })],
   templateUrl: './home-dashboard.component.html',
   host: { class: 'h-full py-1' },
 })
