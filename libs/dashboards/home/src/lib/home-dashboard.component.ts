@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionHeaderComponent } from '@TaskM/shared/layout';
 import { ButtonModule } from 'primeng/button';
@@ -12,6 +12,7 @@ import {
   filter,
   finalize,
   of,
+  Subscription,
   switchMap,
 } from 'rxjs';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
@@ -76,7 +77,7 @@ type UrlParams = ProjectsFilterDto & {
 })
 export class HomeDashboardComponent
   extends BaseEnumComponent
-  implements OnInit
+  implements OnInit, OnDestroy
 {
   loading = false;
   isLoadingMore = false;
@@ -109,6 +110,8 @@ export class HomeDashboardComponent
     name: string;
   }[] = [];
   projectsForm: FormGroup;
+  private projectSubscriptions = new Map<string, Subscription>();
+  private taskSubscriptions = new Map<string, Subscription>();
 
   private isFormInitialized = false;
 
@@ -140,6 +143,11 @@ export class HomeDashboardComponent
     this.subscribeToFilterChanges();
     this.subscribeToRouteParams();
     this.subscribeToProjectChanges();
+  }
+
+  ngOnDestroy(): void {
+    this.projectSubscriptions.forEach((sub) => sub.unsubscribe());
+    this.taskSubscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   private resetAndFetchProjects(filters?: Nullable<ProjectsFilterDto>): void {
@@ -252,10 +260,14 @@ export class HomeDashboardComponent
     return null;
   }
 
-  subscribeToProjectStatusChange(projectId: string) {
+  private subscribeToProjectStatusChange(projectId: string) {
+    // Unsubscribe from any previous subscription for the same project
+    if (this.projectSubscriptions.has(projectId))
+      this.projectSubscriptions.get(projectId)?.unsubscribe();
+
     const control = this.projectsForm.get(`project-${projectId}`);
     if (control) {
-      control.valueChanges
+      const subscription = control.valueChanges
         .pipe(
           debounceTime(300), // Debounce time to limit rapid calls
           switchMap((status: ProjectStatusCode) =>
@@ -274,14 +286,20 @@ export class HomeDashboardComponent
           ),
         )
         .subscribe();
+      // Store the new subscription
+      this.projectSubscriptions.set(projectId, subscription);
     }
   }
 
-  subscribeToTaskStatusChange(taskId: string) {
+  private subscribeToTaskStatusChange(taskId: string) {
+    // Unsubscribe from any previous subscription for the same task
+    if (this.taskSubscriptions.has(taskId))
+      this.taskSubscriptions.get(taskId)?.unsubscribe();
     const control = this.projectsForm.get(`task-${taskId}`);
     if (control) {
-      control.valueChanges
+      const subscription = control.valueChanges
         .pipe(
+          distinctUntilChanged(),
           debounceTime(300), // Debounce time to limit rapid calls
           switchMap((status: TaskStatusCode) =>
             this.taskService.update(taskId, { status }).pipe(
@@ -299,6 +317,8 @@ export class HomeDashboardComponent
           ),
         )
         .subscribe();
+      // Store the new subscription for the task
+      this.taskSubscriptions.set(taskId, subscription);
     }
   }
 
