@@ -25,7 +25,7 @@ export class ServiceProvidersScope extends SelectQueryBuilder<ServiceProvider> {
     );
   }
 
-  _orderBy(order: OrderType = 'DESC') {
+  order(order: OrderType = 'DESC') {
     return this.addOrderBy(`ServiceProviders.firstName`, order).addOrderBy(
       `ServiceProviders.lastName`,
       order,

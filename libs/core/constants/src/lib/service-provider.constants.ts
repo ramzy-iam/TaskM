@@ -68,6 +68,7 @@ export enum ProjectStatus {
   WAITING_QA = 'Waiting QA',
   CLOSED = 'Closed',
   QA_ING = 'QAing',
+  APPROVED = 'Approved',
 }
 
 export enum ProjectStatusCode {
@@ -79,6 +80,7 @@ export enum ProjectStatusCode {
   WAITING_QA = 'WAITING_QA',
   CLOSED = 'CLOSED',
   QA_ING = 'QA_ING',
+  APPROVED = 'APPROVED',
 }
 
 export enum TaskStatus {

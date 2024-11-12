@@ -71,7 +71,7 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
     return this;
   }
 
-  _orderBy(
+  order(
     field: string = ProjectDateFilterField.CREATED_AT,
     order: OrderType = 'DESC',
   ) {

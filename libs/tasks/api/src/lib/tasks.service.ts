@@ -1,11 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CompetencesService } from '@TaskM/competences/api';
-import { TaskDateFilterField, TaskTypeCode } from '@TaskM/core/constants';
+import {
+  TaskDateFilterField,
+  TaskStatusCode,
+  TaskTypeCode,
+} from '@TaskM/core/constants';
 import { Task, TasksRepository } from '@TaskM/core/db';
 import { TasksFilterDto, CreateTaskDto, UpdateTaskDto } from '@TaskM/core/dto';
 import { DayjsHelper, UtilsHelper } from '@TaskM/core/helpers';
 import { paginateResult } from '@TaskM/core/helpers/backend';
 import { ProjectsService } from '@TaskM/projects/api';
+import { ProjectTaskStatusManagerService } from '@TaskM/shared/api';
 import { capitalize } from 'radash';
 
 @Injectable()
@@ -14,6 +19,7 @@ export class TasksService {
     private tasksRepository: TasksRepository,
     private projectsService: ProjectsService,
     private competencesService: CompetencesService,
+    private projectTaskStatusManagerService: ProjectTaskStatusManagerService,
   ) {}
 
   async create(taskDto: CreateTaskDto) {
@@ -42,12 +48,25 @@ export class TasksService {
   }
 
   async update(id: string, taskDto: UpdateTaskDto) {
+    const task = await this.getOne(id);
+    if (!task) throw new BadRequestException('Task not found');
     await this.validateBeforeCreateOrUpdate(taskDto, id);
+
+    let status: TaskStatusCode | null = null;
+
+    if (taskDto.status && task.status !== taskDto.status) {
+      status = taskDto.status;
+      delete taskDto.status;
+    }
 
     await this.tasksRepository.update(
       { id },
       UtilsHelper.convertUndefinedToNull(taskDto),
     );
+
+    if (status)
+      await this.projectTaskStatusManagerService.updateTaskStatus(id, status);
+
     return this.getOne(id);
   }
 
@@ -132,7 +151,7 @@ export class TasksService {
       .joinClient()
       .joinServiceProvider()
       .joinRate()
-      ._orderBy(filters?.orderField, filters?.order);
+      .order(filters?.orderField, filters?.order);
 
     return (
       filters?.page && filters?.limit
@@ -177,9 +196,9 @@ export class TasksService {
       query.filterByServiceProviderId(filters.serviceProviderId);
     if (filters?.projectId) query.filterByProjectId(filters.projectId);
     if (filters?.projectCode) query.filterByProjectCode(filters.projectCode);
-    if (filters?.task) query.filterByType(filters?.task);
-    if (filters?.status) query.filterByStatus(filters?.status);
-    if (filters?.query) query.filterByQuery(filters?.query);
+    if (filters?.task) query.filterByType(filters.task);
+    if (filters?.status) query.filterByStatus([filters.status]);
+    if (filters?.query) query.filterByQuery(filters.query);
 
     query.filterByDate(filters?.from, filters?.to, filters?.dateField);
 

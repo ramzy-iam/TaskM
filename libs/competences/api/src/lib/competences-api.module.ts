@@ -8,6 +8,6 @@ import { CompetencesController } from './competences.controller';
   controllers: [CompetencesController],
   imports: [TypeOrmModule.forFeature([Competence])],
   providers: [CompetencesRepository, CompetencesService],
-  exports: [CompetencesService],
+  exports: [CompetencesService, CompetencesRepository],
 })
 export class CompetencesApiModule {}

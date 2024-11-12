@@ -12,6 +12,7 @@ export const ProjectTagSeverity: {
   [ProjectStatusCode.CANCELLED]: 'danger',
   [ProjectStatusCode.ON_HOLD]: 'danger',
   [ProjectStatusCode.QA_ING]: 'warning',
+  [ProjectStatusCode.APPROVED]: 'success',
 };
 
 export const ClosedProjectStatus = [

@@ -59,6 +59,7 @@
       "@TaskM/service-providers/form": [
         "libs/service-providers/form/src/index.ts"
       ],
+      "@TaskM/shared/api": ["libs/shared/api/src/index.ts"],
       "@TaskM/shared/layout": ["libs/shared/layout/src/index.ts"],
       "@TaskM/shared/misc": ["libs/shared/misc/src/index.ts"],
       "@TaskM/shared/ui": ["libs/shared/ui/src/index.ts"],

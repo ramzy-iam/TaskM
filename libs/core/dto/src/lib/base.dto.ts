@@ -3,6 +3,7 @@ import {
   LoadUnit,
   PAGINATION,
   ProjectStatusCode,
+  TaskDateFilterField,
 } from '@TaskM/core/constants';
 import { CastHelper } from '@TaskM/core/helpers';
 import { OrderType } from '@TaskM/core/types';
@@ -67,7 +68,7 @@ export class BaseFilterDto {
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
-  orderField?: string;
+  orderField?: TaskDateFilterField;
 
   @Transform(({ value }) => CastHelper.toBoolean(value))
   @IsOptional()
