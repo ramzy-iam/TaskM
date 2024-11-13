@@ -1,4 +1,5 @@
 import {
+  ProjectStatus,
   ProjectStatusCode,
   TaskDateFilterField,
   TaskStatusCode,
@@ -12,7 +13,12 @@ import {
   TasksRepository,
 } from '@TaskM/core/db';
 import { DayjsHelper } from '@TaskM/core/helpers';
-import { Global, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Global,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 @Global()
 @Injectable()
@@ -36,15 +42,65 @@ export class ProjectTaskStatusManagerService {
     if (!project) {
       throw new NotFoundException('Project not found');
     }
+    const oldStatus = project.status;
+
+    if (newStatus === oldStatus) return project;
+    this.validateProjectStatusBeforeUpdate(oldStatus, newStatus);
 
     // Update the project status
     project.status = newStatus;
     await this.projectsRepository.save(project);
 
     // Handle task status updates based on the new project status
-    await this.handleTasksOnProjectStatusChange(project, newStatus);
+    await this.updateTasksStatusOnProjectStatusChange(project, newStatus);
 
     return project;
+  }
+
+  private validateProjectStatusBeforeUpdate(
+    oldStatus: ProjectStatusCode,
+    newStatus: ProjectStatusCode,
+  ) {
+    // Cannot change to "QAing" unless the project is "Waiting QA"
+    if (
+      newStatus === ProjectStatusCode.QA_ING &&
+      oldStatus !== ProjectStatusCode.WAITING_QA
+    ) {
+      throw new BadRequestException(
+        `Cannot set status to "${ProjectStatus.QA_ING}" unless the current status is "${ProjectStatus.WAITING_QA}".`,
+      );
+    }
+
+    // Cannot change to "In Progress" unless the project is "Not Started" or "On Hold"
+    if (
+      newStatus === ProjectStatusCode.IN_PROGRESS &&
+      oldStatus !== ProjectStatusCode.NOT_STARTED &&
+      oldStatus !== ProjectStatusCode.ON_HOLD
+    ) {
+      throw new BadRequestException(
+        `Cannot set status to "${ProjectStatus.IN_PROGRESS}" unless the current status is "${ProjectStatus.NOT_STARTED}" or "${ProjectStatus.ON_HOLD}".`,
+      );
+    }
+
+    // Cannot change to "Delivered" unless the project is "QAing"
+    if (
+      newStatus === ProjectStatusCode.DELIVERED &&
+      oldStatus !== ProjectStatusCode.QA_ING
+    ) {
+      throw new BadRequestException(
+        `cannot set status to "${ProjectStatus.DELIVERED}" unless the current status is "${ProjectStatus.QA_ING}".`,
+      );
+    }
+
+    // Cannot change to "Approved" unless the project is "Delivered"
+    if (
+      newStatus === ProjectStatusCode.APPROVED &&
+      oldStatus !== ProjectStatusCode.DELIVERED
+    ) {
+      throw new BadRequestException(
+        `cannot set status to "${ProjectStatus.APPROVED}" unless the current status is "${ProjectStatus.DELIVERED}".`,
+      );
+    }
   }
 
   /**
@@ -64,7 +120,7 @@ export class ProjectTaskStatusManagerService {
     await this.tasksRepository.save(task);
 
     // Check if the task status change should trigger a project status change
-    await this.handleProjectOnTaskStatusChange(task);
+    await this.updateProjectStatusOnTaskStatusChange(task);
 
     return task;
   }
@@ -72,7 +128,7 @@ export class ProjectTaskStatusManagerService {
   /**
    * Handle task status updates when a project status changes.
    */
-  private async handleTasksOnProjectStatusChange(
+  private async updateTasksStatusOnProjectStatusChange(
     project: Project,
     newStatus: ProjectStatusCode,
   ): Promise<void> {
@@ -82,6 +138,12 @@ export class ProjectTaskStatusManagerService {
       .getMany();
 
     switch (newStatus) {
+      case ProjectStatusCode.NOT_STARTED:
+        // Mark all except "Cancelled" tasks as "Not Started"
+        await this.updateTaskStatuses(tasks, [], TaskStatusCode.NOT_STARTED, [
+          TaskStatusCode.CANCELLED,
+        ]);
+        break;
       case ProjectStatusCode.IN_PROGRESS:
         // Mark the first task as 'In Progress'
         const firstTask = tasks.find(
@@ -156,7 +218,9 @@ export class ProjectTaskStatusManagerService {
   /**
    * Handle project status updates when a task status changes.
    */
-  private async handleProjectOnTaskStatusChange(task: Task): Promise<void> {
+  private async updateProjectStatusOnTaskStatusChange(
+    task: Task,
+  ): Promise<void> {
     const project = await this.projectsRepository.scoped
       .filterById(task.projectId)
       .getOne();
@@ -210,18 +274,25 @@ export class ProjectTaskStatusManagerService {
   /**
    * Helper method to update task statuses based on conditions.
    */
-  private async updateTaskStatuses(
+  async updateTaskStatuses(
     tasks: Task[],
     fromStatuses: TaskStatusCode[],
     toStatus: TaskStatusCode,
+    exceptStatuses: TaskStatusCode[] = [],
   ): Promise<void> {
-    const tasksToUpdate = tasks.filter((task) =>
-      fromStatuses.includes(task.status),
+    const fromStatusesLength = fromStatuses.length;
+
+    const tasksToUpdate = tasks.filter(
+      (task) =>
+        !exceptStatuses.includes(task.status) &&
+        (fromStatusesLength === 0 || fromStatuses.includes(task.status)),
     );
-    for (const task of tasksToUpdate) {
-      task.status = toStatus;
-      await this.tasksRepository.save(task);
-    }
+    await Promise.all(
+      tasksToUpdate.map(async (task) => {
+        task.status = toStatus;
+        return await this.tasksRepository.save(task);
+      }),
+    );
   }
 
   /**
