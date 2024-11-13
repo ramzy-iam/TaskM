@@ -111,6 +111,6 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
     return this.leftJoinAndSelect('Projects.tasks', 'tasks')
       .leftJoinAndSelect('tasks.serviceProvider', 'serviceProvider')
       .leftJoinAndSelect('tasks.rate', 'rate')
-      .addOrderBy('tasks.createdAt', 'DESC');
+      .addOrderBy('tasks.createdAt', 'ASC');
   }
 }

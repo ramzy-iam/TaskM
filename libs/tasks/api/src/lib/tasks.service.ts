@@ -161,22 +161,8 @@ export class TasksService {
   }
 
   private async generateSpecialFields(projectId: string) {
-    const today = DayjsHelper.new();
-    const from = today.startOf('M').toDate();
-    const to = today.endOf('M').toDate();
-    const monthTaskCount = await this.tasksRepository.scoped
-      .filterByDate(from, to, TaskDateFilterField.CREATED_AT)
-      .withDeleted()
-      .getCount();
-
-    const todayFormatted = today.format('YYMMDD');
-
-    const newNumber = (monthTaskCount + 1).toString().padStart(3, '0');
-    const code = `${todayFormatted}${newNumber}`;
-
     const project = await this.projectsService.getOne(projectId);
-
-    return { code, lang: project.lang };
+    return await this.projectTaskStatusManagerService.createTaskCode(project);
   }
 
   findOne(filters?: TasksFilterDto) {

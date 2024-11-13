@@ -295,19 +295,38 @@ export class ProjectTaskStatusManagerService {
     );
   }
 
+  async createTaskCode(project: Project) {
+    const today = DayjsHelper.new();
+    const from = today.startOf('M').toDate();
+    const to = today.endOf('M').toDate();
+    const monthTaskCount = await this.tasksRepository.scoped
+      .filterByDate(from, to, TaskDateFilterField.CREATED_AT)
+      .withDeleted()
+      .getCount();
+
+    const todayFormatted = today.format('YYMMDD');
+
+    const newNumber = (monthTaskCount + 1).toString().padStart(3, '0');
+    const code = `${todayFormatted}${newNumber}`;
+
+    return { code, lang: project.lang };
+  }
+
   /**
    * Helper method to create a QA task for a project.
    */
   private async createQATask(project: Project, lastTask: Task): Promise<Task> {
     let task = new Task();
+    const { code } = await this.createTaskCode(project);
 
     const rate = await this.competencesRepository.scoped
-      .filterByServiceProviderId(task.serviceProviderId)
+      .filterByServiceProviderId(lastTask.serviceProviderId)
       .filterByCode(TaskTypeCode.QA)
       .getOneOrFail();
 
     task = {
-      ...lastTask,
+      projectId: project.id,
+      serviceProviderId: lastTask.serviceProviderId,
       type: TaskTypeCode.QA,
       status: TaskStatusCode.NOT_STARTED,
       assignedAt: DayjsHelper.new().toDate(),
@@ -317,7 +336,8 @@ export class ProjectTaskStatusManagerService {
       lang: project.lang,
       rateId: rate.id,
       deliveredAt: null,
-    };
+      code,
+    } as Task;
 
     return task;
   }

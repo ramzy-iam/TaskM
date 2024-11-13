@@ -10,6 +10,7 @@ import {
 } from '@TaskM/core/db';
 import { ProjectTaskStatusManagerService } from './project-task-status-manager.service';
 import {
+  LanguageCode,
   ProjectStatus,
   ProjectStatusCode,
   TaskStatusCode,
@@ -648,6 +649,11 @@ describe('ProjectTaskStatusManagerService', () => {
       jest
         .spyOn(competencesRepository.scoped, 'getOneOrFail')
         .mockResolvedValue(mockRate);
+
+      jest.spyOn(service, 'createTaskCode').mockResolvedValue({
+        code: '202304001',
+        lang: LanguageCode.En,
+      });
 
       const result = await service['createQATask'](mockProject, mockLastTask);
 
