@@ -7,6 +7,7 @@ import { NoDataComponent, TagComponent } from '@TaskM/shared/ui';
 import { Project, ProjectService } from '@TaskM/projects/data-access';
 import {
   BehaviorSubject,
+  catchError,
   debounceTime,
   distinctUntilChanged,
   filter,
@@ -220,13 +221,13 @@ export class HomeDashboardComponent
 
           if (existingProjectIndex === -1) {
             this.addProjectControl(project);
-            this.subscribeToProjectStatusChange(project.id);
+            this.subscribeToProjectStatusChange(project, project.id);
           }
 
           project.tasks?.forEach((task) => {
             if (!this.getTaskControlById(task.id)) {
               this.addTaskControl(task);
-              this.subscribeToTaskStatusChange(task.id);
+              this.subscribeToTaskStatusChange(task, task.id);
             }
           });
         });
@@ -260,7 +261,10 @@ export class HomeDashboardComponent
     return null;
   }
 
-  private subscribeToProjectStatusChange(projectId: string) {
+  private subscribeToProjectStatusChange(
+    originalProject: Project,
+    projectId: string,
+  ) {
     // Unsubscribe from any previous subscription for the same project
     if (this.projectSubscriptions.has(projectId))
       this.projectSubscriptions.get(projectId)?.unsubscribe();
@@ -272,9 +276,13 @@ export class HomeDashboardComponent
           debounceTime(300), // Debounce time to limit rapid calls
           switchMap((status: ProjectStatusCode) =>
             this.projectService.update(projectId, { status }).pipe(
+              catchError(() => {
+                control.setValue(originalProject.status, { emitEvent: false });
+                return of(originalProject);
+              }),
               switchMap((updatedProject) =>
                 this.projectService
-                  .findOne({ poId: updatedProject.poId, withTasks: true })
+                  .findOne({ poId: updatedProject?.poId, withTasks: true })
                   .pipe(
                     switchMap((project) => {
                       this.projectService.triggerChanges(project as Project);
@@ -291,7 +299,7 @@ export class HomeDashboardComponent
     }
   }
 
-  private subscribeToTaskStatusChange(taskId: string) {
+  private subscribeToTaskStatusChange(originalTask: Task, taskId: string) {
     // Unsubscribe from any previous subscription for the same task
     if (this.taskSubscriptions.has(taskId))
       this.taskSubscriptions.get(taskId)?.unsubscribe();
@@ -303,6 +311,10 @@ export class HomeDashboardComponent
           debounceTime(300), // Debounce time to limit rapid calls
           switchMap((status: TaskStatusCode) =>
             this.taskService.update(taskId, { status }).pipe(
+              catchError(() => {
+                control.setValue(originalTask.status, { emitEvent: false });
+                return of(originalTask);
+              }),
               switchMap((updatedTask) =>
                 this.projectService
                   .findOne({ poId: updatedTask.project.poId, withTasks: true })
