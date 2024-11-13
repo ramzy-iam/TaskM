@@ -98,7 +98,6 @@ export class HomeDashboardComponent
     period: FormControl<(Date | null)[] | null | undefined>;
   }>;
   projects$ = new BehaviorSubject<Project[]>([]);
-  selectedProjectCode: string | null = null;
   isFilterActivated = false;
   projectTagSeverity = ProjectTagSeverity;
   taskTagSeverity = TaskTagSeverity;
@@ -273,6 +272,9 @@ export class HomeDashboardComponent
     if (control) {
       const subscription = control.valueChanges
         .pipe(
+          filter(
+            (status: ProjectStatusCode) => originalProject.status !== status,
+          ),
           debounceTime(300), // Debounce time to limit rapid calls
           switchMap((status: ProjectStatusCode) =>
             this.projectService.update(projectId, { status }).pipe(
@@ -307,7 +309,7 @@ export class HomeDashboardComponent
     if (control) {
       const subscription = control.valueChanges
         .pipe(
-          distinctUntilChanged(),
+          filter((status: TaskStatusCode) => originalTask.status !== status),
           debounceTime(300), // Debounce time to limit rapid calls
           switchMap((status: TaskStatusCode) =>
             this.taskService.update(taskId, { status }).pipe(
@@ -410,26 +412,11 @@ export class HomeDashboardComponent
   }
 
   private subscribeToRouteParams(): void {
-    // Subscriber for selectedProjectCode
-    this.route.queryParams
-      .pipe(
-        distinctUntilChanged(
-          (prev, curr) => prev['selectedProject'] === curr['selectedProject'],
-        ),
-      )
-      .subscribe((params) => {
-        this.selectedProjectCode = params['selectedProject'] ?? null;
-      });
-
-    // Subscriber for other route params
     this.route.queryParams
       .pipe(
         filter(() => this.isFormInitialized),
         distinctUntilChanged((prev, curr) => {
-          // Exclude selectedProjectCode
-          const { selectedProject: prevProject, ...prevRest } = prev;
-          const { selectedProject: currProject, ...currRest } = curr;
-          return JSON.stringify(prevRest) === JSON.stringify(currRest);
+          return JSON.stringify(prev) === JSON.stringify(curr);
         }),
       )
       .subscribe((params) => {
