@@ -272,9 +272,6 @@ export class HomeDashboardComponent
     if (control) {
       const subscription = control.valueChanges
         .pipe(
-          filter(
-            (status: ProjectStatusCode) => originalProject.status !== status,
-          ),
           debounceTime(300), // Debounce time to limit rapid calls
           switchMap((status: ProjectStatusCode) =>
             this.projectService.update(projectId, { status }).pipe(
@@ -309,7 +306,6 @@ export class HomeDashboardComponent
     if (control) {
       const subscription = control.valueChanges
         .pipe(
-          filter((status: TaskStatusCode) => originalTask.status !== status),
           debounceTime(300), // Debounce time to limit rapid calls
           switchMap((status: TaskStatusCode) =>
             this.taskService.update(taskId, { status }).pipe(
