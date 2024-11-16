@@ -144,7 +144,7 @@ export class ProjectTaskStatusManagerService {
           TaskStatusCode.CANCELLED,
         ]);
         break;
-      case ProjectStatusCode.IN_PROGRESS:
+      case ProjectStatusCode.IN_PROGRESS: {
         // Mark the first task as 'In Progress'
         const firstTask = tasks.find(
           (task) => task.status === TaskStatusCode.NOT_STARTED,
@@ -154,12 +154,16 @@ export class ProjectTaskStatusManagerService {
           await this.tasksRepository.save(firstTask);
         }
         break;
-      case ProjectStatusCode.WAITING_QA:
+      }
+
+      case ProjectStatusCode.WAITING_QA: {
         // Create a new QA task and mark it as 'Not Started'
         const qaTask = await this.createQATask(project, tasks.at(-1) as Task);
         await this.tasksRepository.save(qaTask);
         break;
-      case ProjectStatusCode.QA_ING:
+      }
+
+      case ProjectStatusCode.QA_ING: {
         // Mark the QA task as 'In Progress'
         const qaInProgressTask = tasks.find(
           (task) => task.type === TaskTypeCode.QA,
@@ -169,6 +173,8 @@ export class ProjectTaskStatusManagerService {
           await this.tasksRepository.save(qaInProgressTask);
         }
         break;
+      }
+
       case ProjectStatusCode.DELIVERED:
         // Cancel all tasks that are "Not Started" or "On Hold"
         await this.updateTaskStatuses(
