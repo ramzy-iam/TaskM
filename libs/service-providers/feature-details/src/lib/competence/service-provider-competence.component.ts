@@ -12,6 +12,7 @@ import { ConfirmationService, MenuItem } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CompetenceService } from '@TaskM/service-providers/data-access';
 import { MenuModule } from 'primeng/menu';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-service-provider-competence',
@@ -23,6 +24,7 @@ import { MenuModule } from 'primeng/menu';
     DialogModule,
     ConfirmDialogModule,
     MenuModule,
+    TooltipModule,
   ],
   templateUrl: './service-provider-competence.component.html',
   providers: [ConfirmationService],

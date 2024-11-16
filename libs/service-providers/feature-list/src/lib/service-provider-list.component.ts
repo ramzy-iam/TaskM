@@ -99,6 +99,8 @@ export class ServiceProviderListComponent implements OnInit, OnDestroy {
     name: value,
   }));
 
+  TaskLabel = TaskType;
+
   constructor(
     private serviceProviderService: ServiceProviderService,
     private route: ActivatedRoute,

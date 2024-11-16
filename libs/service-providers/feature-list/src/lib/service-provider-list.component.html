@@ -124,6 +124,8 @@
                             shape="circle"
                             tooltipPosition="bottom"
                             [pTooltip]="
+                              TaskLabel[competence.code] +
+                              ': ' +
                               (competence.rate
                                 | currency
                                   : competence.currency
