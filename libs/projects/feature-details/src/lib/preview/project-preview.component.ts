@@ -31,7 +31,7 @@ import { ClientAutocompleteComponent } from '@TaskM/clients/form';
 import { PanelModule } from 'primeng/panel';
 
 @Component({
-  selector: 'app-project-details',
+  selector: 'app-project-preview',
   standalone: true,
   imports: [
     CommonModule,
@@ -50,9 +50,9 @@ import { PanelModule } from 'primeng/panel';
     PanelModule,
     TagComponent,
   ],
-  templateUrl: './project-details.component.html',
+  templateUrl: './project-preview.component.html',
 })
-export class ProjectDetailsComponent
+export class ProjectPreviewComponent
   extends ProjectFormComponent
   implements OnInit, OnChanges
 {

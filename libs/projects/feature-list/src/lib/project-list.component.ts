@@ -25,7 +25,7 @@ import {
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ProjectPreviewDto, ProjectsFilterDto } from '@TaskM/core/dto';
-import { ProjectDetailsComponent } from '@TaskM/projects/feature-details';
+import { ProjectPreviewComponent } from '@TaskM/projects/feature-details';
 import { ProjectFormComponent } from '@TaskM/projects/form';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FormUtilsService, ScrollNearEndDirective } from '@TaskM/shared/misc';
@@ -64,7 +64,7 @@ type UrlParams = ProjectsFilterDto & {
     InputTextModule,
     InputSearchComponent,
     ListItemComponent,
-    ProjectDetailsComponent,
+    ProjectPreviewComponent,
     DialogModule,
     SkeletonModule,
     SpinnerComponent,

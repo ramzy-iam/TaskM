@@ -1,1 +1,1 @@
-export * from './lib/project-details.component';
+export * from './lib/preview/project-preview.component';

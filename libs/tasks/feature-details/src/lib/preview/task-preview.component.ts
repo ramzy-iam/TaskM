@@ -36,7 +36,7 @@ import { CompetenceService } from '@TaskM/service-providers/data-access';
 import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
-  selector: 'app-task-details',
+  selector: 'app-task-preview',
   standalone: true,
   imports: [
     CommonModule,
@@ -60,9 +60,9 @@ import { TooltipModule } from 'primeng/tooltip';
     TagComponent,
     TooltipModule,
   ],
-  templateUrl: './task-details.component.html',
+  templateUrl: './task-preview.component.html',
 })
-export class TaskDetailsComponent
+export class TaskPreviewComponent
   extends TaskFormComponent
   implements OnInit, OnChanges
 {

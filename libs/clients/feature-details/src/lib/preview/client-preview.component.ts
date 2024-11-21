@@ -9,7 +9,7 @@ import { CloseButtonComponent } from '@TaskM/shared/ui';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-client-details',
+  selector: 'app-client-preview',
   standalone: true,
   imports: [
     CommonModule,
@@ -17,9 +17,9 @@ import { Router } from '@angular/router';
     SkeletonModule,
     CloseButtonComponent,
   ],
-  templateUrl: './client-details.component.html',
+  templateUrl: './client-preview.component.html',
 })
-export class ClientDetailsComponent implements OnChanges {
+export class ClientPreviewComponent implements OnChanges {
   @Input() code!: string;
   client$ = new BehaviorSubject<ClientDto | null>(null);
   loading = false;

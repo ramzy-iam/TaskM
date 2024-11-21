@@ -25,7 +25,7 @@ import {
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TaskPreviewDto, TasksFilterDto } from '@TaskM/core/dto';
-import { TaskDetailsComponent } from '@TaskM/tasks/feature-details';
+import { TaskPreviewComponent } from '@TaskM/tasks/feature-details';
 import { TaskFormComponent } from '@TaskM/tasks/form';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FormUtilsService, ScrollNearEndDirective } from '@TaskM/shared/misc';
@@ -65,7 +65,7 @@ type UrlParams = TasksFilterDto & {
     InputTextModule,
     InputSearchComponent,
     ListItemComponent,
-    TaskDetailsComponent,
+    TaskPreviewComponent,
     DialogModule,
     SkeletonModule,
     SpinnerComponent,
@@ -248,14 +248,14 @@ export class TaskListComponent implements OnInit, OnDestroy {
         name: string | null;
       } | null>({
         code: params?.status ?? null,
-        name: TaskStatus[params?.status!] ?? null,
+        name: TaskStatus[params?.status as TaskStatusCode] ?? null,
       }),
       task: new FormControl<{
         code: TaskTypeCode | null;
         name: string | null;
       } | null>({
         code: params?.task ?? null,
-        name: TaskType[params.task!] ?? null,
+        name: TaskType[params.task as TaskTypeCode] ?? null,
       }),
       project: this.formUtils.createMinimalClientForm(null, {}),
       serviceProvider: this.formUtils.createMinimalServiceProviderForm(

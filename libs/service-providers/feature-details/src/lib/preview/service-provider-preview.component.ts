@@ -24,11 +24,11 @@ import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { DialogModule } from 'primeng/dialog';
-import { ServiceProviderCompetenceComponent } from './competence/service-provider-competence.component';
+import { ServiceProviderCompetenceComponent } from '../competence/service-provider-competence.component';
 import { PanelModule } from 'primeng/panel';
 
 @Component({
-  selector: 'app-service-provider-details',
+  selector: 'app-service-provider-preview',
   standalone: true,
   imports: [
     CommonModule,
@@ -40,9 +40,9 @@ import { PanelModule } from 'primeng/panel';
     ServiceProviderCompetenceComponent,
     PanelModule,
   ],
-  templateUrl: './service-provider-details.component.html',
+  templateUrl: './service-provider-preview.component.html',
 })
-export class ServiceProviderDetailsComponent implements OnInit, OnChanges {
+export class ServiceProviderPreviewComponent implements OnInit, OnChanges {
   @Input() serviceProviderId!: string;
   private serviceProvidersSubject =
     new BehaviorSubject<ServiceProviderDto | null>(null);

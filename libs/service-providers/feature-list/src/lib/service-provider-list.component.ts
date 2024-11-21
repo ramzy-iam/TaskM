@@ -30,7 +30,7 @@ import {
   ServiceProviderPreviewDto,
   ServiceProvidersFilterDto,
 } from '@TaskM/core/dto';
-import { ServiceProviderDetailsComponent } from '@TaskM/service-providers/feature-details';
+import { ServiceProviderPreviewComponent } from '@TaskM/service-providers/feature-details';
 import { ServiceProviderFormComponent } from '@TaskM/service-providers/form';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FormUtilsService, ScrollNearEndDirective } from '@TaskM/shared/misc';
@@ -51,7 +51,6 @@ type UrlParams = ServiceProvidersFilterDto & {
   imports: [
     CommonModule,
     RouterModule,
-
     ReactiveFormsModule,
     NgIconComponent,
     SectionHeaderComponent,
@@ -59,7 +58,7 @@ type UrlParams = ServiceProvidersFilterDto & {
     InputTextModule,
     InputSearchComponent,
     ListItemComponent,
-    ServiceProviderDetailsComponent,
+    ServiceProviderPreviewComponent,
     DialogModule,
     ServiceProviderFormComponent,
     SkeletonModule,
