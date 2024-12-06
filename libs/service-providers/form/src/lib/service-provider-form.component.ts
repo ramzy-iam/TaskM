@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, Optional } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ServiceProviderService } from '@TaskM/service-providers/data-access';
 import {
@@ -26,10 +26,8 @@ import { FormInputErrorComponent } from '@TaskM/shared/ui';
 
 @Component({
   selector: 'app-service-provider-form',
-  standalone: true,
   imports: [
     CommonModule,
-
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
@@ -44,21 +42,17 @@ export class ServiceProviderFormComponent
   extends BaseEnumComponent
   implements OnInit, OnDestroy
 {
+  private serviceProviderService = inject(ServiceProviderService);
+  dialogRef = inject(DynamicDialogRef, { optional: true });
+  private formUtils = inject(FormUtilsService);
+
   private _serviceProvider!: ServiceProviderDto;
   form!: FormGroup;
   loading = false;
   private initialFormValues: any;
   private formValueChangesSubscription!: Subscription;
 
-  constructor(
-    private serviceProviderService: ServiceProviderService,
-    @Optional() public dialogRef: DynamicDialogRef,
-    private formUtils: FormUtilsService,
-  ) {
-    super();
-  }
-
-  @Input() autoSave? = false;
+  readonly autoSave = input<boolean | undefined>(false);
   @Input()
   set serviceProvider(serviceProvider: ServiceProviderDto | null) {
     if (serviceProvider) {
@@ -154,7 +148,7 @@ export class ServiceProviderFormComponent
   private triggerAutoSave() {
     this.formValueChangesSubscription = this.form.valueChanges
       .pipe(
-        filter(() => !!this.autoSave),
+        filter(() => !!this.autoSave()),
         debounceTime(3000),
         distinctUntilChanged(
           (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr),

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   HttpClient,
   HttpContext,
@@ -13,7 +13,8 @@ import { TOAST_OPTIONS_CONTEXT_TOKEN } from './http-context';
   providedIn: 'root',
 })
 export class HttpBaseService {
-  constructor(protected http: HttpClient) {}
+  protected http = inject(HttpClient);
+
 
   protected buildHeaders(listOfHeaders: {
     [key: string]: string;

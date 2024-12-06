@@ -1,10 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionHeaderComponent } from '@TaskM/shared/layout';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { radixCross2 } from '@ng-icons/radix-icons';
 import {
   InputSearchComponent,
   ListItemComponent,
@@ -36,12 +34,10 @@ type UrlParams = ClientsFilterDto & {
 };
 @Component({
   selector: 'app-client-list',
-  standalone: true,
   imports: [
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
-    NgIconComponent,
     SectionHeaderComponent,
     ButtonModule,
     InputTextModule,
@@ -49,17 +45,22 @@ type UrlParams = ClientsFilterDto & {
     ListItemComponent,
     ClientPreviewComponent,
     DialogModule,
-    ClientFormComponent,
     SkeletonModule,
     SpinnerComponent,
     ScrollNearEndDirective,
     NoDataComponent,
   ],
-  providers: [DialogService, provideIcons({ radixCross2 })],
+  providers: [DialogService],
   templateUrl: './client-list.component.html',
   host: { class: 'h-full py-1' },
 })
 export class ClientListComponent implements OnInit, OnDestroy {
+  private clientService = inject(ClientService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private dialogService = inject(DialogService);
+  private formUtils = inject(FormUtilsService);
+
   loading = false;
   isLoadingMore = false;
   private page = PAGINATION.DEFAULT_PAGE;
@@ -74,14 +75,6 @@ export class ClientListComponent implements OnInit, OnDestroy {
   dialogRef?: DynamicDialogRef;
   isFilterActivated = false;
   private isFormInitialized = false;
-
-  constructor(
-    private clientService: ClientService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private dialogService: DialogService,
-    private formUtils: FormUtilsService,
-  ) {}
 
   ngOnInit(): void {
     this.initializeFilterForm();

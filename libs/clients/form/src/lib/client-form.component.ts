@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, Optional } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClientService } from '@TaskM/clients/data-access';
 import {
@@ -26,39 +26,34 @@ import { FormInputErrorComponent } from '@TaskM/shared/ui';
 import { Currency, PaymentMethod } from '@TaskM/core/constants';
 
 @Component({
-  selector: 'app-client-form',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    ButtonModule,
-    InputTextModule,
-    FloatLabelModule,
-    DropdownModule,
-    InputNumberModule,
-    FormInputErrorComponent,
-  ],
-  templateUrl: './client-form.component.html',
+    selector: 'app-client-form',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        ButtonModule,
+        InputTextModule,
+        FloatLabelModule,
+        DropdownModule,
+        InputNumberModule,
+        FormInputErrorComponent,
+    ],
+    templateUrl: './client-form.component.html'
 })
 export class ClientFormComponent
   extends BaseEnumComponent
   implements OnInit, OnDestroy
 {
+  private clientService = inject(ClientService);
+  dialogRef = inject(DynamicDialogRef, { optional: true });
+  private formUtils = inject(FormUtilsService);
+
   private _client!: ClientDto;
   form!: FormGroup;
   loading = false;
   private initialFormValues: any;
   private formValueChangesSubscription!: Subscription;
 
-  constructor(
-    private clientService: ClientService,
-    @Optional() public dialogRef: DynamicDialogRef,
-    private formUtils: FormUtilsService,
-  ) {
-    super();
-  }
-
-  @Input() autoSave?: boolean = false;
+  readonly autoSave = input<boolean | undefined>(false);
   @Input()
   set client(client: ClientDto | null) {
     if (client) {
@@ -156,7 +151,7 @@ export class ClientFormComponent
   private triggerAutoSave() {
     this.formValueChangesSubscription = this.form.valueChanges
       .pipe(
-        filter(() => !!this.autoSave),
+        filter(() => !!this.autoSave()),
         debounceTime(3000),
         distinctUntilChanged(
           (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr),

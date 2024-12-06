@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { map } from 'rxjs';
@@ -7,7 +7,6 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { FormInputErrorComponent } from '@TaskM/shared/ui';
 import { ClientService } from '@TaskM/clients/data-access';
 import { Currency } from '@TaskM/core/constants';
 import {
@@ -18,7 +17,6 @@ import {
 
 @Component({
   selector: 'app-client-autocomplete',
-  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -26,7 +24,6 @@ import {
     InputTextModule,
     FloatLabelModule,
     InputNumberModule,
-    FormInputErrorComponent,
     AutoCompleteModule,
   ],
   template: `
@@ -72,6 +69,8 @@ import {
   `,
 })
 export class ClientAutocompleteComponent {
+  private clientService = inject(ClientService);
+
   form = input.required<FormGroup>();
   client = input<BaseClientDto | null>(null);
   inputId = input<string>('');
@@ -85,8 +84,6 @@ export class ClientAutocompleteComponent {
   searchQuery = '';
   page = 1;
   limit = 15;
-
-  constructor(private clientService: ClientService) {}
 
   searchClients(event: AutoCompleteCompleteEvent) {
     this.searchQuery = event.query;

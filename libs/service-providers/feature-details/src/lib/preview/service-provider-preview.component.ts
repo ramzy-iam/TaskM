@@ -1,10 +1,4 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   Competence,
@@ -28,22 +22,26 @@ import { ServiceProviderCompetenceComponent } from '../competence/service-provid
 import { PanelModule } from 'primeng/panel';
 
 @Component({
-  selector: 'app-service-provider-preview',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ServiceProviderFormComponent,
-    SkeletonModule,
-    CloseButtonComponent,
-    ButtonModule,
-    DialogModule,
-    ServiceProviderCompetenceComponent,
-    PanelModule,
-  ],
-  templateUrl: './service-provider-preview.component.html',
+    selector: 'app-service-provider-preview',
+    imports: [
+        CommonModule,
+        ServiceProviderFormComponent,
+        SkeletonModule,
+        CloseButtonComponent,
+        ButtonModule,
+        DialogModule,
+        ServiceProviderCompetenceComponent,
+        PanelModule,
+    ],
+    templateUrl: './service-provider-preview.component.html'
 })
 export class ServiceProviderPreviewComponent implements OnInit, OnChanges {
-  @Input() serviceProviderId!: string;
+  private serviceProviderService = inject(ServiceProviderService);
+  private router = inject(Router);
+  private dialogService = inject(DialogService);
+  private competenceService = inject(CompetenceService);
+
+  readonly serviceProviderId = input.required<string>();
   private serviceProvidersSubject =
     new BehaviorSubject<ServiceProviderDto | null>(null);
   loading = false;
@@ -51,20 +49,14 @@ export class ServiceProviderPreviewComponent implements OnInit, OnChanges {
 
   TaskLabel = TaskType;
 
-  constructor(
-    private serviceProviderService: ServiceProviderService,
-    private router: Router,
-    private dialogService: DialogService,
-    private competenceService: CompetenceService,
-  ) {}
-
   ngOnInit(): void {
     this.subscribeToCompetenceChanges();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['serviceProviderId'] && this.serviceProviderId) {
-      this.fetchServiceProvider(this.serviceProviderId);
+    const serviceProviderId = this.serviceProviderId();
+    if (changes['serviceProviderId'] && serviceProviderId) {
+      this.fetchServiceProvider(serviceProviderId);
     }
   }
 
@@ -80,7 +72,7 @@ export class ServiceProviderPreviewComponent implements OnInit, OnChanges {
       data: {
         competence: {
           ...competence,
-          serviceProviderId: this.serviceProviderId,
+          serviceProviderId: this.serviceProviderId(),
         },
         serviceProviderCompetences,
       },

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, Optional } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProjectService } from '@TaskM/projects/data-access';
 import {
@@ -58,27 +58,29 @@ type DisabledFields = {
 };
 
 @Component({
-  selector: 'app-project-form',
-  standalone: true,
-  imports: [
-    CommonModule,
-
-    ReactiveFormsModule,
-    ButtonModule,
-    InputTextModule,
-    FloatLabelModule,
-    DropdownModule,
-    InputNumberModule,
-    FormInputErrorComponent,
-    CalendarModule,
-    ClientAutocompleteComponent,
-  ],
-  templateUrl: './project-form.component.html',
+    selector: 'app-project-form',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        ButtonModule,
+        InputTextModule,
+        FloatLabelModule,
+        DropdownModule,
+        InputNumberModule,
+        FormInputErrorComponent,
+        CalendarModule,
+        ClientAutocompleteComponent,
+    ],
+    templateUrl: './project-form.component.html'
 })
 export class ProjectFormComponent
   extends BaseEnumComponent
   implements OnInit, OnDestroy
 {
+  protected projectService = inject(ProjectService);
+  protected dialogRef = inject(DynamicDialogRef, { optional: true });
+  protected formUtils = inject(FormUtilsService);
+
   _project!: ProjectDto | null;
   form!: FormGroup;
   loading = false;
@@ -94,15 +96,7 @@ export class ProjectFormComponent
   statusCode: ProjectStatusCode | null = null;
   projectTagSeverity = ProjectTagSeverity;
 
-  constructor(
-    protected projectService: ProjectService,
-    @Optional() protected dialogRef: DynamicDialogRef,
-    protected formUtils: FormUtilsService,
-  ) {
-    super();
-  }
-
-  @Input() autoSave = false;
+  readonly autoSave = input(false);
   @Input()
   set project(project: ProjectDto | null) {
     if (project) {
@@ -303,7 +297,7 @@ export class ProjectFormComponent
   protected triggerAutoSave(force = false) {
     this.formValueChangesSubscription = this.form?.valueChanges
       .pipe(
-        filter(() => !!this.autoSave || !!force),
+        filter(() => !!this.autoSave() || !!force),
         debounceTime(3000),
         distinctUntilChanged(
           (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr),

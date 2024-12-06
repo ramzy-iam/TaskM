@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionHeaderComponent } from '@TaskM/shared/layout';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { provideIcons } from '@ng-icons/core';
 import { radixCross2 } from '@ng-icons/radix-icons';
 import {
   InputSearchComponent,
@@ -47,12 +47,10 @@ type UrlParams = ServiceProvidersFilterDto & {
 };
 @Component({
   selector: 'app-service-provider-list',
-  standalone: true,
   imports: [
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
-    NgIconComponent,
     SectionHeaderComponent,
     ButtonModule,
     InputTextModule,
@@ -60,7 +58,6 @@ type UrlParams = ServiceProvidersFilterDto & {
     ListItemComponent,
     ServiceProviderPreviewComponent,
     DialogModule,
-    ServiceProviderFormComponent,
     SkeletonModule,
     SpinnerComponent,
     ScrollNearEndDirective,
@@ -75,6 +72,12 @@ type UrlParams = ServiceProvidersFilterDto & {
   host: { class: 'h-full py-1' },
 })
 export class ServiceProviderListComponent implements OnInit, OnDestroy {
+  private serviceProviderService = inject(ServiceProviderService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private dialogService = inject(DialogService);
+  private formUtils = inject(FormUtilsService);
+
   loading = false;
   isLoadingMore = false;
   private page = PAGINATION.DEFAULT_PAGE;
@@ -99,14 +102,6 @@ export class ServiceProviderListComponent implements OnInit, OnDestroy {
   }));
 
   TaskLabel = TaskType;
-
-  constructor(
-    private serviceProviderService: ServiceProviderService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private dialogService: DialogService,
-    private formUtils: FormUtilsService,
-  ) {}
 
   ngOnInit(): void {
     this.initializeFilterForm();

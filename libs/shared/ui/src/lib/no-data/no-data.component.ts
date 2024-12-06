@@ -1,18 +1,17 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'ui-no-data',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './no-data.component.html',
+    selector: 'ui-no-data',
+    imports: [CommonModule],
+    templateUrl: './no-data.component.html'
 })
 export class NoDataComponent {
-  @Input() message = 'No data found';
-  @Input() notFoundMessage = 'No matching data';
-  @Input() isNotFound = false;
+  readonly message = input('No data found');
+  readonly notFoundMessage = input('No matching data');
+  readonly isNotFound = input(false);
 
   get displayedMessage(): string {
-    return this.isNotFound ? this.notFoundMessage : this.message;
+    return this.isNotFound() ? this.notFoundMessage() : this.message();
   }
 }

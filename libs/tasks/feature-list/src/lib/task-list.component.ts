@@ -1,10 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionHeaderComponent } from '@TaskM/shared/layout';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { radixCross2 } from '@ng-icons/radix-icons';
 import {
   InputSearchComponent,
   ListItemComponent,
@@ -53,13 +51,10 @@ type UrlParams = TasksFilterDto & {
 
 @Component({
   selector: 'app-task-list',
-  standalone: true,
   imports: [
     CommonModule,
     RouterModule,
-
     ReactiveFormsModule,
-    NgIconComponent,
     SectionHeaderComponent,
     ButtonModule,
     InputTextModule,
@@ -78,11 +73,18 @@ type UrlParams = TasksFilterDto & {
     ProjectAutocompleteComponent,
     CalendarModule,
   ],
-  providers: [DialogService, provideIcons({ radixCross2 })],
+  providers: [DialogService],
   templateUrl: './task-list.component.html',
   host: { class: 'h-full py-1' },
 })
 export class TaskListComponent implements OnInit, OnDestroy {
+  private taskService = inject(TaskService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private dialogService = inject(DialogService);
+  private formUtils = inject(FormUtilsService);
+  private projectService = inject(ProjectService);
+
   loading = false;
   isLoadingMore = false;
   private page = PAGINATION.DEFAULT_PAGE;
@@ -126,15 +128,6 @@ export class TaskListComponent implements OnInit, OnDestroy {
   }));
 
   private isFormInitialized = false;
-
-  constructor(
-    private taskService: TaskService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private dialogService: DialogService,
-    private formUtils: FormUtilsService,
-    private projectService: ProjectService,
-  ) {}
 
   ngOnInit(): void {
     this.initializeFilterForm();

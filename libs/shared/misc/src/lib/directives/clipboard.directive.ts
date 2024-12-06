@@ -1,10 +1,4 @@
-import {
-  Directive,
-  ElementRef,
-  HostListener,
-  Input,
-  Renderer2,
-} from '@angular/core';
+import { Directive, ElementRef, HostListener, Renderer2, input, inject } from '@angular/core';
 import { Clipboard } from '@angular/cdk/clipboard';
 
 @Directive({
@@ -12,17 +6,15 @@ import { Clipboard } from '@angular/cdk/clipboard';
   selector: '[appClipboard]',
 })
 export class ClipboardDirective {
-  @Input() tempMessage: string | HTMLElement = 'Copied!';
-  @Input() duration = 1000;
-  @Input() value = ''; // Text to be copied to clipboard
+  private el = inject(ElementRef);
+  private clipboard = inject(Clipboard);
+  private renderer = inject(Renderer2);
+
+  readonly tempMessage = input<string | HTMLElement>('Copied!');
+  readonly duration = input(1000);
+  readonly value = input(''); // Text to be copied to clipboard
 
   private originalContent!: string;
-
-  constructor(
-    private el: ElementRef,
-    private clipboard: Clipboard,
-    private renderer: Renderer2,
-  ) {}
 
   @HostListener('click') onClick() {
     this.copyToClipboard();
@@ -30,23 +22,25 @@ export class ClipboardDirective {
   }
 
   private copyToClipboard(): void {
-    if (this.value) {
-      this.clipboard.copy(this.value);
+    const value = this.value();
+    if (value) {
+      this.clipboard.copy(value);
     }
   }
 
   private replaceContentTemporarily(): void {
     this.originalContent = this.el.nativeElement.innerHTML;
 
-    if (typeof this.tempMessage === 'string') {
-      this.el.nativeElement.innerHTML = this.tempMessage;
-    } else if (this.tempMessage instanceof HTMLElement) {
+    const tempMessage = this.tempMessage();
+    if (typeof tempMessage === 'string') {
+      this.el.nativeElement.innerHTML = tempMessage;
+    } else if (tempMessage instanceof HTMLElement) {
       this.el.nativeElement.innerHTML = '';
-      this.renderer.appendChild(this.el.nativeElement, this.tempMessage);
+      this.renderer.appendChild(this.el.nativeElement, tempMessage);
     }
 
     setTimeout(() => {
       this.el.nativeElement.innerHTML = this.originalContent;
-    }, this.duration);
+    }, this.duration());
   }
 }

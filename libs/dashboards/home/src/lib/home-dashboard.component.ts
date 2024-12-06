@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionHeaderComponent } from '@TaskM/shared/layout';
 import { ButtonModule } from 'primeng/button';
@@ -55,31 +55,38 @@ type UrlParams = ProjectsFilterDto & {
 };
 
 @Component({
-  selector: 'app-home-dashboard',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    ReactiveFormsModule,
-    SectionHeaderComponent,
-    ButtonModule,
-    InputTextModule,
-    SkeletonModule,
-    ScrollNearEndDirective,
-    NoDataComponent,
-    TagComponent,
-    MultiSelectModule,
-    DropdownModule,
-    ClientAutocompleteComponent,
-    CalendarModule,
-  ],
-  templateUrl: './home-dashboard.component.html',
-  host: { class: 'h-full py-1' },
+    selector: 'app-home-dashboard',
+    imports: [
+        CommonModule,
+        RouterModule,
+        ReactiveFormsModule,
+        SectionHeaderComponent,
+        ButtonModule,
+        InputTextModule,
+        SkeletonModule,
+        ScrollNearEndDirective,
+        NoDataComponent,
+        TagComponent,
+        MultiSelectModule,
+        DropdownModule,
+        ClientAutocompleteComponent,
+        CalendarModule,
+    ],
+    templateUrl: './home-dashboard.component.html',
+    host: { class: 'h-full py-1' }
 })
 export class HomeDashboardComponent
   extends BaseEnumComponent
   implements OnInit, OnDestroy
 {
+  private projectService = inject(ProjectService);
+  private taskService = inject(TaskService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private formUtils = inject(FormUtilsService);
+  private clientService = inject(ClientService);
+  private fb = inject(FormBuilder);
+
   loading = false;
   isLoadingMore = false;
   private page = PAGINATION.DEFAULT_PAGE;
@@ -115,15 +122,7 @@ export class HomeDashboardComponent
 
   private isFormInitialized = false;
 
-  constructor(
-    private projectService: ProjectService,
-    private taskService: TaskService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private formUtils: FormUtilsService,
-    private clientService: ClientService,
-    private fb: FormBuilder,
-  ) {
+  constructor() {
     super();
     this.filterProjectStatus = this.projectStatuses
       .filter(

@@ -1,9 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionHeaderComponent } from '@TaskM/shared/layout';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { radixCross2 } from '@ng-icons/radix-icons';
 import {
   InputSearchComponent,
@@ -52,13 +51,10 @@ type UrlParams = ProjectsFilterDto & {
 
 @Component({
   selector: 'app-project-list',
-  standalone: true,
   imports: [
     CommonModule,
     RouterModule,
-
     ReactiveFormsModule,
-    NgIconComponent,
     SectionHeaderComponent,
     ButtonModule,
     InputTextModule,
@@ -76,11 +72,18 @@ type UrlParams = ProjectsFilterDto & {
     ClientAutocompleteComponent,
     CalendarModule,
   ],
-  providers: [DialogService, provideIcons({ radixCross2 })],
+  providers: [DialogService],
   templateUrl: './project-list.component.html',
   host: { class: 'h-full py-1' },
 })
 export class ProjectListComponent implements OnInit, OnDestroy {
+  private projectService = inject(ProjectService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private dialogService = inject(DialogService);
+  private formUtils = inject(FormUtilsService);
+  private clientService = inject(ClientService);
+
   loading = false;
   isLoadingMore = false;
   private page = PAGINATION.DEFAULT_PAGE;
@@ -120,15 +123,6 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   }));
 
   private isFormInitialized = false;
-
-  constructor(
-    private projectService: ProjectService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private dialogService: DialogService,
-    private formUtils: FormUtilsService,
-    private clientService: ClientService,
-  ) {}
 
   ngOnInit(): void {
     this.initializeFilterForm();

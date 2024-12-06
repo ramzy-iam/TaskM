@@ -1,10 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 import { CompetenceDto, ServiceProviderDto } from '@TaskM/core/dto';
 import { TaskType } from '@TaskM/core/constants';
 import { CompetenceFormComponent } from '@TaskM/service-providers/form';
-import { CloseButtonComponent } from '@TaskM/shared/ui';
 import { ButtonModule } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { DialogModule } from 'primeng/dialog';
@@ -16,10 +15,8 @@ import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-service-provider-competence',
-  standalone: true,
   imports: [
     CommonModule,
-    CloseButtonComponent,
     ButtonModule,
     DialogModule,
     ConfirmDialogModule,
@@ -30,18 +27,18 @@ import { TooltipModule } from 'primeng/tooltip';
   providers: [ConfirmationService],
 })
 export class ServiceProviderCompetenceComponent {
-  @Input() competence!: CompetenceDto;
+  private competenceService = inject(CompetenceService);
+  private dialogService = inject(DialogService);
+  private confirmationService = inject(ConfirmationService);
+
+  readonly competence = input.required<CompetenceDto>();
   serviceProvider$ = new BehaviorSubject<ServiceProviderDto | null>(null);
   loading = false;
   items: MenuItem[] = [];
 
   TaskLabel = TaskType;
 
-  constructor(
-    private competenceService: CompetenceService,
-    private dialogService: DialogService,
-    private confirmationService: ConfirmationService,
-  ) {
+  constructor() {
     this.items = [
       {
         label: 'Edit',
@@ -67,7 +64,7 @@ export class ServiceProviderCompetenceComponent {
       style: { width: '50vw' },
       modal: true,
       closeOnEscape: true,
-      data: { competence: this.competence },
+      data: { competence: this.competence() },
     });
   }
 
@@ -92,7 +89,7 @@ export class ServiceProviderCompetenceComponent {
 
   private deleteCompetence() {
     this.competenceService
-      .delete(this.competence.id)
+      .delete(this.competence().id)
       .subscribe((competence) => {
         this.competenceService.triggerChanges(competence);
       });

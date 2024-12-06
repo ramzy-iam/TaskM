@@ -1,11 +1,11 @@
-import { Directive, EventEmitter, HostListener, Output } from '@angular/core';
+import { Directive, HostListener, output } from '@angular/core';
 
 @Directive({
   selector: '[appScrollNearEnd]',
   standalone: true,
 })
 export class ScrollNearEndDirective {
-  @Output() nearEnd: EventEmitter<void> = new EventEmitter<void>();
+  readonly nearEnd = output<void>();
 
   @HostListener('scroll', ['$event'])
   windowScrollEvent(event: Event) {

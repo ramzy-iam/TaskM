@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { map } from 'rxjs';
@@ -7,7 +7,6 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { FormInputErrorComponent } from '@TaskM/shared/ui';
 import { ServiceProviderService } from '@TaskM/service-providers/data-access';
 import {
   AutoCompleteCompleteEvent,
@@ -17,16 +16,13 @@ import {
 
 @Component({
   selector: 'app-service-provider-autocomplete',
-  standalone: true,
   imports: [
     CommonModule,
-
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
     FloatLabelModule,
     InputNumberModule,
-    FormInputErrorComponent,
     AutoCompleteModule,
   ],
   template: `
@@ -72,6 +68,8 @@ import {
   `,
 })
 export class ServiceProviderAutocompleteComponent {
+  private serviceProviderService = inject(ServiceProviderService);
+
   form = input.required<FormGroup>();
   serviceProvider = input<BaseServiceProviderDto | null>(null);
   inputId = input<string>('');
@@ -86,8 +84,6 @@ export class ServiceProviderAutocompleteComponent {
   searchQuery = '';
   page = 1;
   limit = 15;
-
-  constructor(private serviceProviderService: ServiceProviderService) {}
 
   searchServiceProviders(event: AutoCompleteCompleteEvent) {
     this.searchQuery = event.query;

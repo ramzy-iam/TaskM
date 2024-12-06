@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Link } from './link';
 import { RouterModule } from '@angular/router';
@@ -15,21 +15,22 @@ import { SIDEBAR_KEY } from '@TaskM/core/constants';
 import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
-  selector: 'app-sidebar',
-  standalone: true,
-  imports: [CommonModule, RouterModule, NgIconComponent, TooltipModule],
-  providers: [
-    provideIcons({
-      heroBuildingOffice,
-      heroSquares2x2,
-      heroPresentationChartBar,
-      heroUserGroup,
-      heroQueueList,
-    }),
-  ],
-  templateUrl: './sidebar.component.html',
+    selector: 'app-sidebar',
+    imports: [CommonModule, RouterModule, NgIconComponent, TooltipModule],
+    providers: [
+        provideIcons({
+            heroBuildingOffice,
+            heroSquares2x2,
+            heroPresentationChartBar,
+            heroUserGroup,
+            heroQueueList,
+        }),
+    ],
+    templateUrl: './sidebar.component.html'
 })
 export class SidebarComponent implements OnInit {
+  private readonly storageService = inject<StorageService>(StorageService);
+
   private _isOpen?: boolean | null;
 
   @Input()
@@ -41,10 +42,6 @@ export class SidebarComponent implements OnInit {
   get isOpen(): boolean {
     return !!this._isOpen;
   }
-
-  constructor(
-    @Inject(StorageService) private readonly storageService: StorageService,
-  ) {}
 
   ngOnInit() {
     this._isOpen = !!this.storageService.getItem(SIDEBAR_KEY, true);
