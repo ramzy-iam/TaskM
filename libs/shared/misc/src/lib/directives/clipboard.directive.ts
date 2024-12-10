@@ -1,8 +1,14 @@
-import { Directive, ElementRef, HostListener, Renderer2, input, inject } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  HostListener,
+  Renderer2,
+  input,
+  inject,
+} from '@angular/core';
 import { Clipboard } from '@angular/cdk/clipboard';
 
 @Directive({
-  standalone: true,
   selector: '[appClipboard]',
 })
 export class ClipboardDirective {

@@ -2,7 +2,6 @@ import { Directive, HostListener, output } from '@angular/core';
 
 @Directive({
   selector: '[appScrollNearEnd]',
-  standalone: true,
 })
 export class ScrollNearEndDirective {
   readonly nearEnd = output<void>();
