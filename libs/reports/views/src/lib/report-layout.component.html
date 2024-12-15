@@ -1,0 +1,52 @@
+<div class="h-full gap-0 grid grid-rows-4 mt-4">
+  <app-section-header>
+    <div>
+      <div class="pt-8 pb-4 bg-white border-b border-gray">
+        <div class="flex flex-col">
+          <h1 class="text-[24px] text-black-2 font-semibold">Reports</h1>
+          <div class="flex justify-center items-center">
+            <form [formGroup]="reportTypeForm">
+              <p-selectButton
+                [options]="reportTypesOptions"
+                formControlName="type"
+                optionLabel="label"
+                optionValue="value"
+              />
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </app-section-header>
+  <div
+    class="grid grid-cols-3 h-auto max-w-full max-h-full row-span-3 overflow-hidden"
+  >
+    <div
+      class="relative w-full col-span-full max-h-full overflow-auto bg-white mb-2 pt-8"
+    >
+      @if (!reportTypeForm.value.type) {
+        <div class="flex justify-center items-center h-1/2">
+          <div class="flex flex-col" [style]="{ gap: '0.70rem' }">
+            <p [style]="{ marginLeft: '1.8rem' }">
+              Please select a report type
+            </p>
+            <img
+              src="assets/svg/select-option.svg"
+              alt="select-option"
+              width="400"
+            />
+          </div>
+        </div>
+      } @else {
+        @switch (reportTypeForm.value.type) {
+          @case (ReportType.SERVICE_PROVIDER) {
+            <p>Service Provider Report</p>
+          }
+          @case (ReportType.CLIENT) {
+            <p>client Report</p>
+          }
+        }
+      }
+    </div>
+  </div>
+</div>

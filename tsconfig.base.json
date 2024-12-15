@@ -44,6 +44,7 @@
         "libs/projects/feature-list/src/index.ts"
       ],
       "@TaskM/projects/form": ["libs/projects/form/src/index.ts"],
+      "@TaskM/reports/views": ["libs/reports/views/src/index.ts"],
       "@TaskM/service-providers/api": [
         "libs/service-providers/api/src/index.ts"
       ],

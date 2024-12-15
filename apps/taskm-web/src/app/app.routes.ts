@@ -40,6 +40,11 @@ export const appRoutes: Route[] = [
             (c) => c.ServiceProviderListComponent,
           ),
       },
+      {
+        path: 'reports',
+        loadComponent: () =>
+          import('@TaskM/reports/views').then((c) => c.ReportLayoutComponent),
+      },
     ],
   },
 ];

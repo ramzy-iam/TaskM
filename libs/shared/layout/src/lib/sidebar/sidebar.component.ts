@@ -9,24 +9,26 @@ import {
   heroPresentationChartBar,
   heroUserGroup,
   heroQueueList,
+  heroDocumentChartBar,
 } from '@ng-icons/heroicons/outline';
 import { StorageService } from '@TaskM/shared/misc';
 import { SIDEBAR_KEY } from '@TaskM/core/constants';
 import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
-    selector: 'app-sidebar',
-    imports: [CommonModule, RouterModule, NgIconComponent, TooltipModule],
-    providers: [
-        provideIcons({
-            heroBuildingOffice,
-            heroSquares2x2,
-            heroPresentationChartBar,
-            heroUserGroup,
-            heroQueueList,
-        }),
-    ],
-    templateUrl: './sidebar.component.html'
+  selector: 'app-sidebar',
+  imports: [CommonModule, RouterModule, NgIconComponent, TooltipModule],
+  providers: [
+    provideIcons({
+      heroBuildingOffice,
+      heroSquares2x2,
+      heroPresentationChartBar,
+      heroUserGroup,
+      heroQueueList,
+      heroDocumentChartBar,
+    }),
+  ],
+  templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent implements OnInit {
   private readonly storageService = inject<StorageService>(StorageService);
@@ -73,6 +75,11 @@ export class SidebarComponent implements OnInit {
       icon: 'heroUserGroup',
       label: 'Service Providers',
       link: 'service-providers',
+    },
+    {
+      icon: 'heroDocumentChartBar',
+      label: 'Reports',
+      link: 'reports',
     },
   ];
 }
