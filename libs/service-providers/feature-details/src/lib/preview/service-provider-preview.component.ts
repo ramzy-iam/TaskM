@@ -1,4 +1,11 @@
-import { Component, OnChanges, OnInit, SimpleChanges, input, inject } from '@angular/core';
+import {
+  Component,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  input,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   Competence,
@@ -22,18 +29,18 @@ import { ServiceProviderCompetenceComponent } from '../competence/service-provid
 import { PanelModule } from 'primeng/panel';
 
 @Component({
-    selector: 'app-service-provider-preview',
-    imports: [
-        CommonModule,
-        ServiceProviderFormComponent,
-        SkeletonModule,
-        CloseButtonComponent,
-        ButtonModule,
-        DialogModule,
-        ServiceProviderCompetenceComponent,
-        PanelModule,
-    ],
-    templateUrl: './service-provider-preview.component.html'
+  selector: 'app-service-provider-preview',
+  imports: [
+    CommonModule,
+    ServiceProviderFormComponent,
+    SkeletonModule,
+    CloseButtonComponent,
+    ButtonModule,
+    DialogModule,
+    ServiceProviderCompetenceComponent,
+    PanelModule,
+  ],
+  templateUrl: './service-provider-preview.component.html',
 })
 export class ServiceProviderPreviewComponent implements OnInit, OnChanges {
   private serviceProviderService = inject(ServiceProviderService);
@@ -42,10 +49,8 @@ export class ServiceProviderPreviewComponent implements OnInit, OnChanges {
   private competenceService = inject(CompetenceService);
 
   readonly serviceProviderId = input.required<string>();
-  private serviceProvidersSubject =
-    new BehaviorSubject<ServiceProviderDto | null>(null);
+  serviceProvider$ = new BehaviorSubject<ServiceProviderDto | null>(null);
   loading = false;
-  serviceProvider$ = this.serviceProvidersSubject.asObservable();
 
   TaskLabel = TaskType;
 
@@ -62,7 +67,7 @@ export class ServiceProviderPreviewComponent implements OnInit, OnChanges {
 
   showCompetenceDialog(competence?: CompetenceDto): void {
     const serviceProviderCompetences =
-      this.serviceProvidersSubject?.value?.competences ?? [];
+      this.serviceProvider$?.value?.competences ?? [];
     this.dialogService.open(CompetenceFormComponent, {
       header: 'New Service',
       breakpoints: { '1199px': '75vw', '575px': '90vw' },
@@ -88,7 +93,7 @@ export class ServiceProviderPreviewComponent implements OnInit, OnChanges {
         next: (serviceProvider) => {
           if (!serviceProvider) this.close();
 
-          this.serviceProvidersSubject.next(serviceProvider);
+          this.serviceProvider$.next(serviceProvider);
         },
         error: () => {
           this.close();
@@ -110,8 +115,7 @@ export class ServiceProviderPreviewComponent implements OnInit, OnChanges {
   }
 
   private handleCompetenceUpdate(competence: Competence): void {
-    const serviceProvider = this.serviceProvidersSubject
-      .value as ServiceProviderDto;
+    const serviceProvider = this.serviceProvider$.value as ServiceProviderDto;
     const competences = serviceProvider?.competences ?? [];
 
     const index = competences.findIndex((t) => t.id === competence.id);
@@ -127,7 +131,7 @@ export class ServiceProviderPreviewComponent implements OnInit, OnChanges {
     } else if (fromIdIndex !== -1) competences[fromIdIndex] = competence;
     else competences.push(competence);
 
-    this.serviceProvidersSubject.next({ ...serviceProvider, competences });
+    this.serviceProvider$.next({ ...serviceProvider, competences });
     this.serviceProviderService.triggerChanges({
       ...serviceProvider,
       competences,
