@@ -3,7 +3,7 @@ import { SectionHeaderComponent } from '@TaskM/shared/layout';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { ClientReportComponent } from './client/client-report.component';
 
 type UrlParams = {
   type: ReportType | null;
@@ -16,7 +16,12 @@ enum ReportType {
 
 @Component({
   selector: 'app-report-layout',
-  imports: [ReactiveFormsModule, SectionHeaderComponent, SelectButtonModule],
+  imports: [
+    ReactiveFormsModule,
+    SectionHeaderComponent,
+    SelectButtonModule,
+    ClientReportComponent,
+  ],
   templateUrl: './report-layout.component.html',
 })
 export class ReportLayoutComponent implements OnInit {

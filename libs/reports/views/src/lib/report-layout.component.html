@@ -1,5 +1,5 @@
-<div class="h-full gap-0 grid grid-rows-4 mt-4">
-  <app-section-header>
+<div class="h-full gap-0 mt-4">
+  <app-section-header class="h-29">
     <div>
       <div class="pt-8 pb-4 bg-white border-b border-gray">
         <div class="flex flex-col">
@@ -27,7 +27,13 @@
       @if (!reportTypeForm.value.type) {
         <div class="flex justify-center items-center h-1/2">
           <div class="flex flex-col" [style]="{ gap: '0.70rem' }">
-            <p [style]="{ marginLeft: '1.8rem' }">
+            <p
+              [style]="{
+                marginLeft: '1.8rem',
+                color: '#172B4D',
+                fontWeight: '500',
+              }"
+            >
               Please select a report type
             </p>
             <img
@@ -38,14 +44,16 @@
           </div>
         </div>
       } @else {
-        @switch (reportTypeForm.value.type) {
-          @case (ReportType.SERVICE_PROVIDER) {
-            <p>Service Provider Report</p>
+        <div>
+          @switch (reportTypeForm.value.type) {
+            @case (ReportType.SERVICE_PROVIDER) {
+              <p>Service Provider Report</p>
+            }
+            @case (ReportType.CLIENT) {
+              <app-client-report />
+            }
           }
-          @case (ReportType.CLIENT) {
-            <p>client Report</p>
-          }
-        }
+        </div>
       }
     </div>
   </div>
