@@ -1,26 +1,10 @@
 <div>
   <form [formGroup]="formGroup">
-    <div
-      class="grid gap-4"
-      [style]="{
-        gridTemplateColumns: 'repeat(12, minmax(0, 1fr))',
-        height: '350px',
-      }"
-    >
+    <div class="grid gap-4 h-[350px] grid-cols-12">
       <div
-        class="col-span-2 flex flex-col justify-center border border-gray"
-        [style]="{
-          gridColumnStart: '4',
-          'grid-column': 'span 4 / span 5',
-          height: '100%',
-          gap: '2em',
-          padding: '1rem',
-        }"
+        class="col-start-4 col-span-5 flex flex-col justify-center border border-gray h-full gap-8 p-8"
       >
-        <p
-          class="font-bold text-black-2s text-form-input flex justify-center"
-          [style]="{ color: '#172B4D', fontWeight: '500' }"
-        >
+        <p class="text-black-2s flex justify-center text-black-3 font-medium">
           Fill information first
         </p>
 

@@ -25,15 +25,9 @@
       class="relative w-full col-span-full max-h-full overflow-auto bg-white mb-2 pt-8"
     >
       @if (!reportTypeForm.value.type) {
-        <div class="flex justify-center items-center h-1/2">
-          <div class="flex flex-col" [style]="{ gap: '0.70rem' }">
-            <p
-              [style]="{
-                marginLeft: '1.8rem',
-                color: '#172B4D',
-                fontWeight: '500',
-              }"
-            >
+        <div class="flex justify-center items-center">
+          <div class="flex flex-col gap-3">
+            <p class="font-medium text-black3 ml-7">
               Please select a report type
             </p>
             <img
