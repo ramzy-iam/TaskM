@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -123,10 +123,10 @@ export class ClientReportComponent extends BaseEnumComponent implements OnInit {
   }
 
   fetchProjects(filters?: Nullable<ProjectsFilterDto>): void {
-    if (this.loading || (this.isLoadingMore && !this.hasMore)) return;
+    if (!this.canFetch) return;
 
-    this.setLoadingState(this.isInitialLoad(), !this.isInitialLoad());
-
+    if (this.loading || (this.isLoadingMore && !this.hasMore))
+      this.setLoadingState(this.isInitialLoad(), !this.isInitialLoad());
     this.projectService
       .getList({
         ...filters,
@@ -183,10 +183,6 @@ export class ClientReportComponent extends BaseEnumComponent implements OnInit {
     } else {
       this.isFormInitialized = true;
       this.resetAndFetchProjects(this.buildFilter());
-      this.router.navigate([], {
-        queryParams: { client: null },
-        queryParamsHandling: 'merge',
-      });
     }
   }
 
@@ -303,5 +299,11 @@ export class ClientReportComponent extends BaseEnumComponent implements OnInit {
       queryParams: {},
       queryParamsHandling: 'merge',
     });
+  }
+
+  private get canFetch(): boolean {
+    const filters = this.buildFilter();
+    console.log(filters, !!(filters.clientCode && filters.from && filters.to));
+    return !!(filters.clientCode && filters.from && filters.to);
   }
 }

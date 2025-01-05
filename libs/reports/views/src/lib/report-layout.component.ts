@@ -44,8 +44,14 @@ export class ReportLayoutComponent implements OnInit {
 
   private subscribeToFormChanges(): void {
     this.reportTypeForm.valueChanges.subscribe((value) => {
+      const params = { ...this.route.snapshot.queryParams } as UrlParams;
+
+      Object.keys(params).forEach((key) => {
+        params[key as keyof UrlParams] = null;
+      });
+
       this.router.navigate([], {
-        queryParams: { type: value.type },
+        queryParams: { ...params, type: value.type },
         queryParamsHandling: 'merge',
       });
     });
