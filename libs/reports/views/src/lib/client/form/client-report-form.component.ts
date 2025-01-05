@@ -1,10 +1,15 @@
-import { Component, OnInit, input } from '@angular/core';
+import { Component, OnInit, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 
 import { RouterModule } from '@angular/router';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { BaseEnumComponent } from '@TaskM/shared/misc';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { BaseEnumComponent, FormUtilsService } from '@TaskM/shared/misc';
 import { ClientAutocompleteComponent } from '@TaskM/clients/form';
 import { CalendarModule } from 'primeng/calendar';
 import { ReportForm } from '../form';
@@ -29,12 +34,23 @@ export class ClientReportFormComponent
   extends BaseEnumComponent
   implements OnInit
 {
+  private formUtils = inject(FormUtilsService);
+
   filterForm = input.required<ReportForm>();
   formGroup: ReportForm;
   loading = false;
 
   ngOnInit(): void {
-    this.formGroup = new FormGroup(this.filterForm().controls);
+    this.initializeForm();
+  }
+
+  private initializeForm() {
+    this.formGroup = new FormGroup({
+      client: this.formUtils.createMinimalClientForm(null, { required: true }),
+      period: new FormControl<(Date | null)[] | null | undefined>(null, [
+        Validators.required,
+      ]),
+    });
   }
 
   generateReport() {

@@ -28,8 +28,8 @@ export class ReportLayoutComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   readonly reportTypesOptions = [
-    { label: 'Service Provider', value: 'service-provider' },
     { label: 'Client', value: 'client' },
+    { label: 'Service Provider', value: 'service-provider' },
   ];
   reportTypeForm: FormGroup<{
     type: FormControl<ReportType | null>;

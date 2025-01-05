@@ -303,7 +303,6 @@ export class ClientReportComponent extends BaseEnumComponent implements OnInit {
 
   private get canFetch(): boolean {
     const filters = this.buildFilter();
-    console.log(filters, !!(filters.clientCode && filters.from && filters.to));
     return !!(filters.clientCode && filters.from && filters.to);
   }
 }
