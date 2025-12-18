@@ -1,4 +1,10 @@
-import { Currency, PAGINATION } from '@TaskM/core/constants';
+import {
+  Currency,
+  LoadUnit,
+  PAGINATION,
+  ProjectStatusCode,
+  TaskDateFilterField,
+} from '@TaskM/core/constants';
 import { CastHelper } from '@TaskM/core/helpers';
 import { OrderType } from '@TaskM/core/types';
 import { Expose, Transform, Type } from 'class-transformer';
@@ -62,7 +68,7 @@ export class BaseFilterDto {
 
   @Transform(({ value }) => CastHelper.trim(value))
   @IsOptional()
-  orderField?: string;
+  orderField?: TaskDateFilterField;
 
   @Transform(({ value }) => CastHelper.toBoolean(value))
   @IsOptional()
@@ -113,6 +119,18 @@ export class BaseProjectDto {
 
   @Expose()
   poId: string;
+
+  @Expose()
+  status: ProjectStatusCode;
+
+  @Expose()
+  count: number;
+
+  @Expose()
+  unit: LoadUnit;
+
+  @Expose()
+  deadline: Date;
 
   @Type(() => BaseClientDto)
   @Expose()

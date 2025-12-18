@@ -1,10 +1,9 @@
-import { Component, Input, OnInit, OnDestroy, Optional } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ServiceProviderService } from '@TaskM/service-providers/data-access';
 import {
   FormControl,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -27,10 +26,8 @@ import { FormInputErrorComponent } from '@TaskM/shared/ui';
 
 @Component({
   selector: 'app-service-provider-form',
-  standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
@@ -45,21 +42,17 @@ export class ServiceProviderFormComponent
   extends BaseEnumComponent
   implements OnInit, OnDestroy
 {
+  private serviceProviderService = inject(ServiceProviderService);
+  dialogRef = inject(DynamicDialogRef, { optional: true });
+  private formUtils = inject(FormUtilsService);
+
   private _serviceProvider!: ServiceProviderDto;
   form!: FormGroup;
   loading = false;
   private initialFormValues: any;
   private formValueChangesSubscription!: Subscription;
 
-  constructor(
-    private serviceProviderService: ServiceProviderService,
-    @Optional() public dialogRef: DynamicDialogRef,
-    private formUtils: FormUtilsService,
-  ) {
-    super();
-  }
-
-  @Input() autoSave? = false;
+  readonly autoSave = input<boolean | undefined>(false);
   @Input()
   set serviceProvider(serviceProvider: ServiceProviderDto | null) {
     if (serviceProvider) {
@@ -84,9 +77,10 @@ export class ServiceProviderFormComponent
 
   private initializeForm(serviceProvider: ServiceProviderDto | null) {
     this.form = new FormGroup({
-      firstName: new FormControl<string | undefined>(serviceProvider?.firstName, [
-        Validators.required,
-      ]),
+      firstName: new FormControl<string | undefined>(
+        serviceProvider?.firstName,
+        [Validators.required],
+      ),
       lastName: new FormControl<string | undefined>(serviceProvider?.lastName, [
         Validators.required,
       ]),
@@ -97,9 +91,10 @@ export class ServiceProviderFormComponent
       accountType: new FormControl<string>(serviceProvider?.accountType ?? '', [
         Validators.required,
       ]),
-      accountName: new FormControl<string | undefined>(serviceProvider?.accountName, [
-        Validators.required,
-      ]),
+      accountName: new FormControl<string | undefined>(
+        serviceProvider?.accountName,
+        [Validators.required],
+      ),
       accountNumber: new FormControl<string | undefined>(
         serviceProvider?.accountNumber,
         [Validators.required],
@@ -141,7 +136,8 @@ export class ServiceProviderFormComponent
 
         this.formUtils.handleErrors(this.form, error.error);
 
-        if (this.serviceProvider?.id) this.form.patchValue(this.initialFormValues); // Reset form with initial values on error
+        if (this.serviceProvider?.id)
+          this.form.patchValue(this.initialFormValues); // Reset form with initial values on error
 
         // Resubscribe to form value changes
         this.triggerAutoSave();
@@ -152,7 +148,7 @@ export class ServiceProviderFormComponent
   private triggerAutoSave() {
     this.formValueChangesSubscription = this.form.valueChanges
       .pipe(
-        filter(() => !!this.autoSave),
+        filter(() => !!this.autoSave()),
         debounceTime(3000),
         distinctUntilChanged(
           (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr),

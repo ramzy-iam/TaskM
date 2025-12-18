@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionHeaderComponent } from '@TaskM/shared/layout';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { provideIcons } from '@ng-icons/core';
 import { radixCross2 } from '@ng-icons/radix-icons';
 import {
   InputSearchComponent,
@@ -11,7 +11,10 @@ import {
   NoDataComponent,
   SpinnerComponent,
 } from '@TaskM/shared/ui';
-import { ServiceProvider, ServiceProviderService } from '@TaskM/service-providers/data-access';
+import {
+  ServiceProvider,
+  ServiceProviderService,
+} from '@TaskM/service-providers/data-access';
 import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import {
@@ -22,14 +25,12 @@ import {
   finalize,
 } from 'rxjs';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { ServiceProviderPreviewDto, ServiceProvidersFilterDto } from '@TaskM/core/dto';
-import { ServiceProviderDetailsComponent } from '@TaskM/service-providers/feature-details';
+  ServiceProviderPreviewDto,
+  ServiceProvidersFilterDto,
+} from '@TaskM/core/dto';
+import { ServiceProviderPreviewComponent } from '@TaskM/service-providers/feature-details';
 import { ServiceProviderFormComponent } from '@TaskM/service-providers/form';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FormUtilsService, ScrollNearEndDirective } from '@TaskM/shared/misc';
@@ -46,21 +47,17 @@ type UrlParams = ServiceProvidersFilterDto & {
 };
 @Component({
   selector: 'app-service-provider-list',
-  standalone: true,
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule,
     ReactiveFormsModule,
-    NgIconComponent,
     SectionHeaderComponent,
     ButtonModule,
     InputTextModule,
     InputSearchComponent,
     ListItemComponent,
-    ServiceProviderDetailsComponent,
+    ServiceProviderPreviewComponent,
     DialogModule,
-    ServiceProviderFormComponent,
     SkeletonModule,
     SpinnerComponent,
     ScrollNearEndDirective,
@@ -75,6 +72,12 @@ type UrlParams = ServiceProvidersFilterDto & {
   host: { class: 'h-full py-1' },
 })
 export class ServiceProviderListComponent implements OnInit, OnDestroy {
+  private serviceProviderService = inject(ServiceProviderService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private dialogService = inject(DialogService);
+  private formUtils = inject(FormUtilsService);
+
   loading = false;
   isLoadingMore = false;
   private page = PAGINATION.DEFAULT_PAGE;
@@ -98,13 +101,7 @@ export class ServiceProviderListComponent implements OnInit, OnDestroy {
     name: value,
   }));
 
-  constructor(
-    private serviceProviderService: ServiceProviderService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private dialogService: DialogService,
-    private formUtils: FormUtilsService,
-  ) {}
+  TaskLabel = TaskType;
 
   ngOnInit(): void {
     this.initializeFilterForm();
@@ -124,16 +121,22 @@ export class ServiceProviderListComponent implements OnInit, OnDestroy {
     });
   }
 
-  private resetAndFetchServiceProviders(filters?: Nullable<ServiceProvidersFilterDto>): void {
+  private resetAndFetchServiceProviders(
+    filters?: Nullable<ServiceProvidersFilterDto>,
+  ): void {
     this.page = PAGINATION.DEFAULT_PAGE;
     this.hasMore = false;
     this.serviceProvidersSubject.next([]);
     this.fetchServiceProviders(filters);
   }
 
-  private handleServiceProviderUpdate(serviceProvider: ServiceProviderPreviewDto): void {
+  private handleServiceProviderUpdate(
+    serviceProvider: ServiceProviderPreviewDto,
+  ): void {
     const currentServiceProviders = this.serviceProvidersSubject.getValue();
-    const index = currentServiceProviders.findIndex((t) => t.id === serviceProvider.id);
+    const index = currentServiceProviders.findIndex(
+      (t) => t.id === serviceProvider.id,
+    );
 
     if (index !== -1) {
       currentServiceProviders[index] = serviceProvider;
@@ -144,7 +147,9 @@ export class ServiceProviderListComponent implements OnInit, OnDestroy {
     this.serviceProvidersSubject.next(currentServiceProviders);
   }
 
-  private fetchServiceProviders(filters?: Nullable<ServiceProvidersFilterDto>): void {
+  private fetchServiceProviders(
+    filters?: Nullable<ServiceProvidersFilterDto>,
+  ): void {
     if (this.loading || (this.isLoadingMore && !this.hasMore)) return;
 
     this.setLoadingState(this.isInitialLoad(), !this.isInitialLoad());
@@ -227,11 +232,13 @@ export class ServiceProviderListComponent implements OnInit, OnDestroy {
     this.route.queryParams
       .pipe(
         distinctUntilChanged(
-          (prev, curr) => prev['selectedServiceProvider'] === curr['selectedServiceProvider'],
+          (prev, curr) =>
+            prev['selectedServiceProvider'] === curr['selectedServiceProvider'],
         ),
       )
       .subscribe((params) => {
-        this.selectedServiceProvider = params['selectedServiceProvider'] ?? null;
+        this.selectedServiceProvider =
+          params['selectedServiceProvider'] ?? null;
       });
 
     // Subscriber for other route params
@@ -239,8 +246,10 @@ export class ServiceProviderListComponent implements OnInit, OnDestroy {
       .pipe(
         filter(() => this.isFormInitialized),
         distinctUntilChanged((prev, curr) => {
-          const { selectedServiceProvider: prevServiceProvider, ...prevRest } = prev;
-          const { selectedServiceProvider: currServiceProvider, ...currRest } = curr;
+          const { selectedServiceProvider: prevServiceProvider, ...prevRest } =
+            prev;
+          const { selectedServiceProvider: currServiceProvider, ...currRest } =
+            curr;
           return JSON.stringify(prevRest) === JSON.stringify(currRest);
         }),
       )

@@ -69,16 +69,17 @@ export class TasksScope extends SelectQueryBuilder<Task> {
     return this;
   }
 
-  _orderBy(
-    field: string = TaskDateFilterField.CREATED_AT,
+  order(
+    field: TaskDateFilterField = TaskDateFilterField.CREATED_AT,
     order: OrderType = 'DESC',
   ) {
     return this.addOrderBy(`Tasks.${field}`, order);
   }
 
-  filterByStatus(status: TaskStatusCode) {
-    return this.andWhere('Tasks.status = :status', {
-      status,
+  filterByStatus(statuses: TaskStatusCode[], exclude = false) {
+    const operator = exclude ? 'NOT IN' : 'IN';
+    return this.andWhere(`Tasks.status ${operator} (:...statuses)`, {
+      statuses,
     });
   }
 

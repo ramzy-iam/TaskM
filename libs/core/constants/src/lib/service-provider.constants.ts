@@ -19,10 +19,19 @@ export enum TaskTypeCode {
   TEP = 'TEP',
   TCREA = 'TCREA',
   TRANS = 'TRANS',
-  MPTE = 'MPTE',
+  MTPE = 'MTPE',
   SUBT = 'SUBT',
   DTP = 'DTP',
   VO = 'VO',
+  VOIREC = 'VOIREC',
+  VIDEO = 'VIDEO',
+  PHOTO = 'PHOTO',
+  DESIGN = 'DESIGN',
+  CWRITE = 'CWRITE',
+  QA = 'QA',
+  PRINT = 'PRINT',
+  DESPRI = 'DESPRI',
+  FBACK = 'FBACK',
 }
 
 export enum PaymentMethod {
@@ -52,22 +61,26 @@ export enum LoadUnit {
 
 export enum ProjectStatus {
   NOT_STARTED = 'Not Started',
-  COMPLETED = 'Completed',
+  DELIVERED = 'Delivered',
   IN_PROGRESS = 'In Progress',
   CANCELLED = 'Cancelled',
   ON_HOLD = 'On Hold',
-  DELIVERED_WAITING_QA = 'Delivered & waiting QA',
-  DELIVERED_CLOSED = 'Delivered & closed',
+  WAITING_QA = 'Waiting QA',
+  CLOSED = 'Closed',
+  QA_ING = 'QAing',
+  APPROVED = 'Approved',
 }
 
 export enum ProjectStatusCode {
   NOT_STARTED = 'NOT_STARTED',
-  COMPLETED = 'COMPLETED',
+  DELIVERED = 'DELIVERED',
   IN_PROGRESS = 'IN_PROGRESS',
   CANCELLED = 'CANCELLED',
   ON_HOLD = 'ON_HOLD',
-  DELIVERED_WAITING_QA = 'DELIVERED_WAITING_QA',
-  DELIVERED_CLOSED = 'DELIVERED_CLOSED',
+  WAITING_QA = 'WAITING_QA',
+  CLOSED = 'CLOSED',
+  QA_ING = 'QA_ING',
+  APPROVED = 'APPROVED',
 }
 
 export enum TaskStatus {
@@ -75,6 +88,7 @@ export enum TaskStatus {
   IN_PROGRESS = 'In Progress',
   COMPLETED = 'Completed',
   CANCELLED = 'Cancelled',
+  ON_HOLD = 'On Hold',
 }
 
 export enum TaskStatusCode {
@@ -82,6 +96,7 @@ export enum TaskStatusCode {
   IN_PROGRESS = 'IN_PROGRESS',
   COMPLETED = 'COMPLETED',
   CANCELLED = 'CANCELLED',
+  ON_HOLD = 'ON_HOLD',
 }
 
 export enum LanguageCode {
@@ -117,10 +132,19 @@ export const TaskType: { [key in keyof typeof TaskTypeCode]: string } = {
   [TaskTypeCode.TEP]: 'Translation, Editing & Proofreading',
   [TaskTypeCode.TCREA]: 'Transcreation',
   [TaskTypeCode.TRANS]: 'Transcription',
-  [TaskTypeCode.MPTE]: 'Machine Post Editing',
+  [TaskTypeCode.MTPE]: 'Machine Tanslation Post Editing',
   [TaskTypeCode.SUBT]: 'Subtitling',
   [TaskTypeCode.DTP]: 'Desktop Publishing',
   [TaskTypeCode.VO]: 'Voice Over',
+  [TaskTypeCode.VOIREC]: 'Voice Recording',
+  [TaskTypeCode.VIDEO]: 'Videography',
+  [TaskTypeCode.PHOTO]: 'Photography',
+  [TaskTypeCode.DESIGN]: 'Graphic Design',
+  [TaskTypeCode.CWRITE]: 'Content Writing',
+  [TaskTypeCode.QA]: 'Quality Assurance',
+  [TaskTypeCode.PRINT]: 'Printing',
+  [TaskTypeCode.FBACK]: 'Feedback Implementation',
+  [TaskTypeCode.DESPRI]: 'Design & Printing',
 };
 
 export const Language: { [key in keyof typeof LanguageCode]: string } = {

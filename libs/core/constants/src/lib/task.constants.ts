@@ -8,4 +8,5 @@ export const TaskTagSeverity: {
   [TaskStatusCode.NOT_STARTED]: 'warning',
   [TaskStatusCode.IN_PROGRESS]: 'info',
   [TaskStatusCode.CANCELLED]: 'danger',
+  [TaskStatusCode.ON_HOLD]: 'warning',
 };

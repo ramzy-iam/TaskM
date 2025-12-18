@@ -1,10 +1,9 @@
-import { Component, Input, OnInit, OnDestroy, Optional } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TaskService } from '@TaskM/tasks/data-access';
 import {
   FormControl,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -66,31 +65,35 @@ type DisabledFields = {
 };
 
 @Component({
-  selector: 'app-task-form',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule,
-    ReactiveFormsModule,
-    ButtonModule,
-    InputTextModule,
-    FloatLabelModule,
-    DropdownModule,
-    InputNumberModule,
-    FormInputErrorComponent,
-    CalendarModule,
-    ServiceProviderAutocompleteComponent,
-    ProjectAutocompleteComponent,
-    SpinnerComponent,
-    TooltipModule,
-  ],
-  templateUrl: './task-form.component.html',
+    selector: 'app-task-form',
+    imports: [
+        CommonModule,
+        RouterModule,
+        ReactiveFormsModule,
+        ButtonModule,
+        InputTextModule,
+        FloatLabelModule,
+        DropdownModule,
+        InputNumberModule,
+        FormInputErrorComponent,
+        CalendarModule,
+        ServiceProviderAutocompleteComponent,
+        ProjectAutocompleteComponent,
+        SpinnerComponent,
+        TooltipModule,
+    ],
+    templateUrl: './task-form.component.html'
 })
 export class TaskFormComponent
   extends BaseEnumComponent
   implements OnInit, OnDestroy
 {
+  protected taskService = inject(TaskService);
+  protected dialogRef = inject(DynamicDialogRef, { optional: true });
+  protected formUtils = inject(FormUtilsService);
+  protected projectService = inject(ProjectService);
+  protected competenceService = inject(CompetenceService);
+
   _task!: TaskDto | null;
   form!: FormGroup;
   loading = false;
@@ -119,17 +122,7 @@ export class TaskFormComponent
   statusCode: TaskStatusCode | null = null;
   taskTagSeverity = TaskTagSeverity;
 
-  constructor(
-    protected taskService: TaskService,
-    @Optional() protected dialogRef: DynamicDialogRef,
-    protected formUtils: FormUtilsService,
-    protected projectService: ProjectService,
-    protected competenceService: CompetenceService,
-  ) {
-    super();
-  }
-
-  @Input() autoSave = false;
+  readonly autoSave = input(false);
   @Input()
   set task(task: TaskDto | null) {
     if (task) {
@@ -268,7 +261,7 @@ export class TaskFormComponent
   protected triggerAutoSave(force = false) {
     this.formValueChangesSubscription = this.form?.valueChanges
       .pipe(
-        filter(() => !!this.autoSave || !!force),
+        filter(() => !!this.autoSave() || !!force),
         debounceTime(3000),
         distinctUntilChanged(
           (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr),

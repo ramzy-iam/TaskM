@@ -113,7 +113,7 @@ export class CompetencesService {
       query.filterByServiceProviderId(filters?.serviceProviderId);
     if (filters?.code) query.filterByCode(filters?.code);
 
-    query._orderBy();
+    query.order();
 
     return (
       filters?.page && filters?.limit

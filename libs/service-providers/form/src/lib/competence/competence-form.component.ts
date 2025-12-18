@@ -1,10 +1,9 @@
-import { Component, Input, OnInit, OnDestroy, Optional } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CompetenceService } from '@TaskM/service-providers/data-access';
 import {
   FormControl,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -25,25 +24,28 @@ import {
 } from '@TaskM/core/constants';
 
 @Component({
-  selector: 'app-competence-form',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ButtonModule,
-    InputTextModule,
-    FloatLabelModule,
-    DropdownModule,
-    InputNumberModule,
-    FormInputErrorComponent,
-  ],
-  templateUrl: './competence-form.component.html',
+    selector: 'app-competence-form',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        ButtonModule,
+        InputTextModule,
+        FloatLabelModule,
+        DropdownModule,
+        InputNumberModule,
+        FormInputErrorComponent,
+    ],
+    templateUrl: './competence-form.component.html'
 })
 export class CompetenceFormComponent
   extends BaseEnumComponent
   implements OnInit, OnDestroy
 {
+  private competenceService = inject(CompetenceService);
+  dialogRef = inject(DynamicDialogRef, { optional: true });
+  private formUtils = inject(FormUtilsService);
+  private dialogConfig = inject(DynamicDialogConfig);
+
   private _competence!: CompetenceDto;
   form!: FormGroup;
   loading = false;
@@ -53,12 +55,7 @@ export class CompetenceFormComponent
   availableTasks: { value: string; name: string }[] = [];
   private existingCompetences: CompetenceDto[] = [];
 
-  constructor(
-    private competenceService: CompetenceService,
-    @Optional() public dialogRef: DynamicDialogRef,
-    private formUtils: FormUtilsService,
-    private dialogConfig: DynamicDialogConfig,
-  ) {
+  constructor() {
     super();
     if (this.dialogConfig?.data?.competence) {
       this.competence = this.dialogConfig.data.competence;
@@ -68,7 +65,7 @@ export class CompetenceFormComponent
     this.excludeTasks();
   }
 
-  @Input() autoSave?: boolean = false;
+  readonly autoSave = input<boolean | undefined>(false);
   @Input()
   set competence(competence: CompetenceDto | null) {
     if (competence) {
@@ -116,7 +113,9 @@ export class CompetenceFormComponent
         competence?.currency ?? Currency.XAF,
         [Validators.required],
       ),
-      serviceProviderId: new FormControl<string | undefined>(competence?.serviceProviderId),
+      serviceProviderId: new FormControl<string | undefined>(
+        competence?.serviceProviderId,
+      ),
     });
 
     // Store initial form values

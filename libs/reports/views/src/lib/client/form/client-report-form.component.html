@@ -1,0 +1,52 @@
+<div>
+  <form [formGroup]="formGroup">
+    <div class="grid gap-4 h-[350px] grid-cols-12">
+      <div
+        class="col-start-4 col-span-5 flex flex-col justify-center border border-gray h-full gap-8 p-8"
+      >
+        <p class="text-black-2s flex justify-center text-black-3 font-medium">
+          Fill information first
+        </p>
+
+        <div
+          class="flex flex-col justify-center"
+          [style]="{
+            gap: '3rem',
+          }"
+        >
+          <app-client-autocomplete
+            [form]="formGroup"
+            label="Client"
+            [floatLabel]="true"
+            inputId="clientName"
+            [showClear]="true"
+          />
+          <p-floatLabel>
+            <p-calendar
+              placeholder="Period"
+              formControlName="period"
+              selectionMode="range"
+              showIcon="true"
+              [iconDisplay]="'input'"
+              showButtonBar="true"
+              appendTo="body"
+              inputId="period"
+            />
+            <label for="period">Period</label>
+          </p-floatLabel>
+          <div class="flex justify-center">
+            @let buttonLabel = 'Generate report';
+            <p-button
+              [label]="buttonLabel"
+              [title]="buttonLabel"
+              [disabled]="formGroup.invalid || loading"
+              [loading]="loading"
+              class="col-span-2"
+              (click)="generateReport()"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

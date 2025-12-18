@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Link } from './link';
 import { RouterModule } from '@angular/router';
@@ -9,6 +9,7 @@ import {
   heroPresentationChartBar,
   heroUserGroup,
   heroQueueList,
+  heroDocumentChartBar,
 } from '@ng-icons/heroicons/outline';
 import { StorageService } from '@TaskM/shared/misc';
 import { SIDEBAR_KEY } from '@TaskM/core/constants';
@@ -16,7 +17,6 @@ import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-sidebar',
-  standalone: true,
   imports: [CommonModule, RouterModule, NgIconComponent, TooltipModule],
   providers: [
     provideIcons({
@@ -25,11 +25,14 @@ import { TooltipModule } from 'primeng/tooltip';
       heroPresentationChartBar,
       heroUserGroup,
       heroQueueList,
+      heroDocumentChartBar,
     }),
   ],
   templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent implements OnInit {
+  private readonly storageService = inject<StorageService>(StorageService);
+
   private _isOpen?: boolean | null;
 
   @Input()
@@ -42,20 +45,16 @@ export class SidebarComponent implements OnInit {
     return !!this._isOpen;
   }
 
-  constructor(
-    @Inject(StorageService) private readonly storageService: StorageService,
-  ) {}
-
   ngOnInit() {
     this._isOpen = !!this.storageService.getItem(SIDEBAR_KEY, true);
   }
 
   links: Link[] = [
-    // {
-    //   icon: 'heroSquares2x2',
-    //   label: 'Dashboard',
-    //   link: 'dashboard',
-    // },
+    {
+      icon: 'heroSquares2x2',
+      label: 'Dashboard',
+      link: 'dashboard',
+    },
     {
       icon: 'heroBuildingOffice',
       label: 'Clients',
@@ -76,6 +75,11 @@ export class SidebarComponent implements OnInit {
       icon: 'heroUserGroup',
       label: 'Service Providers',
       link: 'service-providers',
+    },
+    {
+      icon: 'heroDocumentChartBar',
+      label: 'Reports',
+      link: 'reports',
     },
   ];
 }

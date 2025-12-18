@@ -1,10 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionHeaderComponent } from '@TaskM/shared/layout';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { radixCross2 } from '@ng-icons/radix-icons';
 import {
   InputSearchComponent,
   ListItemComponent,
@@ -22,14 +20,9 @@ import {
   finalize,
 } from 'rxjs';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ClientPreviewDto, ClientsFilterDto } from '@TaskM/core/dto';
-import { ClientDetailsComponent } from '@TaskM/clients/feature-details';
+import { ClientPreviewComponent } from '@TaskM/clients/feature-details';
 import { ClientFormComponent } from '@TaskM/clients/form';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FormUtilsService, ScrollNearEndDirective } from '@TaskM/shared/misc';
@@ -41,31 +34,33 @@ type UrlParams = ClientsFilterDto & {
 };
 @Component({
   selector: 'app-client-list',
-  standalone: true,
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule,
     ReactiveFormsModule,
-    NgIconComponent,
     SectionHeaderComponent,
     ButtonModule,
     InputTextModule,
     InputSearchComponent,
     ListItemComponent,
-    ClientDetailsComponent,
+    ClientPreviewComponent,
     DialogModule,
-    ClientFormComponent,
     SkeletonModule,
     SpinnerComponent,
     ScrollNearEndDirective,
     NoDataComponent,
   ],
-  providers: [DialogService, provideIcons({ radixCross2 })],
+  providers: [DialogService],
   templateUrl: './client-list.component.html',
   host: { class: 'h-full py-1' },
 })
 export class ClientListComponent implements OnInit, OnDestroy {
+  private clientService = inject(ClientService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private dialogService = inject(DialogService);
+  private formUtils = inject(FormUtilsService);
+
   loading = false;
   isLoadingMore = false;
   private page = PAGINATION.DEFAULT_PAGE;
@@ -80,14 +75,6 @@ export class ClientListComponent implements OnInit, OnDestroy {
   dialogRef?: DynamicDialogRef;
   isFilterActivated = false;
   private isFormInitialized = false;
-
-  constructor(
-    private clientService: ClientService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private dialogService: DialogService,
-    private formUtils: FormUtilsService,
-  ) {}
 
   ngOnInit(): void {
     this.initializeFilterForm();
