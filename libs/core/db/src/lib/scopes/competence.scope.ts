@@ -47,7 +47,7 @@ export class CompetencesScope extends SelectQueryBuilder<Competence> {
     });
   }
 
-  _orderBy(order: OrderType = 'DESC') {
+  order(order: OrderType = 'DESC') {
     return this.addOrderBy(`"Competences"."code"`, order);
   }
 }

@@ -1,10 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionHeaderComponent } from '@TaskM/shared/layout';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { radixCross2 } from '@ng-icons/radix-icons';
 import {
   InputSearchComponent,
   ListItemComponent,
@@ -23,14 +21,9 @@ import {
   finalize,
 } from 'rxjs';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TaskPreviewDto, TasksFilterDto } from '@TaskM/core/dto';
-import { TaskDetailsComponent } from '@TaskM/tasks/feature-details';
+import { TaskPreviewComponent } from '@TaskM/tasks/feature-details';
 import { TaskFormComponent } from '@TaskM/tasks/form';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FormUtilsService, ScrollNearEndDirective } from '@TaskM/shared/misc';
@@ -58,19 +51,16 @@ type UrlParams = TasksFilterDto & {
 
 @Component({
   selector: 'app-task-list',
-  standalone: true,
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule,
     ReactiveFormsModule,
-    NgIconComponent,
     SectionHeaderComponent,
     ButtonModule,
     InputTextModule,
     InputSearchComponent,
     ListItemComponent,
-    TaskDetailsComponent,
+    TaskPreviewComponent,
     DialogModule,
     SkeletonModule,
     SpinnerComponent,
@@ -83,11 +73,18 @@ type UrlParams = TasksFilterDto & {
     ProjectAutocompleteComponent,
     CalendarModule,
   ],
-  providers: [DialogService, provideIcons({ radixCross2 })],
+  providers: [DialogService],
   templateUrl: './task-list.component.html',
   host: { class: 'h-full py-1' },
 })
 export class TaskListComponent implements OnInit, OnDestroy {
+  private taskService = inject(TaskService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private dialogService = inject(DialogService);
+  private formUtils = inject(FormUtilsService);
+  private projectService = inject(ProjectService);
+
   loading = false;
   isLoadingMore = false;
   private page = PAGINATION.DEFAULT_PAGE;
@@ -131,15 +128,6 @@ export class TaskListComponent implements OnInit, OnDestroy {
   }));
 
   private isFormInitialized = false;
-
-  constructor(
-    private taskService: TaskService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private dialogService: DialogService,
-    private formUtils: FormUtilsService,
-    private projectService: ProjectService,
-  ) {}
 
   ngOnInit(): void {
     this.initializeFilterForm();
@@ -253,17 +241,20 @@ export class TaskListComponent implements OnInit, OnDestroy {
         name: string | null;
       } | null>({
         code: params?.status ?? null,
-        name: TaskStatus[params?.status!] ?? null,
+        name: TaskStatus[params?.status as TaskStatusCode] ?? null,
       }),
       task: new FormControl<{
         code: TaskTypeCode | null;
         name: string | null;
       } | null>({
         code: params?.task ?? null,
-        name: TaskType[params.task!] ?? null,
+        name: TaskType[params.task as TaskTypeCode] ?? null,
       }),
       project: this.formUtils.createMinimalClientForm(null, {}),
-      serviceProvider: this.formUtils.createMinimalServiceProviderForm(null, {}),
+      serviceProvider: this.formUtils.createMinimalServiceProviderForm(
+        null,
+        {},
+      ),
       period: new FormControl<(Date | null)[] | null | undefined>(
         this.getPeriodFromParams(params),
       ),

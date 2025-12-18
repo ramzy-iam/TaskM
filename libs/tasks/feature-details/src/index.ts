@@ -1,1 +1,1 @@
-export * from './lib/task-details.component';
+export * from './lib/preview/task-preview.component';

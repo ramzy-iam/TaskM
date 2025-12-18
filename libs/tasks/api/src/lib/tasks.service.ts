@@ -1,11 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CompetencesService } from '@TaskM/competences/api';
-import { TaskDateFilterField, TaskTypeCode } from '@TaskM/core/constants';
+import {
+  TaskDateFilterField,
+  TaskStatusCode,
+  TaskTypeCode,
+} from '@TaskM/core/constants';
 import { Task, TasksRepository } from '@TaskM/core/db';
 import { TasksFilterDto, CreateTaskDto, UpdateTaskDto } from '@TaskM/core/dto';
 import { DayjsHelper, UtilsHelper } from '@TaskM/core/helpers';
 import { paginateResult } from '@TaskM/core/helpers/backend';
 import { ProjectsService } from '@TaskM/projects/api';
+import { ProjectTaskStatusManagerService } from '@TaskM/shared/api';
 import { capitalize } from 'radash';
 
 @Injectable()
@@ -14,6 +19,7 @@ export class TasksService {
     private tasksRepository: TasksRepository,
     private projectsService: ProjectsService,
     private competencesService: CompetencesService,
+    private projectTaskStatusManagerService: ProjectTaskStatusManagerService,
   ) {}
 
   async create(taskDto: CreateTaskDto) {
@@ -42,12 +48,25 @@ export class TasksService {
   }
 
   async update(id: string, taskDto: UpdateTaskDto) {
+    const task = await this.getOne(id);
+    if (!task) throw new BadRequestException('Task not found');
     await this.validateBeforeCreateOrUpdate(taskDto, id);
+
+    let status: TaskStatusCode | null = null;
+
+    if (taskDto.status && task.status !== taskDto.status) {
+      status = taskDto.status;
+      delete taskDto.status;
+    }
 
     await this.tasksRepository.update(
       { id },
       UtilsHelper.convertUndefinedToNull(taskDto),
     );
+
+    if (status)
+      await this.projectTaskStatusManagerService.updateTaskStatus(id, status);
+
     return this.getOne(id);
   }
 
@@ -66,13 +85,15 @@ export class TasksService {
     if (taskDto?.rateId) {
       const rate = await this.competencesService.findOne({
         id: taskDto.rateId,
-        serviceProviderId: taskDto?.serviceProviderId ?? existingTask?.serviceProviderId,
+        serviceProviderId:
+          taskDto?.serviceProviderId ?? existingTask?.serviceProviderId,
       });
 
       if (!rate) throw new BadRequestException(`Rate not found`);
       if (
         existingTask &&
-        (taskDto?.serviceProviderId ?? existingTask?.serviceProviderId) !== rate.serviceProviderId
+        (taskDto?.serviceProviderId ?? existingTask?.serviceProviderId) !==
+          rate.serviceProviderId
       ) {
         throw new BadRequestException(
           `Rate is not associated with the serviceProvider`,
@@ -130,7 +151,7 @@ export class TasksService {
       .joinClient()
       .joinServiceProvider()
       .joinRate()
-      ._orderBy(filters?.orderField, filters?.order);
+      .order(filters?.orderField, filters?.order);
 
     return (
       filters?.page && filters?.limit
@@ -140,22 +161,8 @@ export class TasksService {
   }
 
   private async generateSpecialFields(projectId: string) {
-    const today = DayjsHelper.new();
-    const from = today.startOf('M').toDate();
-    const to = today.endOf('M').toDate();
-    const monthTaskCount = await this.tasksRepository.scoped
-      .filterByDate(from, to, TaskDateFilterField.CREATED_AT)
-      .withDeleted()
-      .getCount();
-
-    const todayFormatted = today.format('YYMMDD');
-
-    const newNumber = (monthTaskCount + 1).toString().padStart(3, '0');
-    const code = `${todayFormatted}${newNumber}`;
-
     const project = await this.projectsService.getOne(projectId);
-
-    return { code, lang: project.lang };
+    return await this.projectTaskStatusManagerService.createTaskCode(project);
   }
 
   findOne(filters?: TasksFilterDto) {
@@ -171,12 +178,13 @@ export class TasksService {
 
     if (filters?.id) query.filterById(filters.id);
     if (filters?.code) query.filterByCode(filters.code);
-    if (filters?.serviceProviderId) query.filterByServiceProviderId(filters.serviceProviderId);
+    if (filters?.serviceProviderId)
+      query.filterByServiceProviderId(filters.serviceProviderId);
     if (filters?.projectId) query.filterByProjectId(filters.projectId);
     if (filters?.projectCode) query.filterByProjectCode(filters.projectCode);
-    if (filters?.task) query.filterByType(filters?.task);
-    if (filters?.status) query.filterByStatus(filters?.status);
-    if (filters?.query) query.filterByQuery(filters?.query);
+    if (filters?.task) query.filterByType(filters.task);
+    if (filters?.status) query.filterByStatus([filters.status]);
+    if (filters?.query) query.filterByQuery(filters.query);
 
     query.filterByDate(filters?.from, filters?.to, filters?.dateField);
 

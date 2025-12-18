@@ -1,9 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionHeaderComponent } from '@TaskM/shared/layout';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { radixCross2 } from '@ng-icons/radix-icons';
 import {
   InputSearchComponent,
@@ -23,14 +22,9 @@ import {
   finalize,
 } from 'rxjs';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ProjectPreviewDto, ProjectsFilterDto } from '@TaskM/core/dto';
-import { ProjectDetailsComponent } from '@TaskM/projects/feature-details';
+import { ProjectPreviewComponent } from '@TaskM/projects/feature-details';
 import { ProjectFormComponent } from '@TaskM/projects/form';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FormUtilsService, ScrollNearEndDirective } from '@TaskM/shared/misc';
@@ -57,19 +51,16 @@ type UrlParams = ProjectsFilterDto & {
 
 @Component({
   selector: 'app-project-list',
-  standalone: true,
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule,
     ReactiveFormsModule,
-    NgIconComponent,
     SectionHeaderComponent,
     ButtonModule,
     InputTextModule,
     InputSearchComponent,
     ListItemComponent,
-    ProjectDetailsComponent,
+    ProjectPreviewComponent,
     DialogModule,
     SkeletonModule,
     SpinnerComponent,
@@ -81,11 +72,18 @@ type UrlParams = ProjectsFilterDto & {
     ClientAutocompleteComponent,
     CalendarModule,
   ],
-  providers: [DialogService, provideIcons({ radixCross2 })],
+  providers: [DialogService],
   templateUrl: './project-list.component.html',
   host: { class: 'h-full py-1' },
 })
 export class ProjectListComponent implements OnInit, OnDestroy {
+  private projectService = inject(ProjectService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private dialogService = inject(DialogService);
+  private formUtils = inject(FormUtilsService);
+  private clientService = inject(ClientService);
+
   loading = false;
   isLoadingMore = false;
   private page = PAGINATION.DEFAULT_PAGE;
@@ -108,8 +106,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     }>;
     period: FormControl<(Date | null)[] | null | undefined>;
   }>;
-  private projectsSubject = new BehaviorSubject<Project[]>([]);
-  projects$ = this.projectsSubject.asObservable();
+  projects$ = new BehaviorSubject<Project[]>([]);
   selectedProjectCode: string | null = null;
   dialogRef?: DynamicDialogRef;
   isFilterActivated = false;
@@ -125,15 +122,6 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   }));
 
   private isFormInitialized = false;
-
-  constructor(
-    private projectService: ProjectService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private dialogService: DialogService,
-    private formUtils: FormUtilsService,
-    private clientService: ClientService,
-  ) {}
 
   ngOnInit(): void {
     this.initializeFilterForm();
@@ -156,7 +144,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   private resetAndFetchProjects(filters?: Nullable<ProjectsFilterDto>): void {
     this.page = PAGINATION.DEFAULT_PAGE;
     this.hasMore = true;
-    this.projectsSubject.next([]);
+    this.projects$.next([]);
     this.fetchProjects(filters);
   }
 
@@ -169,7 +157,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   }
 
   private handleProjectUpdate(project: ProjectPreviewDto): void {
-    const currentProjects = this.projectsSubject.getValue();
+    const currentProjects = this.projects$.getValue();
     const index = currentProjects.findIndex((t) => t.id === project.id);
 
     if (index !== -1) {
@@ -178,7 +166,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
       currentProjects.unshift(project);
     }
 
-    this.projectsSubject.next(currentProjects);
+    this.projects$.next(currentProjects);
   }
 
   private fetchProjects(filters?: Nullable<ProjectsFilterDto>): void {
@@ -195,8 +183,8 @@ export class ProjectListComponent implements OnInit, OnDestroy {
       })
       .pipe(finalize(() => this.setLoadingState(false, false)))
       .subscribe((data) => {
-        const currentProjects = this.projectsSubject.getValue();
-        this.projectsSubject.next(
+        const currentProjects = this.projects$.getValue();
+        this.projects$.next(
           this.isInitialLoad()
             ? data.items
             : [...currentProjects, ...data.items],

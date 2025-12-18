@@ -3,10 +3,9 @@ import { CommonModule } from '@angular/common';
 import { ProgressBarModule } from 'primeng/progressbar';
 
 @Component({
-  selector: 'ui-spinner',
-  standalone: true,
-  imports: [CommonModule, ProgressBarModule],
-  templateUrl: './spinner.component.html',
+    selector: 'ui-spinner',
+    imports: [CommonModule, ProgressBarModule],
+    templateUrl: './spinner.component.html'
 })
 export class SpinnerComponent {
   bar = input<boolean>(false);

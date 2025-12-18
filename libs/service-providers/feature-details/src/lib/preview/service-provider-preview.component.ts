@@ -1,9 +1,10 @@
 import {
   Component,
-  Input,
   OnChanges,
   OnInit,
   SimpleChanges,
+  input,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -24,12 +25,11 @@ import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { DialogModule } from 'primeng/dialog';
-import { ServiceProviderCompetenceComponent } from './competence/service-provider-competence.component';
+import { ServiceProviderCompetenceComponent } from '../competence/service-provider-competence.component';
 import { PanelModule } from 'primeng/panel';
 
 @Component({
-  selector: 'app-service-provider-details',
-  standalone: true,
+  selector: 'app-service-provider-preview',
   imports: [
     CommonModule,
     ServiceProviderFormComponent,
@@ -40,37 +40,34 @@ import { PanelModule } from 'primeng/panel';
     ServiceProviderCompetenceComponent,
     PanelModule,
   ],
-  templateUrl: './service-provider-details.component.html',
+  templateUrl: './service-provider-preview.component.html',
 })
-export class ServiceProviderDetailsComponent implements OnInit, OnChanges {
-  @Input() serviceProviderId!: string;
-  private serviceProvidersSubject =
-    new BehaviorSubject<ServiceProviderDto | null>(null);
+export class ServiceProviderPreviewComponent implements OnInit, OnChanges {
+  private serviceProviderService = inject(ServiceProviderService);
+  private router = inject(Router);
+  private dialogService = inject(DialogService);
+  private competenceService = inject(CompetenceService);
+
+  readonly serviceProviderId = input.required<string>();
+  serviceProvider$ = new BehaviorSubject<ServiceProviderDto | null>(null);
   loading = false;
-  serviceProvider$ = this.serviceProvidersSubject.asObservable();
 
   TaskLabel = TaskType;
-
-  constructor(
-    private serviceProviderService: ServiceProviderService,
-    private router: Router,
-    private dialogService: DialogService,
-    private competenceService: CompetenceService,
-  ) {}
 
   ngOnInit(): void {
     this.subscribeToCompetenceChanges();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['serviceProviderId'] && this.serviceProviderId) {
-      this.fetchServiceProvider(this.serviceProviderId);
+    const serviceProviderId = this.serviceProviderId();
+    if (changes['serviceProviderId'] && serviceProviderId) {
+      this.fetchServiceProvider(serviceProviderId);
     }
   }
 
   showCompetenceDialog(competence?: CompetenceDto): void {
     const serviceProviderCompetences =
-      this.serviceProvidersSubject?.value?.competences ?? [];
+      this.serviceProvider$?.value?.competences ?? [];
     this.dialogService.open(CompetenceFormComponent, {
       header: 'New Service',
       breakpoints: { '1199px': '75vw', '575px': '90vw' },
@@ -80,7 +77,7 @@ export class ServiceProviderDetailsComponent implements OnInit, OnChanges {
       data: {
         competence: {
           ...competence,
-          serviceProviderId: this.serviceProviderId,
+          serviceProviderId: this.serviceProviderId(),
         },
         serviceProviderCompetences,
       },
@@ -96,7 +93,7 @@ export class ServiceProviderDetailsComponent implements OnInit, OnChanges {
         next: (serviceProvider) => {
           if (!serviceProvider) this.close();
 
-          this.serviceProvidersSubject.next(serviceProvider);
+          this.serviceProvider$.next(serviceProvider);
         },
         error: () => {
           this.close();
@@ -118,8 +115,7 @@ export class ServiceProviderDetailsComponent implements OnInit, OnChanges {
   }
 
   private handleCompetenceUpdate(competence: Competence): void {
-    const serviceProvider = this.serviceProvidersSubject
-      .value as ServiceProviderDto;
+    const serviceProvider = this.serviceProvider$.value as ServiceProviderDto;
     const competences = serviceProvider?.competences ?? [];
 
     const index = competences.findIndex((t) => t.id === competence.id);
@@ -135,7 +131,7 @@ export class ServiceProviderDetailsComponent implements OnInit, OnChanges {
     } else if (fromIdIndex !== -1) competences[fromIdIndex] = competence;
     else competences.push(competence);
 
-    this.serviceProvidersSubject.next({ ...serviceProvider, competences });
+    this.serviceProvider$.next({ ...serviceProvider, competences });
     this.serviceProviderService.triggerChanges({
       ...serviceProvider,
       competences,

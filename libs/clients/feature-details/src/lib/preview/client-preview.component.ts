@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnChanges, SimpleChanges, input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClientService } from '@TaskM/clients/data-access';
 import { BehaviorSubject, finalize } from 'rxjs';
@@ -9,29 +9,27 @@ import { CloseButtonComponent } from '@TaskM/shared/ui';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-client-details',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ClientFormComponent,
-    SkeletonModule,
-    CloseButtonComponent,
-  ],
-  templateUrl: './client-details.component.html',
+    selector: 'app-client-preview',
+    imports: [
+        CommonModule,
+        ClientFormComponent,
+        SkeletonModule,
+        CloseButtonComponent,
+    ],
+    templateUrl: './client-preview.component.html'
 })
-export class ClientDetailsComponent implements OnChanges {
-  @Input() code!: string;
+export class ClientPreviewComponent implements OnChanges {
+  private clientService = inject(ClientService);
+  private router = inject(Router);
+
+  readonly code = input.required<string>();
   client$ = new BehaviorSubject<ClientDto | null>(null);
   loading = false;
 
-  constructor(
-    private clientService: ClientService,
-    private router: Router,
-  ) {}
-
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['code'] && this.code) {
-      this.fetchClient(this.code);
+    const code = this.code();
+    if (changes['code'] && code) {
+      this.fetchClient(code);
     }
   }
 

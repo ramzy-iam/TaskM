@@ -2,8 +2,6 @@ import { Expose, Transform, Type } from 'class-transformer';
 import {
   IsString,
   IsNotEmpty,
-  MinLength,
-  MaxLength,
   IsOptional,
   IsEnum,
   IsPositive,
@@ -12,7 +10,6 @@ import {
   IsArray,
 } from 'class-validator';
 import {
-  BaseClientDto,
   BaseDto,
   BaseServiceProviderDto,
   BaseProjectDto,

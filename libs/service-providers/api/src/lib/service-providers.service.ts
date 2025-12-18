@@ -10,12 +10,15 @@ import { ConflictException, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ServiceProvidersService {
-  constructor(private readonly serviceProvidersRepository: ServiceProvidersRepository) {}
+  constructor(
+    private readonly serviceProvidersRepository: ServiceProvidersRepository,
+  ) {}
 
   async create(serviceProviderDto: CreateServiceProviderDto) {
     const { email } = serviceProviderDto;
     await this.validateBeforeCreateOrUpdate(email);
-    const serviceProvider = this.serviceProvidersRepository.create(serviceProviderDto);
+    const serviceProvider =
+      this.serviceProvidersRepository.create(serviceProviderDto);
     return this.serviceProvidersRepository.save(serviceProvider);
   }
 
@@ -45,7 +48,10 @@ export class ServiceProvidersService {
       .filterByEmail(email)
       .getOne();
 
-    if (existingClient && (!serviceProviderId || existingClient.id !== serviceProviderId))
+    if (
+      existingClient &&
+      (!serviceProviderId || existingClient.id !== serviceProviderId)
+    )
       throw new ConflictException(
         `There is already a serviceProvider with the email '${email}'`,
       );
@@ -58,7 +64,7 @@ export class ServiceProvidersService {
     if (filters?.email) query.filterByEmail(filters.email);
     if (filters?.competence) query.filterByCompetenceCode(filters.competence);
 
-    query.joinCompetences()._orderBy();
+    query.joinCompetences().order();
 
     return (
       filters?.page && filters?.limit

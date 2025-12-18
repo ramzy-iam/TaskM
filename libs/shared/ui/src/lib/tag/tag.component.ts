@@ -13,17 +13,16 @@ const defaultSeverities: CustomTagSeverity[] = [
 ];
 
 @Component({
-  selector: 'ui-tag',
-  standalone: true,
-  imports: [CommonModule, TagModule],
-  template: `
+    selector: 'ui-tag',
+    imports: [CommonModule, TagModule],
+    template: `
     <p-tag
       [value]="value()"
       [rounded]="rounded()"
       [styleClass]="getStyleClass()"
       [severity]="isCustomSeverity()"
     ></p-tag>
-  `,
+  `
 })
 export class TagComponent {
   value = input<string>();

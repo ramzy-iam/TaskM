@@ -1,13 +1,12 @@
 import {
   Component,
-  Input,
   OnChanges,
   OnInit,
-  Optional,
   SimpleChanges,
+  input,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProjectService } from '@TaskM/projects/data-access';
 import { BehaviorSubject, finalize } from 'rxjs';
 import { ProjectDto } from '@TaskM/core/dto';
 import { ProjectFormComponent } from '@TaskM/projects/form';
@@ -18,9 +17,8 @@ import {
   TagComponent,
 } from '@TaskM/shared/ui';
 import { Router } from '@angular/router';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ClipboardDirective, FormUtilsService } from '@TaskM/shared/misc';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ClipboardDirective } from '@TaskM/shared/misc';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
@@ -31,13 +29,11 @@ import { ClientAutocompleteComponent } from '@TaskM/clients/form';
 import { PanelModule } from 'primeng/panel';
 
 @Component({
-  selector: 'app-project-details',
-  standalone: true,
+  selector: 'app-project-preview',
   imports: [
     CommonModule,
     SkeletonModule,
     CloseButtonComponent,
-    FormsModule,
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
@@ -51,23 +47,16 @@ import { PanelModule } from 'primeng/panel';
     PanelModule,
     TagComponent,
   ],
-  templateUrl: './project-details.component.html',
+  templateUrl: './project-preview.component.html',
 })
-export class ProjectDetailsComponent
+export class ProjectPreviewComponent
   extends ProjectFormComponent
   implements OnInit, OnChanges
 {
-  @Input() code!: string;
-  project$ = new BehaviorSubject<ProjectDto | null>(null);
+  private readonly router = inject(Router);
 
-  constructor(
-    protected override projectService: ProjectService,
-    @Optional() protected override dialogRef: DynamicDialogRef,
-    protected override formUtils: FormUtilsService,
-    private readonly router: Router,
-  ) {
-    super(projectService, dialogRef, formUtils);
-  }
+  readonly code = input.required<string>();
+  project$ = new BehaviorSubject<ProjectDto | null>(null);
 
   override ngOnInit(): void {
     this.triggerAutoSave(true);
@@ -75,8 +64,9 @@ export class ProjectDetailsComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['code'] && this.code) {
-      this.fetchProject(this.code);
+    const code = this.code();
+    if (changes['code'] && code) {
+      this.fetchProject(code);
     }
   }
 

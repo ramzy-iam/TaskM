@@ -4,7 +4,11 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { ClientsService } from '@TaskM/clients/api';
-import { ProjectDateFilterField, TaskTypeCode } from '@TaskM/core/constants';
+import {
+  ProjectDateFilterField,
+  ProjectStatusCode,
+  TaskTypeCode,
+} from '@TaskM/core/constants';
 import { Project, ProjectsRepository } from '@TaskM/core/db';
 import {
   ProjectsFilterDto,
@@ -13,12 +17,14 @@ import {
 } from '@TaskM/core/dto';
 import { DayjsHelper, UtilsHelper } from '@TaskM/core/helpers';
 import { paginateResult } from '@TaskM/core/helpers/backend';
+import { ProjectTaskStatusManagerService } from '@TaskM/shared/api';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     private projectsRepository: ProjectsRepository,
     private clientsService: ClientsService,
+    private projectTaskStatusManagerService: ProjectTaskStatusManagerService,
   ) {}
 
   async create(projectDto: CreateProjectDto) {
@@ -53,12 +59,27 @@ export class ProjectsService {
   }
 
   async update(id: string, projectDto: UpdateProjectDto) {
+    const project = await this.getOne(id);
+    if (!project) throw new BadRequestException('Project not found');
+
     await this.validateBeforeCreateOrUpdate(projectDto.name);
+    let status: ProjectStatusCode | null = null;
+    if (projectDto.status && project.status !== projectDto.status) {
+      status = projectDto.status;
+      delete projectDto.status;
+    }
 
     await this.projectsRepository.update(
       { id },
       UtilsHelper.convertUndefinedToNull(projectDto),
     );
+
+    if (status)
+      await this.projectTaskStatusManagerService.updateProjectStatus(
+        id,
+        status,
+      );
+
     return this.getOne(id);
   }
 
@@ -80,7 +101,7 @@ export class ProjectsService {
   findAll<P = Project[]>(filters?: ProjectsFilterDto) {
     const query = this.buildQuery(filters)
       .joinClient()
-      ._orderBy(filters?.orderField, filters?.order);
+      .order(filters?.orderField, filters?.order);
 
     return (
       filters?.page && filters?.limit
@@ -126,6 +147,9 @@ export class ProjectsService {
     if (filters?.clientCode) query.filterByClientCode(filters?.clientCode);
     if (filters?.task) query.filterByTaskType(filters?.task);
     if (filters?.status) query.filterByStatus(filters?.status);
+    if (filters?.withTasks) query.joinTasks();
+    if (filters?.minNumberOfTasks)
+      query.filterByAtLeastNumberOfTasks(filters?.minNumberOfTasks);
 
     query.filterByDate(filters?.from, filters?.to, filters?.dateField);
 

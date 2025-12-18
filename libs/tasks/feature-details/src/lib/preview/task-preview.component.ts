@@ -1,13 +1,12 @@
 import {
   Component,
-  Input,
   OnChanges,
   OnInit,
-  Optional,
   SimpleChanges,
+  input,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TaskService } from '@TaskM/tasks/data-access';
 import { BehaviorSubject, finalize, map } from 'rxjs';
 import { TaskDto } from '@TaskM/core/dto';
 import { TaskFormComponent } from '@TaskM/tasks/form';
@@ -19,9 +18,8 @@ import {
   TagComponent,
 } from '@TaskM/shared/ui';
 import { Router, RouterModule } from '@angular/router';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ClipboardDirective, FormUtilsService } from '@TaskM/shared/misc';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ClipboardDirective } from '@TaskM/shared/misc';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
@@ -31,19 +29,15 @@ import { CalendarModule } from 'primeng/calendar';
 import { PanelModule } from 'primeng/panel';
 import { ProjectAutocompleteComponent } from '@TaskM/projects/form';
 import { ServiceProviderAutocompleteComponent } from '@TaskM/service-providers/form';
-import { ProjectService } from '@TaskM/projects/data-access';
-import { CompetenceService } from '@TaskM/service-providers/data-access';
 import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
-  selector: 'app-task-details',
-  standalone: true,
+  selector: 'app-task-preview',
   imports: [
     CommonModule,
     SkeletonModule,
     RouterModule,
     CloseButtonComponent,
-    FormsModule,
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
@@ -60,30 +54,22 @@ import { TooltipModule } from 'primeng/tooltip';
     TagComponent,
     TooltipModule,
   ],
-  templateUrl: './task-details.component.html',
+  templateUrl: './task-preview.component.html',
 })
-export class TaskDetailsComponent
+export class TaskPreviewComponent
   extends TaskFormComponent
   implements OnInit, OnChanges
 {
-  @Input() code!: string;
+  private router = inject(Router);
+
+  readonly code = input.required<string>();
   task$ = new BehaviorSubject<TaskDto | null>(null);
   override loading = false;
 
-  constructor(
-    protected override taskService: TaskService,
-    @Optional() protected override dialogRef: DynamicDialogRef,
-    protected override formUtils: FormUtilsService,
-    private router: Router,
-    protected override projectService: ProjectService,
-    protected override competenceService: CompetenceService,
-  ) {
-    super(taskService, dialogRef, formUtils, projectService, competenceService);
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['code'] && this.code) {
-      this.fetchTask(this.code);
+    const code = this.code();
+    if (changes['code'] && code) {
+      this.fetchTask(code);
     }
   }
 

@@ -71,7 +71,7 @@ export class Task extends AppBaseEntity {
   assignedAt: Date;
 
   @DateTzColumn({ nullable: true })
-  deliveredAt: Date;
+  deliveredAt: Date | null;
 
   @DateTzColumn()
   deadline: Date;

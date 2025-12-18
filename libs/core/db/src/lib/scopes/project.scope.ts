@@ -1,5 +1,5 @@
 import { SelectQueryBuilder } from 'typeorm';
-import { Project } from '../entities';
+import { Project, Task } from '../entities';
 import { OrderType } from '@TaskM/core/types';
 import {
   ProjectDateFilterField,
@@ -71,7 +71,7 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
     return this;
   }
 
-  _orderBy(
+  order(
     field: string = ProjectDateFilterField.CREATED_AT,
     order: OrderType = 'DESC',
   ) {
@@ -90,7 +90,26 @@ export class ProjectsScope extends SelectQueryBuilder<Project> {
     });
   }
 
+  filterByAtLeastNumberOfTasks(numberOfTasks = 1) {
+    if (!numberOfTasks) return this;
+
+    const subQuery = this.subQuery()
+      .select('COUNT(*)')
+      .from(Task, '_tasks')
+      .where('_tasks.projectId = Projects.id'); // No need for extra parameters here
+
+    return this.andWhere(`(${subQuery.getQuery()}) >= :numberOfTasks`, {
+      numberOfTasks,
+    });
+  }
+
   joinClient() {
     return this.leftJoinAndSelect('Projects.client', 'client');
+  }
+
+  joinTasks() {
+    return this.leftJoinAndSelect('Projects.tasks', 'tasks')
+      .leftJoinAndSelect('tasks.serviceProvider', 'serviceProvider')
+      .leftJoinAndSelect('tasks.rate', 'rate');
   }
 }

@@ -1,11 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { getValidatorErrorMessage } from './validations-utils';
 
 @Component({
   selector: 'input-error',
-  standalone: true,
   imports: [CommonModule],
   template: `
     @if (errorMessage !== null) {
@@ -16,20 +15,21 @@ import { getValidatorErrorMessage } from './validations-utils';
   `,
 })
 export class FormInputErrorComponent {
-  @Input() control!: AbstractControl;
-  @Input() formGroup?: FormGroup;
-  @Input() fieldName?: string;
+  readonly control = input.required<AbstractControl>();
+  readonly formGroup = input<FormGroup>();
+  readonly fieldName = input<string>();
 
   get errorMessage() {
-    for (const validatorName in this.control?.errors) {
-      if (this.control.touched) {
+    for (const validatorName in this.control()?.errors) {
+      const control = this.control();
+      if (control.touched) {
         const fieldName =
-          this.fieldName ??
-          this.getControlName(this.formGroup as FormGroup, this.control) ??
+          this.fieldName() ??
+          this.getControlName(this.formGroup() as FormGroup, control) ??
           'This field';
         return getValidatorErrorMessage(
           validatorName,
-          this.control.errors[validatorName],
+          control?.errors?.[validatorName],
           fieldName,
         );
       }

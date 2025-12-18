@@ -1,14 +1,24 @@
 <div class="border-b-2 border-gray">
   <div class="grid grid-cols-4 items-center relative">
-    <div class="col-span-1" [title]="TaskLabel[competence.code]">
-      {{ competence.code }}
+    <div class="col-span-1" [pTooltip]="TaskLabel[competence().code]">
+      {{ competence().code }}
     </div>
-    <div class="col-span-2 truncate" [title]="competence.rate">
+    <div
+      class="col-span-2 truncate"
+      [title]="competence().rate"
+      [pTooltip]="
+        competence().rate.toString() +
+        ' ' +
+        competence().currency +
+        '/' +
+        competence().unit
+      "
+    >
       {{
-        +competence.rate
-          | currency: competence.currency : 'symbol' : '1.2-6' : 'en-CM'
+        +competence().rate
+          | currency: competence().currency : 'symbol' : '1.2-6' : 'en-CM'
       }}
-      (<span class="text-sm">per {{ competence.unit }}</span
+      (<span class="text-sm">per {{ competence().unit }}</span
       >)
     </div>
     <div class="col-span-1 place-self-end">

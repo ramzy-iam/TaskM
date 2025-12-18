@@ -1,13 +1,12 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { map } from 'rxjs';
 import { BaseProjectDto } from '@TaskM/core/dto';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { FormInputErrorComponent } from '@TaskM/shared/ui';
 import { ProjectService } from '@TaskM/projects/data-access';
 import {
   AutoCompleteCompleteEvent,
@@ -17,16 +16,13 @@ import {
 
 @Component({
   selector: 'app-project-autocomplete',
-  standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
     FloatLabelModule,
     InputNumberModule,
-    FormInputErrorComponent,
     AutoCompleteModule,
   ],
   template: `
@@ -72,6 +68,8 @@ import {
   `,
 })
 export class ProjectAutocompleteComponent {
+  private projectService = inject(ProjectService);
+
   form = input.required<FormGroup>();
   project = input<BaseProjectDto | null>(null);
   inputId = input<string>('');
@@ -86,8 +84,6 @@ export class ProjectAutocompleteComponent {
   searchQuery = '';
   page = 1;
   limit = 15;
-
-  constructor(private projectService: ProjectService) {}
 
   searchProjects(event: AutoCompleteCompleteEvent) {
     this.searchQuery = event.query;

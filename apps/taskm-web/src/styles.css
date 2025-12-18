@@ -147,8 +147,9 @@
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
-  margin: 0 2px;
+  width: 8px;
+  height: 8px;
+  scrollbar-width: thin;
 }
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
@@ -160,4 +161,17 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #888;
+}
+
+table.custom-table,
+.custom-table th,
+.custom-table td,
+.custom-table tr {
+  border: 1px solid #ddd;
+  border-collapse: collapse;
+  padding: 10px;
+}
+
+.custom-table td {
+  white-space: nowrap;
 }
